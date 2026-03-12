@@ -7,7 +7,9 @@ const adaptRequestFromBackend = (backendRequest) => {
     id: backendRequest.id,
     requestNumber: backendRequest.requestNumber,
     clientId: backendRequest.clientId,
-    client: backendRequest.client?.name || 'Cliente',
+    client: typeof backendRequest.client === 'string' 
+      ? backendRequest.client 
+      : backendRequest.client?.name || 'Cliente',
     quoteId: backendRequest.quoteId,
     quoteNumber: backendRequest.quote?.quoteNumber || 'N/A',
     status: backendRequest.status,

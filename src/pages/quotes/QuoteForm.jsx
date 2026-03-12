@@ -1,23 +1,71 @@
 // components/quotes/QuoteForm.jsx - Diseño Profesional con Selects Mejorados
 import { useState, Fragment } from "react";
-import { Trash2, Plus, AlertCircle, CheckCircle, User, Calendar, DollarSign, ChevronUpDown, Check } from "lucide-react";
 import { Listbox, Transition } from "@headlessui/react";
+import DatePicker from "../../components/ui/DatePicker";
+import {
+  Trash2,
+  Plus,
+  AlertCircle,
+  CheckCircle,
+  User,
+  Calendar,
+  DollarSign,
+  ChevronsUpDown,
+  Check,
+  Percent,
+  Building2,
+  Package,
+  FileText,
+  Hash,
+  Tag,
+  Scale
+} from "lucide-react";
 
 // Componente Select personalizado con búsqueda (usa Listbox de Headless UI)
-const Select = ({ label, value, onChange, options = [], disabled, placeholder = "Seleccionar..." }) => {
-  const selected = options.find(opt => opt.value === value) || null;
+const Select = ({
+  label,
+  value,
+  onChange,
+  options = [],
+  disabled,
+  placeholder = "Seleccionar...",
+  icon: Icon,
+}) => {
+  const selected = options.find((opt) => opt.value === value) || null;
 
   return (
     <div className="w-full">
-      {label && <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
-      <Listbox value={selected} onChange={(opt) => onChange(opt?.value || "")} disabled={disabled}>
+      {label && (
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {label}
+        </label>
+      )}
+      <Listbox
+        value={selected}
+        onChange={(opt) => onChange(opt?.value || "")}
+        disabled={disabled}
+      >
         <div className="relative">
-          <Listbox.Button className="relative w-full cursor-default rounded-xl border border-gray-200 bg-white py-2 pl-4 pr-10 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm">
+          {Icon && (
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
+              <Icon className="w-4 h-4 text-gray-400" />
+            </div>
+          )}
+          <Listbox.Button className={`relative w-full cursor-default rounded-xl border border-gray-200 bg-white py-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm ${
+            Icon ? 'pl-9 pr-10' : 'pl-4 pr-10'
+          }`}>
             <span className="block truncate">
-              {selected ? selected.label : <span className="text-gray-400">{placeholder}</span>}
+              {selected ? (
+                selected.label
+              ) : (
+                <span className="text-gray-400">{placeholder}</span>
+              )}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <ChevronUpDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ChevronsUpDown
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
             </span>
           </Listbox.Button>
           <Transition
@@ -39,7 +87,9 @@ const Select = ({ label, value, onChange, options = [], disabled, placeholder = 
                 >
                   {({ selected }) => (
                     <>
-                      <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                      <span
+                        className={`block truncate ${selected ? "font-medium" : "font-normal"}`}
+                      >
                         {opt.label}
                       </span>
                       {selected ? (
@@ -94,12 +144,22 @@ const QuantityInput = ({ value, onChange, min = 1, disabled }) => {
   );
 };
 
-// Mantenemos el Button y Input sin cambios (ya estaban bien)
-const Button = ({ children, variant = "primary", className = "", disabled, onClick, type = "button" }) => {
-  const base = "px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+// Componente Button mejorado
+const Button = ({
+  children,
+  variant = "primary",
+  className = "",
+  disabled,
+  onClick,
+  type = "button",
+}) => {
+  const base =
+    "px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm hover:shadow",
-    secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400",
+    primary:
+      "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm hover:shadow",
+    secondary:
+      "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400",
     ghost: "bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-300",
   };
   return (
@@ -114,22 +174,40 @@ const Button = ({ children, variant = "primary", className = "", disabled, onCli
   );
 };
 
-const Input = ({ label, type = "text", className = "", error, ...props }) => (
+// Componente Input con iconos mejorado
+const Input = ({ label, type = "text", className = "", error, icon: Icon, ...props }) => (
   <div className="w-full">
-    {label && <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
-    <input
-      type={type}
-      className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow ${
-        error ? "border-red-300" : "border-gray-200"
-      } ${className}`}
-      {...props}
-    />
+    {label && (
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+    )}
+    <div className="relative">
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <Icon className="w-4 h-4 text-gray-400" />
+        </div>
+      )}
+      <input
+        type={type}
+        className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow ${
+          error ? "border-red-300" : "border-gray-200"
+        } ${className}`}
+        {...props}
+      />
+    </div>
     {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
   </div>
 );
 
 // Componente principal
-export default function QuoteForm({ clients, services, initialData = {}, onSubmit, onCancel }) {
+export default function QuoteForm({
+  clients,
+  services,
+  initialData = {},
+  onSubmit,
+  onCancel,
+}) {
   const safeClients = Array.isArray(clients) ? clients : [];
   const safeServices = Array.isArray(services) ? services : [];
 
@@ -146,10 +224,13 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Convertir arrays a opciones para los selects
-  const clientOptions = safeClients.map(c => ({ value: c.id, label: c.name }));
-  const serviceOptions = safeServices.map(s => ({ 
-    value: s.id, 
-    label: `${s.code} – ${s.name} ($${s.priceExternal})` 
+  const clientOptions = safeClients.map((c) => ({
+    value: c.id,
+    label: c.name,
+  }));
+  const serviceOptions = safeServices.map((s) => ({
+    value: s.id,
+    label: `${s.code} – ${s.name} ($${s.priceExternal})`,
   }));
   const priceListOptions = [
     { value: "EXTERNO", label: "Externo" },
@@ -157,36 +238,57 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
   ];
 
   const addItem = () => {
-    if (!selectedService) {
-      alert("Selecciona un servicio");
-      return;
+    const service = services.find((s) => s.id === selectedService);
+    if (!service) return;
+
+    const existingIndex = formData.items.findIndex(
+      (i) => i.serviceId === service.id,
+    );
+
+    if (existingIndex >= 0) {
+      const newItems = [...formData.items];
+      newItems[existingIndex].quantity += quantity;
+      setFormData({ ...formData, items: newItems });
+    } else {
+      setFormData({
+        ...formData,
+        items: [
+          ...formData.items,
+          {
+            serviceId: service.id,
+            serviceName: service.name,
+            serviceCode: service.code,
+            quantity,
+          },
+        ],
+      });
     }
-    const service = safeServices.find((s) => s.id === selectedService);
-    if (!service) {
-      alert("Servicio no encontrado");
-      return;
-    }
-    setFormData({
-      ...formData,
-      items: [...formData.items, { serviceId: service.id, serviceName: service.name, serviceCode: service.code, quantity }],
-    });
+
     setSelectedService("");
     setQuantity(1);
   };
 
   const removeItem = (index) => {
-    setFormData({ ...formData, items: formData.items.filter((_, i) => i !== index) });
+    setFormData({
+      ...formData,
+      items: formData.items.filter((_, i) => i !== index),
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validUntilISO = formData.validUntil ? new Date(formData.validUntil).toISOString() : null;
+    const validUntilISO = formData.validUntil
+      ? new Date(formData.validUntil).toISOString()
+      : null;
     onSubmit({
       clientId: formData.clientId,
       priceList: formData.priceList,
       ivaPercent: formData.ivaPercent,
       validUntil: validUntilISO,
-      items: formData.items.map(({ serviceId, quantity }) => ({ serviceId, quantity })),
+      items: formData.items.map(({ serviceId, quantity }) => ({
+        serviceId,
+        quantity,
+      })),
     });
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -197,7 +299,10 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
     formData.items.forEach((item) => {
       const service = safeServices.find((s) => s.id === item.serviceId);
       if (service) {
-        const price = formData.priceList === "ESTUDIANTE" ? +service.priceStudent : +service.priceExternal;
+        const price =
+          formData.priceList === "ESTUDIANTE"
+            ? +service.priceStudent
+            : +service.priceExternal;
         subtotal += price * item.quantity;
       }
     });
@@ -210,7 +315,7 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
   const selectedClient = safeClients.find((c) => c.id === formData.clientId);
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4 sm:px-0">
       {/* Notificación de éxito animada */}
       {showSuccess && (
         <div className="fixed top-4 right-4 z-50 bg-white border border-green-200 text-green-800 px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300">
@@ -219,34 +324,45 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
           </div>
           <div className="flex-1">
             <p className="font-semibold">¡Cotización guardada!</p>
-            <p className="text-sm text-green-600">Los datos se han registrado correctamente.</p>
+            <p className="text-sm text-green-600">
+              Los datos se han registrado correctamente.
+            </p>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 space-y-8">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-8 space-y-6 sm:space-y-8"
+      >
         {/* Encabezado */}
-        <div className="border-b border-gray-100 pb-6">
-          <h2 className="text-3xl font-bold text-gray-800">Nueva Cotización</h2>
-          <p className="text-sm text-gray-400 mt-1">Complete los datos para generar una cotización profesional</p>
+        <div className="border-b border-gray-100 pb-4 sm:pb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Nueva Cotización</h2>
+          <p className="text-xs sm:text-sm text-gray-400 mt-1">
+            Complete los datos para generar una cotización profesional
+          </p>
         </div>
 
         {/* Alertas */}
         {safeClients.length === 0 && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
             <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-amber-800 text-sm font-medium">No hay clientes disponibles. Debe crear clientes primero.</div>
+            <div className="text-amber-800 text-sm font-medium">
+              No hay clientes disponibles. Debe crear clientes primero.
+            </div>
           </div>
         )}
         {safeServices.length === 0 && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
             <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-amber-800 text-sm font-medium">No hay servicios disponibles. Debe crear servicios primero.</div>
+            <div className="text-amber-800 text-sm font-medium">
+              No hay servicios disponibles. Debe crear servicios primero.
+            </div>
           </div>
         )}
 
         {/* Sección Cliente y Precios */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-3">
             <Select
               label="Cliente *"
@@ -254,22 +370,28 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
               onChange={(value) => {
                 const client = safeClients.find((c) => c.id === value);
                 let priceList = formData.priceList;
-                if (client?.email?.endsWith("@utm.edu.ec")) priceList = "ESTUDIANTE";
+                if (client?.email?.endsWith("@utm.edu.ec"))
+                  priceList = "ESTUDIANTE";
                 else if (client?.email) priceList = "EXTERNO";
                 setFormData({ ...formData, clientId: value, priceList });
               }}
               options={clientOptions}
               disabled={safeClients.length === 0}
               placeholder="Seleccionar cliente"
+              icon={Building2}
             />
             {selectedClient?.email && (
-              <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
-                selectedClient.email.endsWith("@utm.edu.ec")
-                  ? "bg-purple-100 text-purple-700"
-                  : "bg-blue-100 text-blue-700"
-              }`}>
-                {selectedClient.email.endsWith("@utm.edu.ec") ? <User className="w-3 h-3" /> : <User className="w-3 h-3" />}
-                {selectedClient.email.endsWith("@utm.edu.ec") ? "Estudiante UTM" : "Cliente Externo"}
+              <div
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+                  selectedClient.email.endsWith("@utm.edu.ec")
+                    ? "bg-purple-100 text-purple-700"
+                    : "bg-blue-100 text-blue-700"
+                }`}
+              >
+                <User className="w-3 h-3" />
+                {selectedClient.email.endsWith("@utm.edu.ec")
+                  ? "Estudiante UTM"
+                  : "Cliente Externo"}
               </div>
             )}
           </div>
@@ -278,36 +400,45 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
             <Select
               label="Lista de Precios *"
               value={formData.priceList}
-              onChange={(value) => setFormData({ ...formData, priceList: value })}
+              onChange={(value) =>
+                setFormData({ ...formData, priceList: value })
+              }
               options={priceListOptions}
               required
+              icon={Tag}
             />
           </div>
         </div>
 
         {/* IVA y Validez */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <Input
             label="IVA %"
             type="number"
             value={formData.ivaPercent}
-            onChange={(e) => setFormData({ ...formData, ivaPercent: +e.target.value || 0 })}
+            onChange={(e) =>
+              setFormData({ ...formData, ivaPercent: +e.target.value || 0 })
+            }
             min="0"
             max="100"
             step="1"
+            icon={Percent}
           />
-          <Input
+          <DatePicker
             label="Válido hasta"
-            type="date"
             value={formData.validUntil}
-            onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
+            onChange={(date) => {
+              const dateString = date ? date.toISOString().split("T")[0] : "";
+              setFormData({ ...formData, validUntil: dateString });
+            }}
+            minDate={new Date()}
           />
         </div>
 
         {/* Agregar análisis */}
-        <div className="bg-gray-50/80 rounded-xl p-6 space-y-4 border border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-blue-500" />
+        <div className="bg-gray-50/80 rounded-xl p-4 sm:p-6 space-y-4 border border-gray-100">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
             Agregar Análisis
           </h3>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -318,6 +449,7 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
               disabled={safeServices.length === 0}
               placeholder="Seleccionar análisis"
               className="flex-1"
+              icon={Package}
             />
             <QuantityInput
               value={quantity}
@@ -330,7 +462,7 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
               onClick={addItem}
               variant="secondary"
               disabled={!selectedService || safeServices.length === 0}
-              className="sm:w-auto"
+              className="sm:w-auto w-full"
             >
               <Plus className="w-4 h-4 mr-2" />
               Agregar
@@ -341,33 +473,114 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
         {/* Lista de items */}
         {formData.items.length > 0 && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">Análisis seleccionados</h3>
-            <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800">
+              Análisis seleccionados
+            </h3>
+            
+            {/* Vista móvil: tarjetas */}
+            <div className="sm:hidden space-y-3">
+              {formData.items.map((item, idx) => {
+                const service = safeServices.find(
+                  (s) => s.id === item.serviceId,
+                );
+                if (!service) return null;
+                const unitPrice =
+                  formData.priceList === "ESTUDIANTE"
+                    ? +service.priceStudent
+                    : +service.priceExternal;
+                const subtotal = unitPrice * item.quantity;
+                
+                return (
+                  <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="font-medium text-gray-800">{service.name}</div>
+                        <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                          <Hash className="w-3 h-3" />
+                          {service.code}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeItem(idx)}
+                        className="text-red-400 hover:text-red-600 p-1"
+                        title="Eliminar análisis"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                      <div className="bg-gray-50 p-2 rounded-lg text-center">
+                        <p className="text-xs text-gray-500">Cantidad</p>
+                        <p className="font-mono font-medium">{item.quantity}</p>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded-lg text-center">
+                        <p className="text-xs text-gray-500">P.Unit.</p>
+                        <p className="font-mono font-medium">${unitPrice.toLocaleString("es-CL")}</p>
+                      </div>
+                      <div className="bg-blue-50 p-2 rounded-lg text-center">
+                        <p className="text-xs text-gray-500">Subtotal</p>
+                        <p className="font-mono font-medium text-blue-600">${subtotal.toLocaleString("es-CL")}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Vista desktop: tabla */}
+            <div className="hidden sm:block border border-gray-200 rounded-xl overflow-hidden shadow-sm">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium text-gray-600">Análisis</th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">Cant.</th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">P.Unit.</th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">Subtotal</th>
-                    <th className="px-6 py-3 text-center font-medium text-gray-600">Acción</th>
+                    <th className="px-6 py-3 text-left font-medium text-gray-600">
+                      Análisis
+                    </th>
+                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                      Cant.
+                    </th>
+                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                      P.Unit.
+                    </th>
+                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                      Subtotal
+                    </th>
+                    <th className="px-6 py-3 text-center font-medium text-gray-600">
+                      Acción
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {formData.items.map((item, idx) => {
-                    const service = safeServices.find((s) => s.id === item.serviceId);
+                    const service = safeServices.find(
+                      (s) => s.id === item.serviceId,
+                    );
                     if (!service) return null;
-                    const unitPrice = formData.priceList === "ESTUDIANTE" ? +service.priceStudent : +service.priceExternal;
+                    const unitPrice =
+                      formData.priceList === "ESTUDIANTE"
+                        ? +service.priceStudent
+                        : +service.priceExternal;
                     const subtotal = unitPrice * item.quantity;
                     return (
                       <tr key={idx} className="hover:bg-gray-50/50 transition">
                         <td className="px-6 py-4">
-                          <div className="font-medium text-gray-800">{service.name}</div>
-                          <div className="text-xs text-gray-400">{service.code}</div>
+                          <div className="font-medium text-gray-800">
+                            {service.name}
+                          </div>
+                          <div className="text-xs text-gray-400 flex items-center gap-1">
+                            <Hash className="w-3 h-3" />
+                            {service.code}
+                          </div>
                         </td>
-                        <td className="px-6 py-4 text-right font-mono">{item.quantity}</td>
-                        <td className="px-6 py-4 text-right font-mono">${unitPrice.toLocaleString("es-CL")}</td>
-                        <td className="px-6 py-4 text-right font-mono font-medium">${subtotal.toLocaleString("es-CL")}</td>
+                        <td className="px-6 py-4 text-right font-mono">
+                          {item.quantity}
+                        </td>
+                        <td className="px-6 py-4 text-right font-mono">
+                          ${unitPrice.toLocaleString("es-CL")}
+                        </td>
+                        <td className="px-6 py-4 text-right font-mono font-medium">
+                          ${subtotal.toLocaleString("es-CL")}
+                        </td>
                         <td className="px-6 py-4 text-center">
                           <button
                             type="button"
@@ -387,18 +600,26 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
 
             {/* Totales */}
             <div className="flex justify-end">
-              <div className="w-full max-w-sm bg-gray-50/80 rounded-xl p-6 space-y-3 border border-gray-100 shadow-sm">
+              <div className="w-full sm:max-w-sm bg-gray-50/80 rounded-xl p-4 sm:p-6 space-y-3 border border-gray-100 shadow-sm">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium text-gray-800">${totals.subtotal.toLocaleString("es-CL")}</span>
+                  <span className="font-medium text-gray-800">
+                    ${totals.subtotal.toLocaleString("es-CL")}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">IVA ({formData.ivaPercent}%)</span>
-                  <span className="font-medium text-gray-800">${totals.iva.toLocaleString("es-CL")}</span>
+                  <span className="text-gray-500">
+                    IVA ({formData.ivaPercent}%)
+                  </span>
+                  <span className="font-medium text-gray-800">
+                    ${totals.iva.toLocaleString("es-CL")}
+                  </span>
                 </div>
-                <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-bold">
+                <div className="border-t border-gray-200 pt-3 flex justify-between text-base sm:text-lg font-bold">
                   <span className="text-gray-700">Total</span>
-                  <span className="text-blue-600">${totals.total.toLocaleString("es-CL")}</span>
+                  <span className="text-blue-600">
+                    ${totals.total.toLocaleString("es-CL")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -406,13 +627,14 @@ export default function QuoteForm({ clients, services, initialData = {}, onSubmi
         )}
 
         {/* Botones de acción */}
-        <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
-          <Button type="button" variant="ghost" onClick={onCancel}>
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 sm:pt-6 border-t border-gray-100">
+          <Button type="button" variant="ghost" onClick={onCancel} className="w-full sm:w-auto">
             Cancelar
           </Button>
           <Button
             type="submit"
             disabled={formData.items.length === 0 || !formData.clientId}
+            className="w-full sm:w-auto"
           >
             Guardar Cotización
           </Button>

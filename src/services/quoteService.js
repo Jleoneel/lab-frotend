@@ -1,4 +1,3 @@
-// services/quoteService.js - VERSIÓN CORREGIDA
 import api from '../lib/axios';
 
 // Adaptador para las respuestas del backend
@@ -85,5 +84,7 @@ convert: async (id, samplesData) => {
       console.error('Error en quoteService.updateStatus:', error);
       throw error;
     }
-  }
+  },
+
+  update: (id, data) => api.put(`/quotes/${id}`, data),
 };

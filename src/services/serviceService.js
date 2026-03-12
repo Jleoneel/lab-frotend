@@ -12,7 +12,8 @@ const adaptServiceFromBackend = (backendService) => {
     description: backendService.description || '',
     isActive: backendService.isActive ?? true,
     createdAt: backendService.createdAt,
-    updatedAt: backendService.updatedAt
+    updatedAt: backendService.updatedAt,
+    _count: backendService._count || { quoteItems: 0, sampleLinks: 0 } // 👈
   };
 };
 
@@ -23,9 +24,7 @@ export const serviceService = {
       // Tu backend usa ?q= para búsqueda
       const url = searchTerm ? `/services?q=${encodeURIComponent(searchTerm)}` : '/services';
       const response = await api.get(url);
-      
-      console.log('Servicios raw:', response); // Debug
-      
+          
       // La respuesta puede ser response.data o response directamente
       const data = response.data || response;
       const services = Array.isArray(data) ? data : [];
@@ -43,9 +42,7 @@ export const serviceService = {
       // Usamos getAll y filtramos isActive
       const response = await serviceService.getAll();
       const activeServices = response.data.filter(service => service.isActive === true);
-      
-      console.log('Servicios activos (filtrados):', activeServices);
-      
+            
       return { data: activeServices };
     } catch (error) {
       console.error('Error en serviceService.getActive:', error);
@@ -78,9 +75,7 @@ export const serviceService = {
         description: data.description || undefined,
         isActive: data.isActive ?? true
       };
-      
-      console.log('Creando servicio:', cleanData); // Debug
-      
+            
       const response = await api.post('/services', cleanData);
       return response;
     } catch (error) {
@@ -101,9 +96,7 @@ export const serviceService = {
       if (cleanData.priceStudent != null) {
         cleanData.priceStudent = cleanData.priceStudent.toString();
       }
-      
-      console.log('Actualizando servicio:', { id, ...cleanData }); // Debug
-      
+          
       const response = await api.put(`/services/${id}`, cleanData);
       return response;
     } catch (error) {

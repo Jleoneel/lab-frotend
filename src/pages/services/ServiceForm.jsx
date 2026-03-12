@@ -1,7 +1,19 @@
 // pages/services/ServiceForm.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Save, 
+  Code, 
+  FileText, 
+  DollarSign, 
+  Users, 
+  Tag,
+  AlertCircle,
+  CheckCircle,
+  Sparkles,
+  Info
+} from 'lucide-react';
 import { serviceService } from '../../services/serviceService';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -22,6 +34,7 @@ export default function ServiceForm() {
   
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -30,12 +43,15 @@ export default function ServiceForm() {
   }, [id]);
 
   const loadService = async () => {
+    setLoading(true);
     try {
       const response = await serviceService.getById(id);
       setFormData(response.data);
     } catch (error) {
       console.error('Error cargando servicio:', error);
       navigate('/services');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,11 +81,11 @@ export default function ServiceForm() {
       newErrors.name = 'El nombre es obligatorio';
     }
     
-    if (!formData.priceExternal || formData.priceExternal <= 0) {
+    if (!formData.priceExternal || parseFloat(formData.priceExternal) <= 0) {
       newErrors.priceExternal = 'El precio externo debe ser mayor a 0';
     }
     
-    if (!formData.priceStudent || formData.priceStudent <= 0) {
+    if (!formData.priceStudent || parseFloat(formData.priceStudent) <= 0) {
       newErrors.priceStudent = 'El precio estudiante debe ser mayor a 0';
     }
     
@@ -88,7 +104,6 @@ export default function ServiceForm() {
     setLoading(true);
     
     try {
-      // Convertir precios a números
       const dataToSend = {
         ...formData,
         priceExternal: parseFloat(formData.priceExternal),
@@ -100,7 +115,11 @@ export default function ServiceForm() {
       } else {
         await serviceService.create(dataToSend);
       }
-      navigate('/services');
+      
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate('/services');
+      }, 1500);
     } catch (error) {
       console.error('Error guardando servicio:', error);
       setErrors({
@@ -112,7 +131,6 @@ export default function ServiceForm() {
   };
 
   const generateCode = () => {
-    // Generar código automático basado en el nombre
     if (formData.name) {
       const words = formData.name.split(' ');
       let code = '';
@@ -123,127 +141,211 @@ export default function ServiceForm() {
         code = words.map(word => word[0]).join('').toUpperCase();
       }
       
-      // Agregar número aleatorio
       code += Math.floor(Math.random() * 1000);
-      
       setFormData(prev => ({ ...prev, code }));
     }
   };
 
+  if (loading && isEditing) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500">Cargando servicio...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Notificación de éxito */}
+      {showSuccess && (
+        <div className="fixed top-4 right-4 z-50 bg-white border border-green-200 text-green-800 px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300">
+          <div className="bg-green-100 rounded-full p-1">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold">¡Servicio guardado!</p>
+            <p className="text-sm text-green-600">Redirigiendo a la lista...</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
-      <div className="mb-6">
+      <div>
         <button
           onClick={() => navigate('/services')}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors group"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
+          <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a servicios
         </button>
 
-        <h1 className="text-2xl font-bold text-gray-800">
-          {isEditing ? 'Editar Servicio' : 'Nuevo Servicio'}
-        </h1>
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center">
+            <Tag className="w-7 h-7 text-purple-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">
+              {isEditing ? 'Editar Servicio' : 'Nuevo Servicio'}
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {isEditing 
+                ? 'Modifica los datos del servicio de análisis' 
+                : 'Registra un nuevo servicio de análisis en el catálogo'}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 max-w-2xl">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8 space-y-8">
+        {/* Mensaje de error general */}
         {errors.submit && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
-            {errors.submit}
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-red-800">
+              <p className="font-medium">Error al guardar</p>
+              <p className="text-red-600">{errors.submit}</p>
+            </div>
           </div>
         )}
 
-        <div className="space-y-4">
-          {/* Código y nombre */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Input
-                label="Código *"
-                name="code"
-                value={formData.code}
-                onChange={handleChange}
-                error={errors.code}
-                required
-              />
-              {!isEditing && (
-                <button
-                  type="button"
-                  onClick={generateCode}
-                  className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+        {/* Código y Nombre */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Input
+              label="Código *"
+              name="code"
+              value={formData.code}
+              onChange={handleChange}
+              error={errors.code}
+              required
+              icon={Code}
+              placeholder="Ej: BIO001"
+            />
+            {!isEditing && (
+              <button
+                type="button"
+                onClick={generateCode}
+                className="inline-flex items-center gap-1 text-xs text-purple-600 hover:text-purple-800 bg-purple-50 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Sparkles className="w-3 h-3" />
+                Generar código automático
+              </button>
+            )}
+          </div>
+          
+          <Input
+            label="Nombre *"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            error={errors.name}
+            required
+            icon={FileText}
+            placeholder="Ej: Análisis de pH"
+          />
+        </div>
+
+        {/* Precios */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Input
+            label="Precio Externo *"
+            type="number"
+            name="priceExternal"
+            value={formData.priceExternal}
+            onChange={handleChange}
+            error={errors.priceExternal}
+            required
+            icon={DollarSign}
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+          
+          <Input
+            label="Precio Estudiante *"
+            type="number"
+            name="priceStudent"
+            value={formData.priceStudent}
+            onChange={handleChange}
+            error={errors.priceStudent}
+            required
+            icon={Users}
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        {/* Estado activo (solo en edición) */}
+        {isEditing && (
+          <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  name="isActive"
+                  id="isActive"
+                  checked={formData.isActive}
+                  onChange={handleChange}
+                  className="sr-only"
+                />
+                <div
+                  onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
+                  className={`
+                    w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200
+                    ${formData.isActive ? 'bg-green-500' : 'bg-gray-300'}
+                  `}
                 >
-                  Generar código automático
-                </button>
-              )}
+                  <div className={`
+                    w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200
+                    ${formData.isActive ? 'translate-x-4' : 'translate-x-0'}
+                  `} />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="isActive" className="font-medium text-gray-700 cursor-pointer">
+                  Servicio activo
+                </label>
+                <p className="text-xs text-gray-500">
+                  {formData.isActive 
+                    ? 'El servicio está disponible para nuevas cotizaciones' 
+                    : 'El servicio no aparecerá en el catálogo activo'}
+                </p>
+              </div>
             </div>
-            
-            <Input
-              label="Nombre *"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              error={errors.name}
-              required
-            />
           </div>
-
-          {/* Precios */}
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Precio Externo *"
-              type="number"
-              name="priceExternal"
-              value={formData.priceExternal}
-              onChange={handleChange}
-              error={errors.priceExternal}
-              required
-            />
-            
-            <Input
-              label="Precio Estudiante *"
-              type="number"
-              name="priceStudent"
-              value={formData.priceStudent}
-              onChange={handleChange}
-              error={errors.priceStudent}
-              required
-            />
-          </div>
-          {/* Estado activo */}
-          {isEditing && (
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="isActive"
-                id="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
-                Servicio activo
-              </label>
-            </div>
-          )}
-
-          {/* Botones */}
-          <div className="pt-4 flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => navigate('/services')}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {loading ? 'Guardando...' : 'Guardar Servicio'}
-            </Button>
-          </div>
+        )}
+        {/* Botones de acción */}
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => navigate('/services')}
+            className="order-2 sm:order-1"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="order-1 sm:order-2"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Guardando...
+              </span>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                {isEditing ? 'Actualizar Servicio' : 'Guardar Servicio'}
+              </>
+            )}
+          </Button>
         </div>
       </form>
     </div>

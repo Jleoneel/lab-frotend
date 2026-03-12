@@ -1,1 +1,9 @@
 @import 'tailwindcss';
+
+.react-datepicker {
+  @apply border border-gray-200 rounded-xl shadow-lg;
+}
+
+.react-datepicker__header {
+  @apply bg-gray-50 border-b border-gray-200;
+}   
