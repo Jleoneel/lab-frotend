@@ -60,7 +60,6 @@ export default function SampleAnalysesTable({
             <>
               <tr key={analysis.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {/* ✅ FIX: usar analysis.service.name en lugar de analysis.serviceName */}
                   <div className="text-sm font-medium text-gray-900">
                     {analysis.service?.name}
                   </div>

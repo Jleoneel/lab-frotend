@@ -15,8 +15,8 @@ const adaptSampleFromBackend = (backendSample) => {
       typeof backendSample.clientName === "string"
         ? backendSample.clientName
         : typeof backendSample.request?.client === "string"
-        ? backendSample.request.client
-        : backendSample.request?.client?.name || "N/A",
+          ? backendSample.request.client
+          : backendSample.request?.client?.name || "N/A",
 
     requestNumber:
       backendSample.requestNumber ||
@@ -34,40 +34,37 @@ const adaptSampleAnalysisFromBackend = (backendAnalysis) => {
   return {
     id: backendAnalysis.id,
     serviceId: backendAnalysis.serviceId,
-    serviceName:
-      backendAnalysis.serviceName ||
-      backendAnalysis.service?.name ||
-      "Servicio",
-    serviceCode:
-      backendAnalysis.serviceCode ||
-      backendAnalysis.service?.code ||
-      "N/A",
     status: backendAnalysis.status,
+    assignedTo: backendAnalysis.assignedTo || null,
     result: backendAnalysis.result || null,
     startedAt: backendAnalysis.startedAt || null,
     completedAt: backendAnalysis.completedAt || null,
+    service: backendAnalysis.service || {
+      name: backendAnalysis.serviceName || "Servicio",
+      code: backendAnalysis.serviceCode || "N/A",
+    },
   };
 };
 
 export const sampleService = {
   getKanban: async () => {
-  try {
-    const response = await api.get("/samples/kanban");
-    const data = response.data || response;
+    try {
+      const response = await api.get("/samples/kanban");
+      const data = response.data || response;
 
-    const adapted = Object.fromEntries(
-      Object.entries(data).map(([status, samples]) => [
-        status,
-        Array.isArray(samples) ? samples.map(adaptSampleFromBackend) : []
-      ])
-    );
+      const adapted = Object.fromEntries(
+        Object.entries(data).map(([status, samples]) => [
+          status,
+          Array.isArray(samples) ? samples.map(adaptSampleFromBackend) : [],
+        ]),
+      );
 
-    return { data: adapted };
-  } catch (error) {
-    console.error("Error en sampleService.getKanban:", error);
-    throw error;
-  }
-},
+      return { data: adapted };
+    } catch (error) {
+      console.error("Error en sampleService.getKanban:", error);
+      throw error;
+    }
+  },
   getById: async (id) => {
     try {
       const response = await api.get(`/samples/${id}`);
@@ -95,7 +92,7 @@ export const sampleService = {
     try {
       return await api.patch(
         `/samples/sample-services/${sampleServiceId}/status`,
-        { status }
+        { status },
       );
     } catch (error) {
       console.error("Error en sampleService.updateAnalysisStatus:", error);
@@ -107,7 +104,7 @@ export const sampleService = {
     try {
       return await api.post(
         `/samples/sample-services/${sampleServiceId}/result`,
-        resultData
+        resultData,
       );
     } catch (error) {
       console.error("Error en sampleService.registerResult:", error);

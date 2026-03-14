@@ -25,6 +25,7 @@
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.13.1",
     "react-select": "^5.10.2",
+    "sweetalert2": "^11.26.22",
     "tailwindcss": "^4.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.11"
