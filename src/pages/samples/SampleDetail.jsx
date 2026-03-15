@@ -23,6 +23,10 @@ import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
 import { formatDate } from "../../lib/utils";
 import { QRCodeSVG } from "qrcode.react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { settingsService } from "../../services/settingsService";
+import SampleReportPDF from "../../components/samples/SampleReportPDF";
+import QRCode from "qrcode";
 
 const statusColors = {
   EN_COLA: "bg-gray-100 text-gray-800 border-gray-200",
@@ -55,6 +59,8 @@ export default function SampleDetail() {
   const [selectedAnalysis, setSelectedAnalysis] = useState(null);
   const [showResultModal, setShowResultModal] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [labInfo, setLabInfo] = useState(null);
+  const [qrDataUrl, setQrDataUrl] = useState(null);
 
   useEffect(() => {
     loadSampleData();
@@ -62,12 +68,19 @@ export default function SampleDetail() {
 
   const loadSampleData = async () => {
     try {
-      const [sampleRes, analysesRes] = await Promise.all([
+      const [sampleRes, analysesRes, labInfoRes] = await Promise.all([
         sampleService.getById(id),
         sampleService.getAnalyses(id),
+        settingsService.getLabInfo(),
       ]);
       setSample(sampleRes.data);
       setAnalyses(analysesRes.data);
+      setLabInfo(labInfoRes);
+
+      // Generar QR como imagen base64
+      const url = `${window.location.origin}/samples/${id}`;
+      const dataUrl = await QRCode.toDataURL(url, { width: 150, margin: 1 });
+      setQrDataUrl(dataUrl);
     } catch (error) {
       console.error("Error cargando muestra:", error);
     } finally {
@@ -234,6 +247,30 @@ export default function SampleDetail() {
                 <FileText className="w-4 h-4 mr-2" />
                 Emitir Informe
               </Button>
+            )}
+            {sample.status === "TERMINADO" && labInfo && qrDataUrl && (
+              <PDFDownloadLink
+                document={
+                  <SampleReportPDF
+                    sample={sample}
+                    analyses={analyses}
+                    labInfo={labInfo}
+                    qrDataUrl={qrDataUrl}
+                  />
+                }
+                fileName={`informe-${sample.sampleCode}.pdf`}
+              >
+                {({ loading: pdfLoading }) => (
+                  <Button
+                    variant="secondary"
+                    disabled={pdfLoading}
+                    className="shadow-sm"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    {pdfLoading ? "Generando..." : "Descargar PDF"}
+                  </Button>
+                )}
+              </PDFDownloadLink>
             )}
           </div>
         </div>

@@ -121,7 +121,7 @@ export default function Sidebar() {
           ${mobileSidebarClass}
         `}>
           <div className="p-5 border-b border-gray-800">
-            <h1 className="text-xl font-bold text-white">LAB UTM</h1>
+            <h1 className="text-xl font-bold text-white">CABA UTM</h1>
             <p className="text-xs text-gray-400 mt-1">Sistema de Trazabilidad</p>
           </div>
           
@@ -174,7 +174,7 @@ export default function Sidebar() {
         `}>
           {!isCollapsed ? (
             <div>
-              <h1 className="text-xl font-bold text-white">LAB UTM</h1>
+              <h1 className="text-xl font-bold text-white">CABA UTM</h1>
               <p className="text-xs text-gray-400 mt-1">Sistema de Trazabilidad</p>
             </div>
           ) : (

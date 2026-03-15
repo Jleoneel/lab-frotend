@@ -8,15 +8,20 @@ const adaptSampleFromBackend = (backendSample) => {
     sampleName: backendSample.sampleName,
     objetivoAnalisis: backendSample.objetivoAnalisis,
     cantidadRecibida: backendSample.cantidadRecibida,
+    status: backendSample.status,
     receivedAt: backendSample.receivedAt,
     requestId: backendSample.requestId,
 
     clientName:
       typeof backendSample.clientName === "string"
         ? backendSample.clientName
-        : typeof backendSample.request?.client === "string"
-          ? backendSample.request.client
-          : backendSample.request?.client?.name || "N/A",
+        : backendSample.request?.client?.name || "N/A",
+
+    clientAddress:
+      backendSample.request?.client?.address ||
+      backendSample.request?.client?.city ||
+      "N/A",
+    clientPhone: backendSample.request?.client?.phone || "N/A",
 
     requestNumber:
       backendSample.requestNumber ||
