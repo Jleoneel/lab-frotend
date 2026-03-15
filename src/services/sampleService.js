@@ -6,8 +6,8 @@ const adaptSampleFromBackend = (backendSample) => {
     id: backendSample.id,
     sampleCode: backendSample.sampleCode,
     sampleName: backendSample.sampleName,
-    description: backendSample.description,
-    status: backendSample.status,
+    objetivoAnalisis: backendSample.objetivoAnalisis,
+    cantidadRecibida: backendSample.cantidadRecibida,
     receivedAt: backendSample.receivedAt,
     requestId: backendSample.requestId,
 

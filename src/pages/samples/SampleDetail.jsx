@@ -215,7 +215,9 @@ export default function SampleDetail() {
               className={`${statusColors[sample.status]} px-4 py-2 text-sm`}
             >
               <StatusIcon className="w-4 h-4 mr-2 inline" />
-              {statusLabels[sample.status] || sample.status.replace("_", " ")}
+              {statusLabels[sample.status] ||
+                sample.status?.replace(/_/g, " ") ||
+                "Sin estado"}{" "}
             </Badge>
 
             <Button
@@ -251,11 +253,22 @@ export default function SampleDetail() {
           <div className="space-y-4">
             <div>
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">
-                Descripción
+                Objetivo del Análisis
               </p>
               <p className="text-gray-800">
-                {sample.description || (
-                  <span className="text-gray-400 italic">Sin descripción</span>
+                {sample.objetivoAnalisis || (
+                  <span className="text-gray-400 italic">Sin objetivo</span>
+                )}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">
+                Cantidad Recibida
+              </p>
+              <p className="text-gray-800">
+                {sample.cantidadRecibida || (
+                  <span className="text-gray-400 italic">No especificada</span>
                 )}
               </p>
             </div>
