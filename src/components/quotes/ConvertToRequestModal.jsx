@@ -26,7 +26,7 @@ export default function ConvertToRequestModal({
       sampleName: "",
       objetivoAnalisis: "",
       cantidadRecibida: "",
-      serviceIds: quoteItems.map((i) => i.serviceId),
+      serviceIds: [],
     },
   ]);
 
@@ -66,17 +66,24 @@ export default function ConvertToRequestModal({
     setSamples(newSamples);
   };
 
-  const toggleService = (sampleIndex, serviceId, agotado) => {
+  const addService = (sampleIndex, serviceId, agotado) => {
     if (agotado) return;
     const newSamples = [...samples];
-    const current = newSamples[sampleIndex].serviceIds;
-    if (current.includes(serviceId)) {
-      if (current.length === 1) return; // mínimo 1
-      newSamples[sampleIndex].serviceIds = current.filter(
-        (id) => id !== serviceId,
+    newSamples[sampleIndex].serviceIds = [
+      ...newSamples[sampleIndex].serviceIds,
+      serviceId,
+    ];
+    setSamples(newSamples);
+  };
+
+  const removeService = (sampleIndex, serviceId) => {
+    const newSamples = [...samples];
+    const ids = newSamples[sampleIndex].serviceIds;
+    const lastIndex = ids.lastIndexOf(serviceId);
+    if (lastIndex >= 0) {
+      newSamples[sampleIndex].serviceIds = ids.filter(
+        (_, i) => i !== lastIndex,
       );
-    } else {
-      newSamples[sampleIndex].serviceIds = [...current, serviceId];
     }
     setSamples(newSamples);
   };
@@ -279,69 +286,75 @@ export default function ConvertToRequestModal({
 
                       <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
                         {quoteItems.map((item) => {
-                          const isSelected = sample.serviceIds.includes(
-                            item.serviceId,
-                          );
-                          const usado = serviceUsage[item.serviceId] || 0;
-                          const disponible = item.quantity - usado;
-                          const agotado = !isSelected && disponible <= 0;
+                          const usadoEnEstaMuestra = sample.serviceIds.filter(
+                            (id) => id === item.serviceId,
+                          ).length;
+                          const usadoEnTotal =
+                            serviceUsage[item.serviceId] || 0;
+                          const disponible = item.quantity - usadoEnTotal;
+                          const agotado = disponible <= 0;
 
                           return (
-                            <button
+                            <div
                               key={item.serviceId}
-                              type="button"
-                              onClick={() =>
-                                toggleService(
-                                  sampleIndex,
-                                  item.serviceId,
-                                  agotado,
-                                )
-                              }
-                              disabled={agotado}
                               className={`
-                                w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm transition-all
-                                ${
-                                  isSelected
-                                    ? "bg-purple-50 text-purple-700 border border-purple-200 shadow-sm"
-                                    : agotado
-                                      ? "bg-gray-50 text-gray-300 border border-gray-100 cursor-not-allowed"
-                                      : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                                }
-                              `}
+        w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm border
+        ${
+          agotado && usadoEnEstaMuestra === 0
+            ? "bg-gray-50 text-gray-300 border-gray-100"
+            : "bg-white text-gray-600 border-gray-200"
+        }
+      `}
                             >
-                              <span className="flex items-center gap-2 min-w-0">
-                                {isSelected ? (
-                                  <CheckSquare className="w-4 h-4 flex-shrink-0 text-purple-600" />
-                                ) : (
-                                  <Square
-                                    className={`w-4 h-4 flex-shrink-0 ${agotado ? "text-gray-300" : "text-gray-400"}`}
-                                  />
-                                )}
-                                <span className="truncate text-left">
-                                  {item.serviceName}
-                                  <span className="text-xs ml-1 opacity-60 font-mono">
-                                    {item.serviceCode}
-                                  </span>
+                              <span className="truncate text-left flex-1">
+                                {item.serviceName}
+                                <span className="text-xs ml-1 opacity-60 font-mono">
+                                  {item.serviceCode}
                                 </span>
                               </span>
 
-                              <span
-                                className={`
-                                text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0
-                                ${
-                                  isSelected
-                                    ? "bg-purple-100 text-purple-700"
-                                    : agotado
-                                      ? "bg-red-100 text-red-600"
-                                      : "bg-gray-100 text-gray-600"
-                                }
-                              `}
-                              >
-                                {isSelected
-                                  ? `${item.quantity - (usado - 1)}/${item.quantity}`
-                                  : `${disponible}/${item.quantity}`}
-                              </span>
-                            </button>
+                              {/* Contador +/- */}
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    removeService(sampleIndex, item.serviceId)
+                                  }
+                                  disabled={usadoEnEstaMuestra === 0}
+                                  className="w-6 h-6 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold"
+                                >
+                                  −
+                                </button>
+
+                                <span className="w-6 text-center font-semibold text-gray-800">
+                                  {usadoEnEstaMuestra}
+                                </span>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    addService(
+                                      sampleIndex,
+                                      item.serviceId,
+                                      agotado,
+                                    )
+                                  }
+                                  disabled={agotado}
+                                  className="w-6 h-6 rounded-full bg-gray-100 hover:bg-green-100 text-gray-600 hover:text-green-600 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold"
+                                >
+                                  +
+                                </button>
+
+                                <span
+                                  className={`
+          text-xs px-2 py-0.5 rounded-full font-medium
+          ${agotado ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"}
+        `}
+                                >
+                                  {disponible}/{item.quantity}
+                                </span>
+                              </div>
+                            </div>
                           );
                         })}
                       </div>
