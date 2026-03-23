@@ -119,8 +119,8 @@ export default function ClientForm() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500">Cargando cliente...</p>
+          <div className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#009933', borderTopColor: '#FFCC33' }}></div>
+          <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>Cargando cliente...</p>
         </div>
       </div>
     );
@@ -130,13 +130,13 @@ export default function ClientForm() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Notificación de éxito */}
       {showSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-white border border-green-200 text-green-800 px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300">
-          <div className="bg-green-100 rounded-full p-1">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+        <div className="fixed top-4 right-4 z-50 bg-white border px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300" style={{ borderColor: '#009933' }}>
+          <div className="rounded-full p-1" style={{ backgroundColor: '#E8F5E9' }}>
+            <CheckCircle className="w-5 h-5" style={{ color: '#009933' }} />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">¡Cliente guardado!</p>
-            <p className="text-sm text-green-600">Redirigiendo a la lista...</p>
+            <p className="font-semibold" style={{ color: '#009933' }}>¡Cliente guardado!</p>
+            <p className="text-sm" style={{ color: '#666666' }}>Redirigiendo a la lista...</p>
           </div>
         </div>
       )}
@@ -145,21 +145,24 @@ export default function ClientForm() {
       <div>
         <button
           onClick={() => navigate('/clients')}
-          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors group"
+          className="flex items-center mb-4 transition-colors group"
+          style={{ color: '#666666' }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#009933'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
         >
           <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a clientes
         </button>
 
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center">
-            <User className="w-7 h-7 text-blue-600" />
+          <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+            <User className="w-7 h-7" style={{ color: '#009933' }} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold" style={{ color: '#009933', fontFamily: "'Trajan Pro Bold', serif" }}>
               {isEditing ? 'Editar Cliente' : 'Nuevo Cliente'}
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm mt-1" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
               {isEditing 
                 ? 'Modifica los datos del cliente' 
                 : 'Registra un nuevo cliente en el sistema'}
@@ -169,7 +172,7 @@ export default function ClientForm() {
       </div>
 
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8 space-y-8">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border shadow-xl p-8 space-y-8" style={{ borderColor: '#E5E5E5' }}>
         {/* Mensaje de error general */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
@@ -183,7 +186,7 @@ export default function ClientForm() {
 
         {/* Grid de campos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Nombre (ocupa toda la fila en móvil, pero en desktop es el primer campo) */}
+          {/* Nombre */}
           <div className="md:col-span-2">
             <Input
               label="Nombre *"
@@ -216,7 +219,7 @@ export default function ClientForm() {
             onChange={handleChange}
             error={errors.city}
             icon={Building2}
-            placeholder="Ej: Quito"
+            placeholder="Ej: Portoviejo"
           />
 
           {/* Teléfono */}
@@ -244,11 +247,11 @@ export default function ClientForm() {
         </div>
 
         {/* Información adicional */}
-        <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100 flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-800">
-            <p className="font-medium">Completa los datos del cliente</p>
-            <p className="text-blue-600 text-xs mt-1">
+        <div className="rounded-xl p-4 flex items-start gap-3" style={{ backgroundColor: '#E8F5E9', border: '1px solid #00993320' }}>
+          <Info className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#009933' }} />
+          <div className="text-sm">
+            <p className="font-medium" style={{ color: '#009933' }}>Completa los datos del cliente</p>
+            <p className="text-xs mt-1" style={{ color: '#666666' }}>
               {isEditing 
                 ? 'Los campos marcados con * son obligatorios. Puedes modificar cualquier información.'
                 : 'Todos los campos marcados con * son obligatorios. El email debe ser válido.'}
@@ -256,23 +259,23 @@ export default function ClientForm() {
           </div>
         </div>
 
-        {/* Vista previa (solo si hay datos) */}
+        {/* Vista previa */}
         {(formData.name || formData.email || formData.phone) && (
-          <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-200">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+          <div className="rounded-xl p-4 border" style={{ backgroundColor: '#F9F9F9', borderColor: '#E5E5E5' }}>
+            <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: '#666666' }}>
               Vista previa
             </p>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 font-semibold">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+                <span className="font-semibold" style={{ color: '#009933' }}>
                   {formData.name ? formData.name.charAt(0).toUpperCase() : '?'}
                 </span>
               </div>
               <div>
-                <p className="font-medium text-gray-800">
+                <p className="font-medium" style={{ color: '#333333' }}>
                   {formData.name || 'Nombre no especificado'}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs" style={{ color: '#666666' }}>
                   {formData.email || formData.phone || 'Sin contacto'}
                 </p>
               </div>
@@ -281,7 +284,7 @@ export default function ClientForm() {
         )}
 
         {/* Botones de acción */}
-        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t" style={{ borderColor: '#E5E5E5' }}>
           <Button
             type="button"
             variant="ghost"

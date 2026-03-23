@@ -5,9 +5,9 @@ import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 
 const statusColors = {
-  PENDING: 'bg-yellow-100 text-yellow-800',
-  RUNNING: 'bg-blue-100 text-blue-800',
-  DONE: 'bg-green-100 text-green-800'
+  PENDING: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  RUNNING: 'bg-blue-100 text-blue-700 border-blue-200',
+  DONE: 'bg-green-100 text-green-700 border-green-200'
 };
 
 const statusLabels = {
@@ -26,45 +26,49 @@ export default function SampleAnalysesTable({
 
   if (!analyses || analyses.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <AlertCircle className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-        <p>No hay análisis asignados a esta muestra</p>
+      <div className="text-center py-12">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#F9F9F9' }}>
+          <AlertCircle className="w-8 h-8" style={{ color: '#CCCCCC' }} />
+        </div>
+        <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
+          No hay análisis asignados a esta muestra
+        </p>
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <table className="min-w-full">
+        <thead>
+          <tr className="border-b" style={{ borderColor: '#E5E5E5' }}>
+            <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>
               Análisis
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>
               Estado
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>
               Asignado a
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>
               Resultado
             </th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>
               Acciones
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="divide-y" style={{ borderColor: '#E5E5E5' }}>
           {analyses.map((analysis) => (
             <>
-              <tr key={analysis.id} className="hover:bg-gray-50">
+              <tr key={analysis.id} className="hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-medium" style={{ color: '#009933' }}>
                     {analysis.service?.name}
                   </div>
                   {analysis.service?.code && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs" style={{ color: '#666666' }}>
                       {analysis.service?.code}
                     </div>
                   )}
@@ -76,7 +80,7 @@ export default function SampleAnalysesTable({
                   </Badge>
                 </td>
                 
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm" style={{ color: '#666666' }}>
                   {analysis.assignedTo || 'No asignado'}
                 </td>
                 
@@ -84,58 +88,71 @@ export default function SampleAnalysesTable({
                   {analysis.result ? (
                     <button
                       onClick={() => setExpandedRow(expandedRow === analysis.id ? null : analysis.id)}
-                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                      className="text-sm flex items-center gap-1 transition-colors"
+                      style={{ color: '#009933' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#00802b'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#009933'}
                     >
-                      <FileText className="w-4 h-4 mr-1" />
+                      <FileText className="w-4 h-4" />
                       Ver resultado
                     </button>
                   ) : (
-                    <span className="text-sm text-gray-400">Sin resultado</span>
+                    <span className="text-sm" style={{ color: '#999999' }}>Sin resultado</span>
                   )}
                 </td>
                 
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-right">
                   {!readOnly && (
                     <div className="flex justify-end gap-2">
                       {analysis.status === 'PENDING' && (
-                        <Button
-                          size="sm"
+                        <button
                           onClick={() => onStatusChange(analysis.id, 'RUNNING')}
+                          className="p-2 rounded-lg transition-colors"
+                          style={{ color: '#666666' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
                           title="Iniciar análisis"
                         >
                           <Play className="w-4 h-4" />
-                        </Button>
+                        </button>
                       )}
                       
                       {analysis.status === 'RUNNING' && (
                         <>
-                          <Button
-                            size="sm"
-                            variant="secondary"
+                          <button
                             onClick={() => onStatusChange(analysis.id, 'PENDING')}
+                            className="p-2 rounded-lg transition-colors"
+                            style={{ color: '#666666' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FFF9E8'; e.currentTarget.style.color = '#FFCC33'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
                             title="Pausar"
                           >
                             <AlertCircle className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
+                          </button>
+                          <button
                             onClick={() => onRegisterResult(analysis)}
+                            className="p-2 rounded-lg transition-colors"
+                            style={{ color: '#666666' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
                             title="Registrar resultado"
                           >
                             <CheckCircle className="w-4 h-4" />
-                          </Button>
+                          </button>
                         </>
                       )}
                       
                       {analysis.status === 'DONE' && analysis.result && (
-                        <Button
-                          size="sm"
-                          variant="secondary"
+                        <button
                           onClick={() => setExpandedRow(expandedRow === analysis.id ? null : analysis.id)}
+                          className="p-2 rounded-lg transition-colors"
+                          style={{ color: '#666666' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#F5F5F5'; e.currentTarget.style.color = '#009933'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
                           title="Ver resultado"
                         >
                           <FileText className="w-4 h-4" />
-                        </Button>
+                        </button>
                       )}
                     </div>
                   )}
@@ -144,42 +161,47 @@ export default function SampleAnalysesTable({
               
               {/* Fila expandida para mostrar resultado */}
               {expandedRow === analysis.id && analysis.result && (
-                <tr className="bg-gray-50">
+                <tr className="hover:bg-gray-50/50">
                   <td colSpan="5" className="px-6 py-4">
-                    <div className="border-l-4 border-blue-500 pl-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">
-                        Resultado del análisis
-                      </h4>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="rounded-xl p-4" style={{ backgroundColor: '#F9F9F9', border: '1px solid #E5E5E5' }}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+                          <FileText className="w-3 h-3" style={{ color: '#009933' }} />
+                        </div>
+                        <h4 className="text-sm font-semibold" style={{ color: '#009933' }}>
+                          Resultado del análisis
+                        </h4>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                         {analysis.result.resultText && (
-                          <div>
-                            <p className="text-gray-500">Resultado:</p>
-                            <p className="font-medium">{analysis.result.resultText}</p>
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                            <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Resultado</p>
+                            <p className="font-medium" style={{ color: '#333333' }}>{analysis.result.resultText}</p>
                           </div>
                         )}
                         {analysis.result.resultNumber && (
-                          <div>
-                            <p className="text-gray-500">Valor:</p>
-                            <p className="font-medium">
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                            <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Valor</p>
+                            <p className="font-medium" style={{ color: '#009933' }}>
                               {analysis.result.resultNumber} {analysis.result.unit || ''}
                             </p>
                           </div>
                         )}
-                        <div>
-                          <p className="text-gray-500">Registrado por:</p>
-                          <p className="font-medium">{analysis.result.recordedBy}</p>
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                          <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Registrado por</p>
+                          <p className="font-medium" style={{ color: '#333333' }}>{analysis.result.recordedBy}</p>
                         </div>
-                        <div>
-                          <p className="text-gray-500">Fecha:</p>
-                          <p className="font-medium">
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                          <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Fecha</p>
+                          <p className="font-medium" style={{ color: '#333333' }}>
                             {new Date(analysis.result.recordedAt).toLocaleString()}
                           </p>
                         </div>
                       </div>
                       {analysis.result.isFinal && (
-                        <Badge className="bg-green-100 text-green-800 mt-2">
-                          Resultado Final
-                        </Badge>
+                        <div className="mt-3 flex justify-end">
+                          <Badge variant="utm_green">Resultado Final</Badge>
+                        </div>
                       )}
                     </div>
                   </td>

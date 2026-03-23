@@ -88,7 +88,6 @@ export default function ConvertToRequestModal({
     setSamples(newSamples);
   };
 
-  // Cuántas veces está usado cada servicio en TODAS las muestras
   const serviceUsage = {};
   samples.forEach((sample) => {
     sample.serviceIds.forEach((id) => {
@@ -106,7 +105,6 @@ export default function ConvertToRequestModal({
     samples.some((s) => s.sampleName.trim() !== "") &&
     samples.every((s) => s.serviceIds.length > 0);
 
-  // Estadísticas para el resumen
   const totalMuestrasValidas = samples.filter((s) =>
     s.sampleName.trim(),
   ).length;
@@ -124,29 +122,28 @@ export default function ConvertToRequestModal({
     >
       <div className="space-y-5">
         {/* Header con estadísticas rápidas */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
+        <div className="rounded-xl p-4 border" style={{ backgroundColor: '#E8F5E9', borderColor: '#00993330' }}>
           <div className="flex items-start gap-3">
-            <div className="bg-white p-2 rounded-lg shadow-sm">
-              <Package className="w-5 h-5 text-blue-600" />
+            <div className="bg-white p-2 rounded-lg shadow-sm" style={{ border: '1px solid #E5E5E5' }}>
+              <Package className="w-5 h-5" style={{ color: '#009933' }} />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium text-gray-800">
+              <h3 className="font-medium" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
                 Registro de Muestras
               </h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Asigna los análisis disponibles a cada muestra. Cada análisis
-                tiene una cantidad limitada según la cotización.
+              <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                Asigna los análisis disponibles a cada muestra. Cada análisis tiene una cantidad limitada según la cotización.
               </p>
               <div className="flex flex-wrap gap-3 mt-3">
-                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm">
-                  <span className="text-gray-500">Muestras:</span>
-                  <span className="ml-2 font-semibold text-blue-600">
+                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border" style={{ borderColor: '#E5E5E5' }}>
+                  <span style={{ color: '#666666' }}>Muestras:</span>
+                  <span className="ml-2 font-semibold" style={{ color: '#009933' }}>
                     {totalMuestrasValidas}
                   </span>
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm">
-                  <span className="text-gray-500">Análisis asignados:</span>
-                  <span className="ml-2 font-semibold text-purple-600">
+                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border" style={{ borderColor: '#E5E5E5' }}>
+                  <span style={{ color: '#666666' }}>Análisis asignados:</span>
+                  <span className="ml-2 font-semibold" style={{ color: '#FFCC33' }}>
                     {totalAnalisisAsignados}
                   </span>
                 </div>
@@ -168,58 +165,52 @@ export default function ConvertToRequestModal({
                 key={sampleIndex}
                 className={`
                   border rounded-xl transition-all duration-200
-                  ${
-                    isComplete
-                      ? "border-green-200 bg-green-50/30"
-                      : "border-gray-200 bg-white hover:border-gray-300"
-                  }
                   ${isExpanded ? "shadow-md" : "shadow-sm"}
                 `}
+                style={{
+                  borderColor: isComplete ? '#00993330' : '#E5E5E5',
+                  backgroundColor: isComplete ? '#E8F5E9' : '#FFFFFF'
+                }}
               >
-                {/* Header de la muestra (siempre visible) */}
+                {/* Header de la muestra */}
                 <div
                   onClick={() => toggleSampleExpand(sampleIndex)}
                   className="flex items-center justify-between p-4 cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div
-                      className={`
-                      w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
-                      ${
-                        isComplete
-                          ? "bg-green-100 text-green-600"
-                          : hasName
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-gray-100 text-gray-400"
-                      }
-                    `}
+                      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{
+                        backgroundColor: isComplete ? '#E8F5E9' : (hasName ? '#E8F5E9' : '#F5F5F5'),
+                        color: isComplete ? '#009933' : (hasName ? '#009933' : '#999999')
+                      }}
                     >
                       <Package className="w-4 h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-800">
+                        <span className="font-medium" style={{ color: '#333333' }}>
                           Muestra #{sampleIndex + 1}
                         </span>
                         {isComplete && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                          <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8F5E9', color: '#009933' }}>
                             Completa
                           </span>
                         )}
                       </div>
                       {sample.sampleName ? (
-                        <p className="text-sm text-gray-600 truncate">
+                        <p className="text-sm truncate" style={{ color: '#666666' }}>
                           {sample.sampleName}
                         </p>
                       ) : (
-                        <p className="text-sm text-gray-400 italic">
+                        <p className="text-sm italic" style={{ color: '#999999' }}>
                           Sin nombre
                         </p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border">
+                    <span className="text-xs px-2 py-1 rounded-full border" style={{ color: '#666666', backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
                       {sample.serviceIds.length}/{quoteItems.length} análisis
                     </span>
                     {samples.length > 1 && (
@@ -228,22 +219,25 @@ export default function ConvertToRequestModal({
                           e.stopPropagation();
                           removeSample(sampleIndex);
                         }}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-1.5 rounded-lg transition-colors"
+                        style={{ color: '#666666' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF2F2'; e.currentTarget.style.color = '#DC2626'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
                       >
                         <X className="w-4 h-4" />
                       </button>
                     )}
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5 text-gray-400" />
+                      <ChevronUp className="w-5 h-5" style={{ color: '#666666' }} />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                      <ChevronDown className="w-5 h-5" style={{ color: '#666666' }} />
                     )}
                   </div>
                 </div>
 
                 {/* Contenido expandible */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-2 border-t border-gray-100 space-y-4">
+                  <div className="px-4 pb-4 pt-2 border-t space-y-4" style={{ borderColor: '#E5E5E5' }}>
                     <Input
                       placeholder="Nombre de la muestra *"
                       value={sample.sampleName}
@@ -276,7 +270,7 @@ export default function ConvertToRequestModal({
                     />
 
                     <div>
-                      <p className="text-xs font-medium text-gray-500 mb-2 flex items-center gap-1">
+                      <p className="text-xs font-medium mb-2 flex items-center gap-1" style={{ color: '#666666' }}>
                         <span>Selecciona los análisis a realizar</span>
                         <span className="text-gray-400">·</span>
                         <span className="text-gray-400">
@@ -297,14 +291,12 @@ export default function ConvertToRequestModal({
                           return (
                             <div
                               key={item.serviceId}
-                              className={`
-        w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm border
-        ${
-          agotado && usadoEnEstaMuestra === 0
-            ? "bg-gray-50 text-gray-300 border-gray-100"
-            : "bg-white text-gray-600 border-gray-200"
-        }
-      `}
+                              className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm border"
+                              style={{
+                                backgroundColor: agotado && usadoEnEstaMuestra === 0 ? '#F9F9F9' : '#FFFFFF',
+                                borderColor: '#E5E5E5',
+                                color: '#666666'
+                              }}
                             >
                               <span className="truncate text-left flex-1">
                                 {item.serviceName}
@@ -313,7 +305,6 @@ export default function ConvertToRequestModal({
                                 </span>
                               </span>
 
-                              {/* Contador +/- */}
                               <div className="flex items-center gap-2 flex-shrink-0">
                                 <button
                                   type="button"
@@ -321,12 +312,15 @@ export default function ConvertToRequestModal({
                                     removeService(sampleIndex, item.serviceId)
                                   }
                                   disabled={usadoEnEstaMuestra === 0}
-                                  className="w-6 h-6 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold"
+                                  className="w-6 h-6 rounded-full transition-colors flex items-center justify-center font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+                                  style={{ backgroundColor: '#F5F5F5', color: '#666666' }}
+                                  onMouseEnter={(e) => { if (usadoEnEstaMuestra > 0) { e.currentTarget.style.backgroundColor = '#FEF2F2'; e.currentTarget.style.color = '#DC2626'; } }}
+                                  onMouseLeave={(e) => { if (usadoEnEstaMuestra > 0) { e.currentTarget.style.backgroundColor = '#F5F5F5'; e.currentTarget.style.color = '#666666'; } }}
                                 >
                                   −
                                 </button>
 
-                                <span className="w-6 text-center font-semibold text-gray-800">
+                                <span className="w-6 text-center font-semibold" style={{ color: '#009933' }}>
                                   {usadoEnEstaMuestra}
                                 </span>
 
@@ -340,16 +334,20 @@ export default function ConvertToRequestModal({
                                     )
                                   }
                                   disabled={agotado}
-                                  className="w-6 h-6 rounded-full bg-gray-100 hover:bg-green-100 text-gray-600 hover:text-green-600 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold"
+                                  className="w-6 h-6 rounded-full transition-colors flex items-center justify-center font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+                                  style={{ backgroundColor: '#F5F5F5', color: '#666666' }}
+                                  onMouseEnter={(e) => { if (!agotado) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; } }}
+                                  onMouseLeave={(e) => { if (!agotado) { e.currentTarget.style.backgroundColor = '#F5F5F5'; e.currentTarget.style.color = '#666666'; } }}
                                 >
                                   +
                                 </button>
 
                                 <span
-                                  className={`
-          text-xs px-2 py-0.5 rounded-full font-medium
-          ${agotado ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"}
-        `}
+                                  className="text-xs px-2 py-0.5 rounded-full font-medium"
+                                  style={{
+                                    backgroundColor: agotado ? '#FEF2F2' : '#F5F5F5',
+                                    color: agotado ? '#DC2626' : '#666666'
+                                  }}
                                 >
                                   {disponible}/{item.quantity}
                                 </span>
@@ -360,11 +358,9 @@ export default function ConvertToRequestModal({
                       </div>
 
                       {sample.serviceIds.length === 0 && (
-                        <div className="flex items-center gap-2 mt-2 text-xs text-red-500 bg-red-50 p-2 rounded-lg">
+                        <div className="flex items-center gap-2 mt-2 text-xs p-2 rounded-lg" style={{ backgroundColor: '#FEF2F2', color: '#DC2626' }}>
                           <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                          <span>
-                            Selecciona al menos un análisis para esta muestra
-                          </span>
+                          <span>Selecciona al menos un análisis para esta muestra</span>
                         </div>
                       )}
                     </div>
@@ -380,7 +376,10 @@ export default function ConvertToRequestModal({
           type="button"
           variant="secondary"
           onClick={addSample}
-          className="w-full py-3 border-dashed border-2 hover:border-blue-300 hover:bg-blue-50/50 transition-all"
+          className="w-full py-3 border-dashed border-2 transition-all"
+          style={{ borderColor: '#E5E5E5' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.backgroundColor = '#E8F5E9'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.backgroundColor = 'transparent'; }}
         >
           <Plus className="w-4 h-4 mr-2" />
           Agregar otra muestra
@@ -388,9 +387,9 @@ export default function ConvertToRequestModal({
 
         {/* Resumen de validación */}
         {!canConfirm && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-amber-800">
+          <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: '#FFF9E8', border: '1px solid #FFCC3330' }}>
+            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FFCC33' }} />
+            <div className="text-sm" style={{ color: '#996600' }}>
               <p className="font-medium">Completa los datos requeridos:</p>
               <ul className="list-disc list-inside mt-1 text-xs opacity-90">
                 {!samples.some((s) => s.sampleName.trim()) && (
@@ -406,7 +405,7 @@ export default function ConvertToRequestModal({
       </div>
 
       {/* Footer con botones de acción */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-5 border-t border-gray-200 mt-5">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-5 border-t mt-5" style={{ borderColor: '#E5E5E5' }}>
         <Button
           type="button"
           variant="ghost"
@@ -419,6 +418,7 @@ export default function ConvertToRequestModal({
           onClick={handleConfirm}
           disabled={loading || !canConfirm}
           className="order-1 sm:order-2"
+          style={{ backgroundColor: '#009933' }}
         >
           {loading ? (
             <span className="flex items-center gap-2">

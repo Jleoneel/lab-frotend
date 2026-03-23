@@ -22,11 +22,11 @@ import Badge from "../../components/ui/Badge";
 import { formatDate } from "../../lib/utils";
 
 const statusColors = {
-  DRAFT: "bg-gray-100 text-gray-800 border-gray-200",
-  SENT: "bg-blue-100 text-blue-800 border-blue-200",
-  APPROVED: "bg-green-100 text-green-800 border-green-200",
-  CONVERTIDA: "bg-purple-100 text-purple-800 border-purple-200",
-  CANCELLED: "bg-red-100 text-red-800 border-red-200",
+  DRAFT: "bg-gray-100 text-gray-700 border-gray-200",
+  SENT: "bg-blue-100 text-blue-700 border-blue-200",
+  APPROVED: "bg-green-100 text-green-700 border-green-200",
+  CONVERTIDA: "bg-amber-100 text-amber-700 border-amber-200",
+  CANCELLED: "bg-red-100 text-red-700 border-red-200",
 };
 
 const statusLabels = {
@@ -61,7 +61,7 @@ export default function QuoteDetail() {
         icon: "error",
         title: "Error",
         text: "No se pudo cargar la cotización",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#009933",
         timer: 3000,
         timerProgressBar: true,
       });
@@ -76,8 +76,8 @@ export default function QuoteDetail() {
       text: `¿Estás seguro de aprobar la cotización ${quote.quoteNumber}?`,
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#10b981",
-      cancelButtonColor: "#6b7280",
+      confirmButtonColor: "#009933",
+      cancelButtonColor: "#666666",
       confirmButtonText: "Sí, aprobar",
       cancelButtonText: "Cancelar",
       reverseButtons: true,
@@ -104,7 +104,7 @@ export default function QuoteDetail() {
         icon: "error",
         title: "Error",
         text: "No se pudo aprobar la cotización",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#009933",
       });
     } finally {
       setApproving(false);
@@ -135,7 +135,7 @@ export default function QuoteDetail() {
           icon: "warning",
           title: "Atención",
           text: "Conversión exitosa pero no se pudo obtener el ID de la solicitud",
-          confirmButtonColor: "#3085d6",
+          confirmButtonColor: "#009933",
         });
       }
     } catch (error) {
@@ -144,7 +144,7 @@ export default function QuoteDetail() {
         icon: "error",
         title: "Error al convertir",
         text: error.response?.data?.message || error.message,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#009933",
       });
     } finally {
       setConverting(false);
@@ -152,33 +152,6 @@ export default function QuoteDetail() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500">Cargando cotización...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!quote) {
-    return (
-      <div className="text-center py-12">
-        <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900">
-          Cotización no encontrada
-        </h3>
-        <p className="text-gray-500 mt-2">
-          La cotización que buscas no existe o ha sido eliminada.
-        </p>
-        <Button onClick={() => navigate("/quotes")} className="mt-4">
-          Volver a cotizaciones
-        </Button>
-      </div>
-    );
-  }
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");
     printWindow.document.write(`
@@ -187,38 +160,38 @@ export default function QuoteDetail() {
         <title>Cotización ${quote.quoteNumber}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-          .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 2px solid #3b82f6; padding-bottom: 20px; }
-          .lab-name { font-size: 22px; font-weight: bold; color: #1e40af; }
-          .lab-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+          body { font-family: 'Montserrat', Arial, sans-serif; padding: 40px; color: #333333; }
+          .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 2px solid #009933; padding-bottom: 20px; }
+          .lab-name { font-size: 22px; font-weight: bold; color: #009933; font-family: 'Trajan Pro Bold', serif; }
+          .lab-sub { font-size: 12px; color: #666666; margin-top: 4px; }
           .quote-number { text-align: right; }
-          .quote-number h2 { font-size: 18px; font-weight: bold; color: #111; }
-          .quote-number p { font-size: 12px; color: #6b7280; margin-top: 4px; }
+          .quote-number h2 { font-size: 18px; font-weight: bold; color: #009933; }
+          .quote-number p { font-size: 12px; color: #666666; margin-top: 4px; }
           .section { margin-bottom: 24px; }
-          .section-title { font-size: 13px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-          .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; background: #f9fafb; padding: 16px; border-radius: 8px; }
-          .info-item label { font-size: 11px; color: #9ca3af; display: block; margin-bottom: 4px; }
-          .info-item p { font-size: 14px; font-weight: 500; }
+          .section-title { font-size: 13px; font-weight: bold; color: #666666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+          .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; background: #F9F9F9; padding: 16px; border-radius: 8px; }
+          .info-item label { font-size: 11px; color: #666666; display: block; margin-bottom: 4px; }
+          .info-item p { font-size: 14px; font-weight: 500; color: #333333; }
           table { width: 100%; border-collapse: collapse; }
-          thead { background: #f3f4f6; }
-          th { padding: 10px 12px; text-align: left; font-size: 12px; color: #6b7280; text-transform: uppercase; }
+          thead { background: #F5F5F5; }
+          th { padding: 10px 12px; text-align: left; font-size: 12px; color: #666666; text-transform: uppercase; font-weight: 600; }
           th:last-child, td:last-child { text-align: right; }
           th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) { text-align: right; }
-          td { padding: 12px; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
-          .service-code { font-size: 11px; color: #9ca3af; }
+          td { padding: 12px; font-size: 13px; border-bottom: 1px solid #E5E5E5; color: #333333; }
+          .service-code { font-size: 11px; color: #666666; }
           .totals { margin-top: 16px; display: flex; justify-content: flex-end; }
           .totals-box { width: 280px; }
-          .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-          .totals-row.total { border-top: 2px solid #e5e7eb; margin-top: 8px; padding-top: 12px; font-weight: bold; font-size: 16px; color: #2563eb; }
-          .footer { margin-top: 48px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 16px; }
-          .status-badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 500; background: #dcfce7; color: #15803d; }
+          .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: #333333; }
+          .totals-row.total { border-top: 2px solid #009933; margin-top: 8px; padding-top: 12px; font-weight: bold; font-size: 16px; color: #009933; }
+          .footer { margin-top: 48px; text-align: center; font-size: 11px; color: #666666; border-top: 1px solid #E5E5E5; padding-top: 16px; }
+          .status-badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 500; background: #E8F5E9; color: #009933; }
         </style>
       </head>
       <body>
         <div class="header">
           <div>
-            <div class="lab-name">LAB UTM FCZ</div>
-            <div class="lab-sub">Laboratorio de Análisis Microbiológicos y Bromatológicos</div>
+            <div class="lab-name">CABA UTM</div>
+            <div class="lab-sub">Centro de Análisis Biológico y Agroalimentario</div>
             <div class="lab-sub">Universidad Técnica de Manabí - Facultad de Ciencias Zootécnicas</div>
           </div>
           <div class="quote-number">
@@ -295,7 +268,7 @@ export default function QuoteDetail() {
         </div>
 
         <div class="footer">
-          <p>Este documento es una cotización oficial del LAB UTM FCZ</p>
+          <p>Este documento es una cotización oficial del Centro de Análisis Biológico y Agroalimentario (CABA UTM)</p>
           <p style="margin-top:4px">Sistema de Trazabilidad de Análisis de Laboratorio © 2026</p>
         </div>
       </body>
@@ -307,13 +280,44 @@ export default function QuoteDetail() {
     setTimeout(() => printWindow.close(), 500);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#009933', borderTopColor: '#FFCC33' }}></div>
+          <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>Cargando cotización...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!quote) {
+    return (
+      <div className="text-center py-12">
+        <Package className="w-16 h-16 mx-auto mb-4" style={{ color: '#CCCCCC' }} />
+        <h3 className="text-lg font-medium mb-2" style={{ color: '#333333', fontFamily: "'Montserrat', sans-serif" }}>
+          Cotización no encontrada
+        </h3>
+        <p className="text-sm mt-2" style={{ color: '#666666' }}>
+          La cotización que buscas no existe o ha sido eliminada.
+        </p>
+        <Button onClick={() => navigate("/quotes")} className="mt-4" style={{ backgroundColor: '#009933' }}>
+          Volver a cotizaciones
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header con navegación */}
       <div className="mb-6">
         <button
           onClick={() => navigate("/quotes")}
-          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors group"
+          className="flex items-center mb-4 transition-colors group"
+          style={{ color: '#666666' }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#009933'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
         >
           <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a cotizaciones
@@ -321,14 +325,14 @@ export default function QuoteDetail() {
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-              <FileText className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+              <FileText className="w-6 h-6" style={{ color: '#009933' }} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">
+              <h1 className="text-2xl font-bold" style={{ color: '#009933', fontFamily: "'Trajan Pro Bold', serif" }}>
                 Cotización {quote.quoteNumber}
               </h1>
-              <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+              <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: '#666666' }}>
                 <Calendar className="w-4 h-4" />
                 <span>Creada el {formatDate(quote.createdAt)}</span>
               </div>
@@ -336,36 +340,36 @@ export default function QuoteDetail() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {/* Botón Aprobar - solo si está en DRAFT */}
             {quote.status === "DRAFT" && (
               <Button
                 onClick={handleApprove}
                 disabled={approving}
                 variant="success"
                 className="shadow-sm"
+                style={{ backgroundColor: '#009933' }}
               >
                 <ThumbsUp className="w-4 h-4 mr-2" />
                 {approving ? "Aprobando..." : "Aprobar Cotización"}
               </Button>
             )}
 
-            {/* Botón Editar - solo si está en DRAFT */}
             {quote.status === "DRAFT" && (
               <Button
                 variant="secondary"
                 onClick={() => setShowEditModal(true)}
                 className="shadow-sm"
+                style={{ borderColor: '#E5E5E5', color: '#666666' }}
               >
                 <Pencil className="w-4 h-4 mr-2" />
                 Editar
               </Button>
             )}
 
-            {/* Botón Convertir - solo si está APPROVED */}
             {quote.status === "APPROVED" && (
               <Button
                 onClick={() => setShowConvertModal(true)}
                 className="shadow-sm"
+                style={{ backgroundColor: '#FFCC33', color: '#333333' }}
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Convertir a Solicitud
@@ -376,6 +380,7 @@ export default function QuoteDetail() {
               variant="secondary"
               onClick={handlePrint}
               className="shadow-sm"
+              style={{ borderColor: '#E5E5E5', color: '#666666' }}
             >
               <Printer className="w-4 h-4 mr-2" />
               Imprimir
@@ -385,33 +390,29 @@ export default function QuoteDetail() {
       </div>
 
       {/* Tarjeta de información del cliente */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div className="bg-white rounded-2xl shadow-sm border p-6 mb-6" style={{ borderColor: '#E5E5E5' }}>
         <div className="flex items-center gap-2 mb-4">
-          <User className="w-5 h-5 text-gray-400" />
-          <h2 className="text-lg font-semibold text-gray-800">
+          <User className="w-5 h-5" style={{ color: '#666666' }} />
+          <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
             Información del Cliente
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-              Cliente
-            </p>
-            <p className="font-medium text-gray-800">{quote.client}</p>
+            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Cliente</p>
+            <p className="font-medium" style={{ color: '#333333' }}>{quote.client}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-              Lista de Precios
-            </p>
-            <p className="font-medium text-gray-800">
+            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Lista de Precios</p>
+            <p className="font-medium" style={{ color: '#333333' }}>
               {quote.priceList === "ESTUDIANTE" ? (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 rounded-lg text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm" style={{ backgroundColor: '#E8F5E9', color: '#009933' }}>
                   <User className="w-3 h-3" />
                   Estudiante
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm" style={{ backgroundColor: '#FFF9E8', color: '#FFCC33' }}>
                   <DollarSign className="w-3 h-3" />
                   Externo
                 </span>
@@ -419,31 +420,25 @@ export default function QuoteDetail() {
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-              Estado
-            </p>
+            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Estado</p>
             <Badge className={statusColors[quote.status] || "bg-gray-100"}>
               {statusLabels[quote.status] || quote.status}
             </Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-              Válido hasta
-            </p>
-            <p className="font-medium text-gray-800">
-              {quote.validUntil
-                ? formatDate(quote.validUntil)
-                : "No especificado"}
+            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Válido hasta</p>
+            <p className="font-medium" style={{ color: '#333333' }}>
+              {quote.validUntil ? formatDate(quote.validUntil) : "No especificado"}
             </p>
           </div>
         </div>
       </div>
 
       {/* Tarjeta de análisis cotizados */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-2xl shadow-sm border p-6" style={{ borderColor: '#E5E5E5' }}>
         <div className="flex items-center gap-2 mb-6">
-          <FileText className="w-5 h-5 text-gray-400" />
-          <h2 className="text-lg font-semibold text-gray-800">
+          <FileText className="w-5 h-5" style={{ color: '#666666' }} />
+          <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
             Análisis Cotizados
           </h2>
         </div>
@@ -451,44 +446,23 @@ export default function QuoteDetail() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-4 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Análisis
-                </th>
-                <th className="text-right py-4 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Cantidad
-                </th>
-                <th className="text-right py-4 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Precio Unit.
-                </th>
-                <th className="text-right py-4 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Subtotal
-                </th>
-              </tr>
+              <tr className="border-b" style={{ borderColor: '#E5E5E5' }}>
+                <th className="text-left py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Análisis</th>
+                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Cantidad</th>
+                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Precio Unit.</th>
+                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Subtotal</th>
+               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y" style={{ borderColor: '#E5E5E5' }}>
               {quote.items?.map((item, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-50/50 transition-colors"
-                >
+                <tr key={index} className="hover:bg-gray-50/50 transition-colors">
                   <td className="py-4 px-4">
-                    <div className="font-medium text-gray-800">
-                      {item.serviceName}
-                    </div>
-                    <div className="text-xs text-gray-400 mt-0.5">
-                      {item.serviceCode}
-                    </div>
+                    <div className="font-medium" style={{ color: '#333333' }}>{item.serviceName}</div>
+                    <div className="text-xs mt-0.5" style={{ color: '#666666' }}>{item.serviceCode}</div>
                   </td>
-                  <td className="text-right py-4 px-4 font-mono text-gray-700">
-                    {item.quantity}
-                  </td>
-                  <td className="text-right py-4 px-4 font-mono text-gray-700">
-                    ${item.unitPriceApplied?.toLocaleString("es-CL")}
-                  </td>
-                  <td className="text-right py-4 px-4 font-mono font-medium text-gray-900">
-                    ${item.lineSubtotal?.toLocaleString("es-CL")}
-                  </td>
+                  <td className="text-right py-4 px-4 font-mono" style={{ color: '#666666' }}>{item.quantity}</td>
+                  <td className="text-right py-4 px-4 font-mono" style={{ color: '#666666' }}>${item.unitPriceApplied?.toLocaleString("es-CL")}</td>
+                  <td className="text-right py-4 px-4 font-mono font-medium" style={{ color: '#009933' }}>${item.lineSubtotal?.toLocaleString("es-CL")}</td>
                 </tr>
               ))}
             </tbody>
@@ -496,28 +470,20 @@ export default function QuoteDetail() {
         </div>
 
         {/* Totales */}
-        <div className="mt-6 pt-6 border-t border-gray-100">
+        <div className="mt-6 pt-6 border-t" style={{ borderColor: '#E5E5E5' }}>
           <div className="flex justify-end">
-            <div className="w-full max-w-sm bg-gray-50/80 rounded-xl p-5 space-y-3">
+            <div className="w-full max-w-sm rounded-xl p-5 space-y-3" style={{ backgroundColor: '#F9F9F9' }}>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Subtotal</span>
-                <span className="font-medium text-gray-800 font-mono">
-                  ${quote.subtotal?.toLocaleString("es-CL")}
-                </span>
+                <span style={{ color: '#666666' }}>Subtotal</span>
+                <span className="font-medium font-mono" style={{ color: '#333333' }}>${quote.subtotal?.toLocaleString("es-CL")}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">
-                  IVA ({quote.ivaPercent || 19}%)
-                </span>
-                <span className="font-medium text-gray-800 font-mono">
-                  ${quote.ivaAmount?.toLocaleString("es-CL")}
-                </span>
+                <span style={{ color: '#666666' }}>IVA ({quote.ivaPercent || 19}%)</span>
+                <span className="font-medium font-mono" style={{ color: '#333333' }}>${quote.ivaAmount?.toLocaleString("es-CL")}</span>
               </div>
-              <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-bold">
-                <span className="text-gray-700">Total</span>
-                <span className="text-blue-600 font-mono">
-                  ${quote.total?.toLocaleString("es-CL")}
-                </span>
+              <div className="border-t pt-3 flex justify-between text-lg font-bold" style={{ borderColor: '#E5E5E5' }}>
+                <span style={{ color: '#666666' }}>Total</span>
+                <span className="font-mono" style={{ color: '#009933' }}>${quote.total?.toLocaleString("es-CL")}</span>
               </div>
             </div>
           </div>

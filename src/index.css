@@ -1,9 +1,24 @@
 @import 'tailwindcss';
 
-.react-datepicker {
-  @apply border border-gray-200 rounded-xl shadow-lg;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.react-datepicker__header {
-  @apply bg-gray-50 border-b border-gray-200;
-}   
+@keyframes zoomIn {
+  from { transform: scale(0.95); }
+  to { transform: scale(1); }
+}
+
+.animate-in {
+  animation-duration: 0.2s;
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.zoom-in {
+  animation-name: zoomIn;
+}

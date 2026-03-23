@@ -150,8 +150,8 @@ export default function ServiceForm() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500">Cargando servicio...</p>
+          <div className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#009933', borderTopColor: '#FFCC33' }}></div>
+          <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>Cargando servicio...</p>
         </div>
       </div>
     );
@@ -161,13 +161,13 @@ export default function ServiceForm() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Notificación de éxito */}
       {showSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-white border border-green-200 text-green-800 px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300">
-          <div className="bg-green-100 rounded-full p-1">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+        <div className="fixed top-4 right-4 z-50 bg-white border px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300" style={{ borderColor: '#009933' }}>
+          <div className="rounded-full p-1" style={{ backgroundColor: '#E8F5E9' }}>
+            <CheckCircle className="w-5 h-5" style={{ color: '#009933' }} />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">¡Servicio guardado!</p>
-            <p className="text-sm text-green-600">Redirigiendo a la lista...</p>
+            <p className="font-semibold" style={{ color: '#009933' }}>¡Servicio guardado!</p>
+            <p className="text-sm" style={{ color: '#666666' }}>Redirigiendo a la lista...</p>
           </div>
         </div>
       )}
@@ -176,21 +176,24 @@ export default function ServiceForm() {
       <div>
         <button
           onClick={() => navigate('/services')}
-          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors group"
+          className="flex items-center mb-4 transition-colors group"
+          style={{ color: '#666666' }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#009933'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
         >
           <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a servicios
         </button>
 
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center">
-            <Tag className="w-7 h-7 text-purple-600" />
+          <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+            <Tag className="w-7 h-7" style={{ color: '#009933' }} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold" style={{ color: '#009933', fontFamily: "'Trajan Pro Bold', serif" }}>
               {isEditing ? 'Editar Servicio' : 'Nuevo Servicio'}
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm mt-1" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
               {isEditing 
                 ? 'Modifica los datos del servicio de análisis' 
                 : 'Registra un nuevo servicio de análisis en el catálogo'}
@@ -200,7 +203,7 @@ export default function ServiceForm() {
       </div>
 
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8 space-y-8">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border shadow-xl p-8 space-y-8" style={{ borderColor: '#E5E5E5' }}>
         {/* Mensaje de error general */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
@@ -229,7 +232,10 @@ export default function ServiceForm() {
               <button
                 type="button"
                 onClick={generateCode}
-                className="inline-flex items-center gap-1 text-xs text-purple-600 hover:text-purple-800 bg-purple-50 px-3 py-1.5 rounded-lg transition-colors"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg transition-colors"
+                style={{ backgroundColor: '#E8F5E9', color: '#009933' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#D4EAD5'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#E8F5E9'}
               >
                 <Sparkles className="w-3 h-3" />
                 Generar código automático
@@ -280,9 +286,27 @@ export default function ServiceForm() {
           />
         </div>
 
+        {/* Descripción (opcional) */}
+        <div>
+          <label className="block text-sm font-medium mb-1" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
+            Descripción
+          </label>
+          <textarea
+            name="description"
+            value={formData.description || ''}
+            onChange={handleChange}
+            rows="3"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-0 transition-shadow resize-none"
+            style={{ borderColor: '#E5E5E5', color: '#333333', fontFamily: "'Montserrat', sans-serif" }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            placeholder="Descripción detallada del servicio (opcional)"
+          />
+        </div>
+
         {/* Estado activo (solo en edición) */}
         {isEditing && (
-          <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-100">
+          <div className="rounded-xl p-4 border" style={{ backgroundColor: '#F9F9F9', borderColor: '#E5E5E5' }}>
             <div className="flex items-center gap-3">
               <div className="relative">
                 <input
@@ -297,7 +321,7 @@ export default function ServiceForm() {
                   onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
                   className={`
                     w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200
-                    ${formData.isActive ? 'bg-green-500' : 'bg-gray-300'}
+                    ${formData.isActive ? 'bg-[#009933]' : 'bg-gray-300'}
                   `}
                 >
                   <div className={`
@@ -307,10 +331,10 @@ export default function ServiceForm() {
                 </div>
               </div>
               <div>
-                <label htmlFor="isActive" className="font-medium text-gray-700 cursor-pointer">
+                <label htmlFor="isActive" className="font-medium cursor-pointer" style={{ color: '#333333' }}>
                   Servicio activo
                 </label>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs mt-0.5" style={{ color: '#666666' }}>
                   {formData.isActive 
                     ? 'El servicio está disponible para nuevas cotizaciones' 
                     : 'El servicio no aparecerá en el catálogo activo'}
@@ -319,8 +343,22 @@ export default function ServiceForm() {
             </div>
           </div>
         )}
+
+        {/* Información adicional */}
+        {!isEditing && (
+          <div className="rounded-xl p-4 flex items-start gap-3" style={{ backgroundColor: '#E8F5E9', border: '1px solid #00993320' }}>
+            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#009933' }} />
+            <div className="text-sm">
+              <p className="font-medium" style={{ color: '#009933' }}>Completa los datos del servicio</p>
+              <p className="text-xs mt-1" style={{ color: '#666666' }}>
+                Todos los campos marcados con * son obligatorios. Los precios deben ser mayores a 0.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Botones de acción */}
-        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t" style={{ borderColor: '#E5E5E5' }}>
           <Button
             type="button"
             variant="ghost"

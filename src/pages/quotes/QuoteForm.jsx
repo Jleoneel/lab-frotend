@@ -1,4 +1,4 @@
-// components/quotes/QuoteForm.jsx - Diseño Profesional con Selects Mejorados
+// components/quotes/QuoteForm.jsx
 import { useState, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import DatePicker from "../../components/ui/DatePicker";
@@ -18,10 +18,10 @@ import {
   FileText,
   Hash,
   Tag,
-  Scale
+  Scale,
 } from "lucide-react";
 
-// Componente Select personalizado con búsqueda (usa Listbox de Headless UI)
+// Componente Select personalizado con búsqueda
 const Select = ({
   label,
   value,
@@ -36,7 +36,10 @@ const Select = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          className="block text-sm font-medium mb-1"
+          style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}
+        >
           {label}
         </label>
       )}
@@ -48,24 +51,26 @@ const Select = ({
         <div className="relative">
           {Icon && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
-              <Icon className="w-4 h-4 text-gray-400" />
+              <Icon className="w-4 h-4" style={{ color: "#666666" }} />
             </div>
           )}
-          <Listbox.Button className={`relative w-full cursor-default rounded-xl border border-gray-200 bg-white py-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm ${
-            Icon ? 'pl-9 pr-10' : 'pl-4 pr-10'
-          }`}>
-            <span className="block truncate">
+          <Listbox.Button
+            className={`relative w-full cursor-default rounded-xl border bg-white py-2 text-left focus:outline-none focus:ring-2 focus:border-transparent shadow-sm ${
+              Icon ? "pl-9 pr-10" : "pl-4 pr-10"
+            }`}
+            style={{ borderColor: "#E5E5E5" }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#009933")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E5E5")}
+          >
+            <span className="block truncate" style={{ color: "#333333" }}>
               {selected ? (
                 selected.label
               ) : (
-                <span className="text-gray-400">{placeholder}</span>
+                <span style={{ color: "#999999" }}>{placeholder}</span>
               )}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <ChevronsUpDown
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronsUpDown className="h-5 w-5" style={{ color: "#666666" }} />
             </span>
           </Listbox.Button>
           <Transition
@@ -80,7 +85,9 @@ const Select = ({
                   key={opt.value}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? "bg-blue-50 text-blue-600" : "text-gray-900"
+                      active 
+                        ? "bg-[#009933] text-white" 
+                        : "text-gray-900"
                     }`
                   }
                   value={opt}
@@ -93,7 +100,7 @@ const Select = ({
                         {opt.label}
                       </span>
                       {selected ? (
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
                           <Check className="h-5 w-5" aria-hidden="true" />
                         </span>
                       ) : null}
@@ -120,7 +127,14 @@ const QuantityInput = ({ value, onChange, min = 1, disabled }) => {
         type="button"
         onClick={handleDecrement}
         disabled={disabled || value <= min}
-        className="px-3 py-2 border border-gray-200 rounded-l-xl bg-gray-50 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+        className="px-3 py-2 border rounded-l-xl bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        style={{ borderColor: "#E5E5E5", color: "#666666" }}
+        onMouseEnter={(e) => {
+          if (!disabled) e.currentTarget.style.backgroundColor = "#F5F5F5";
+        }}
+        onMouseLeave={(e) => {
+          if (!disabled) e.currentTarget.style.backgroundColor = "#F9F9F9";
+        }}
       >
         −
       </button>
@@ -130,13 +144,23 @@ const QuantityInput = ({ value, onChange, min = 1, disabled }) => {
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value) || min)}
         disabled={disabled}
-        className="w-16 text-center border-t border-b border-gray-200 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-16 text-center border-t border-b py-2 focus:outline-none focus:ring-2 focus:ring-offset-0"
+        style={{ borderColor: "#E5E5E5", color: "#333333" }}
+        onFocus={(e) => (e.currentTarget.style.borderColor = "#009933")}
+        onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E5E5")}
       />
       <button
         type="button"
         onClick={handleIncrement}
         disabled={disabled}
-        className="px-3 py-2 border border-gray-200 rounded-r-xl bg-gray-50 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+        className="px-3 py-2 border rounded-r-xl bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        style={{ borderColor: "#E5E5E5", color: "#666666" }}
+        onMouseEnter={(e) => {
+          if (!disabled) e.currentTarget.style.backgroundColor = "#F5F5F5";
+        }}
+        onMouseLeave={(e) => {
+          if (!disabled) e.currentTarget.style.backgroundColor = "#F9F9F9";
+        }}
       >
         +
       </button>
@@ -144,7 +168,7 @@ const QuantityInput = ({ value, onChange, min = 1, disabled }) => {
   );
 };
 
-// Componente Button mejorado
+// Componente Button
 const Button = ({
   children,
   variant = "primary",
@@ -156,18 +180,44 @@ const Button = ({
   const base =
     "px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
   const variants = {
-    primary:
-      "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm hover:shadow",
-    secondary:
-      "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400",
-    ghost: "bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-300",
+    primary: "text-white shadow-sm hover:shadow",
+    secondary: "border transition-colors",
+    ghost: "bg-transparent transition-colors",
   };
+
+  const variantStyles = {
+    primary: { backgroundColor: "#009933" },
+    secondary: { borderColor: "#E5E5E5", color: "#666666" },
+    ghost: { color: "#666666" },
+  };
+
+  const hoverStyles = {
+    primary: { backgroundColor: "#00802b" },
+    secondary: {
+      backgroundColor: "#F5F5F5",
+      borderColor: "#009933",
+      color: "#009933",
+    },
+    ghost: { backgroundColor: "#F5F5F5", color: "#009933" },
+  };
+
   return (
     <button
       type={type}
       className={`${base} ${variants[variant]} ${className}`}
       disabled={disabled}
       onClick={onClick}
+      style={variantStyles[variant]}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          Object.assign(e.currentTarget.style, hoverStyles[variant]);
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!disabled) {
+          Object.assign(e.currentTarget.style, variantStyles[variant]);
+        }
+      }}
     >
       {children}
     </button>
@@ -175,28 +225,51 @@ const Button = ({
 };
 
 // Componente Input con iconos mejorado
-const Input = ({ label, type = "text", className = "", error, icon: Icon, ...props }) => (
+const Input = ({
+  label,
+  type = "text",
+  className = "",
+  error,
+  icon: Icon,
+  ...props
+}) => (
   <div className="w-full">
     {label && (
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label
+        className="block text-sm font-medium mb-1"
+        style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}
+      >
         {label}
       </label>
     )}
     <div className="relative">
       {Icon && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Icon className="w-4 h-4 text-gray-400" />
+          <Icon className="w-4 h-4" style={{ color: "#666666" }} />
         </div>
       )}
       <input
         type={type}
-        className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow ${
-          error ? "border-red-300" : "border-gray-200"
+        className={`w-full ${Icon ? "pl-9" : "pl-4"} pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-0 transition-shadow ${
+          error ? "border-red-300" : ""
         } ${className}`}
+        style={{ borderColor: error ? "#FECACA" : "#E5E5E5", color: "#333333" }}
+        onFocus={(e) => {
+          e.currentTarget.style.borderColor = "#009933";
+          e.currentTarget.style.boxShadow = "0 0 0 2px #00993320";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.borderColor = error ? "#FECACA" : "#E5E5E5";
+          e.currentTarget.style.boxShadow = "none";
+        }}
         {...props}
       />
     </div>
-    {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+    {error && (
+      <p className="mt-1 text-sm" style={{ color: "#DC2626" }}>
+        {error}
+      </p>
+    )}
   </div>
 );
 
@@ -223,7 +296,6 @@ export default function QuoteForm({
   const [quantity, setQuantity] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Convertir arrays a opciones para los selects
   const clientOptions = safeClients.map((c) => ({
     value: c.id,
     label: c.name,
@@ -318,13 +390,21 @@ export default function QuoteForm({
     <div className="max-w-5xl mx-auto px-4 sm:px-0">
       {/* Notificación de éxito animada */}
       {showSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-white border border-green-200 text-green-800 px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300">
-          <div className="bg-green-100 rounded-full p-1">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+        <div
+          className="fixed top-4 right-4 z-50 bg-white border px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300"
+          style={{ borderColor: "#009933" }}
+        >
+          <div
+            className="rounded-full p-1"
+            style={{ backgroundColor: "#E8F5E9" }}
+          >
+            <CheckCircle className="w-5 h-5" style={{ color: "#009933" }} />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">¡Cotización guardada!</p>
-            <p className="text-sm text-green-600">
+            <p className="font-semibold" style={{ color: "#009933" }}>
+              ¡Cotización guardada!
+            </p>
+            <p className="text-sm" style={{ color: "#666666" }}>
               Los datos se han registrado correctamente.
             </p>
           </div>
@@ -333,29 +413,53 @@ export default function QuoteForm({
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-8 space-y-6 sm:space-y-8"
+        className="bg-white rounded-2xl shadow-xl border p-4 sm:p-8 space-y-6 sm:space-y-8"
+        style={{ borderColor: "#E5E5E5" }}
       >
         {/* Encabezado */}
-        <div className="border-b border-gray-100 pb-4 sm:pb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Nueva Cotización</h2>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
+        <div
+          className="border-b pb-4 sm:pb-6"
+          style={{ borderColor: "#E5E5E5" }}
+        >
+          <h2
+            className="text-2xl sm:text-3xl font-bold"
+            style={{ color: "#009933", fontFamily: "'Trajan Pro Bold', serif" }}
+          >
+            Nueva Cotización
+          </h2>
+          <p
+            className="text-xs sm:text-sm mt-1"
+            style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}
+          >
             Complete los datos para generar una cotización profesional
           </p>
         </div>
 
         {/* Alertas */}
         {safeClients.length === 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-            <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-amber-800 text-sm font-medium">
+          <div
+            className="border rounded-xl p-4 flex items-start gap-3 shadow-sm"
+            style={{ backgroundColor: "#FFF9E8", borderColor: "#FFCC33" }}
+          >
+            <AlertCircle
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              style={{ color: "#FFCC33" }}
+            />
+            <div className="text-sm font-medium" style={{ color: "#996600" }}>
               No hay clientes disponibles. Debe crear clientes primero.
             </div>
           </div>
         )}
         {safeServices.length === 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-            <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-amber-800 text-sm font-medium">
+          <div
+            className="border rounded-xl p-4 flex items-start gap-3 shadow-sm"
+            style={{ backgroundColor: "#FFF9E8", borderColor: "#FFCC33" }}
+          >
+            <AlertCircle
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              style={{ color: "#FFCC33" }}
+            />
+            <div className="text-sm font-medium" style={{ color: "#996600" }}>
               No hay servicios disponibles. Debe crear servicios primero.
             </div>
           </div>
@@ -382,11 +486,15 @@ export default function QuoteForm({
             />
             {selectedClient?.email && (
               <div
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
-                  selectedClient.email.endsWith("@utm.edu.ec")
-                    ? "bg-purple-100 text-purple-700"
-                    : "bg-blue-100 text-blue-700"
-                }`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                style={{
+                  backgroundColor: selectedClient.email.endsWith("@utm.edu.ec")
+                    ? "#E8F5E9"
+                    : "#FFF9E8",
+                  color: selectedClient.email.endsWith("@utm.edu.ec")
+                    ? "#009933"
+                    : "#FFCC33",
+                }}
               >
                 <User className="w-3 h-3" />
                 {selectedClient.email.endsWith("@utm.edu.ec")
@@ -436,9 +544,18 @@ export default function QuoteForm({
         </div>
 
         {/* Agregar análisis */}
-        <div className="bg-gray-50/80 rounded-xl p-4 sm:p-6 space-y-4 border border-gray-100">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+        <div
+          className="rounded-xl p-4 sm:p-6 space-y-4 border"
+          style={{ backgroundColor: "#F9F9F9", borderColor: "#E5E5E5" }}
+        >
+          <h3
+            className="text-base sm:text-lg font-semibold flex items-center gap-2"
+            style={{ color: "#009933", fontFamily: "'Montserrat', sans-serif" }}
+          >
+            <Plus
+              className="w-4 h-4 sm:w-5 sm:h-5"
+              style={{ color: "#009933" }}
+            />
             Agregar Análisis
           </h3>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -473,10 +590,16 @@ export default function QuoteForm({
         {/* Lista de items */}
         {formData.items.length > 0 && (
           <div className="space-y-4">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800">
+            <h3
+              className="text-base sm:text-lg font-semibold"
+              style={{
+                color: "#009933",
+                fontFamily: "'Montserrat', sans-serif",
+              }}
+            >
               Análisis seleccionados
             </h3>
-            
+
             {/* Vista móvil: tarjetas */}
             <div className="sm:hidden space-y-3">
               {formData.items.map((item, idx) => {
@@ -489,38 +612,87 @@ export default function QuoteForm({
                     ? +service.priceStudent
                     : +service.priceExternal;
                 const subtotal = unitPrice * item.quantity;
-                
+
                 return (
-                  <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+                  <div
+                    key={idx}
+                    className="bg-white border rounded-xl p-4 space-y-3"
+                    style={{ borderColor: "#E5E5E5" }}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
-                        <div className="font-medium text-gray-800">{service.name}</div>
-                        <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                        <div
+                          className="font-medium"
+                          style={{ color: "#333333" }}
+                        >
+                          {service.name}
+                        </div>
+                        <div
+                          className="text-xs flex items-center gap-1 mt-1"
+                          style={{ color: "#666666" }}
+                        >
                           <Hash className="w-3 h-3" />
                           {service.code}
                         </div>
                       </div>
                       <button
                         onClick={() => removeItem(idx)}
-                        className="text-red-400 hover:text-red-600 p-1"
+                        className="p-1 transition-colors"
+                        style={{ color: "#FECACA" }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.color = "#DC2626")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.color = "#FECACA")
+                        }
                         title="Eliminar análisis"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    
+
                     <div className="grid grid-cols-3 gap-2 text-sm">
-                      <div className="bg-gray-50 p-2 rounded-lg text-center">
-                        <p className="text-xs text-gray-500">Cantidad</p>
-                        <p className="font-mono font-medium">{item.quantity}</p>
+                      <div
+                        className="p-2 rounded-lg text-center"
+                        style={{ backgroundColor: "#F9F9F9" }}
+                      >
+                        <p className="text-xs" style={{ color: "#666666" }}>
+                          Cantidad
+                        </p>
+                        <p
+                          className="font-mono font-medium"
+                          style={{ color: "#333333" }}
+                        >
+                          {item.quantity}
+                        </p>
                       </div>
-                      <div className="bg-gray-50 p-2 rounded-lg text-center">
-                        <p className="text-xs text-gray-500">P.Unit.</p>
-                        <p className="font-mono font-medium">${unitPrice.toLocaleString("es-CL")}</p>
+                      <div
+                        className="p-2 rounded-lg text-center"
+                        style={{ backgroundColor: "#F9F9F9" }}
+                      >
+                        <p className="text-xs" style={{ color: "#666666" }}>
+                          P.Unit.
+                        </p>
+                        <p
+                          className="font-mono font-medium"
+                          style={{ color: "#333333" }}
+                        >
+                          ${unitPrice.toLocaleString("es-CL")}
+                        </p>
                       </div>
-                      <div className="bg-blue-50 p-2 rounded-lg text-center">
-                        <p className="text-xs text-gray-500">Subtotal</p>
-                        <p className="font-mono font-medium text-blue-600">${subtotal.toLocaleString("es-CL")}</p>
+                      <div
+                        className="p-2 rounded-lg text-center"
+                        style={{ backgroundColor: "#E8F5E9" }}
+                      >
+                        <p className="text-xs" style={{ color: "#666666" }}>
+                          Subtotal
+                        </p>
+                        <p
+                          className="font-mono font-medium"
+                          style={{ color: "#009933" }}
+                        >
+                          ${subtotal.toLocaleString("es-CL")}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -529,28 +701,49 @@ export default function QuoteForm({
             </div>
 
             {/* Vista desktop: tabla */}
-            <div className="hidden sm:block border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <div
+              className="hidden sm:block border rounded-xl overflow-hidden shadow-sm"
+              style={{ borderColor: "#E5E5E5" }}
+            >
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead
+                  className="border-b"
+                  style={{ backgroundColor: "#F9F9F9", borderColor: "#E5E5E5" }}
+                >
                   <tr>
-                    <th className="px-6 py-3 text-left font-medium text-gray-600">
+                    <th
+                      className="px-6 py-3 text-left font-medium"
+                      style={{ color: "#666666" }}
+                    >
                       Análisis
                     </th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                    <th
+                      className="px-6 py-3 text-right font-medium"
+                      style={{ color: "#666666" }}
+                    >
                       Cant.
                     </th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                    <th
+                      className="px-6 py-3 text-right font-medium"
+                      style={{ color: "#666666" }}
+                    >
                       P.Unit.
                     </th>
-                    <th className="px-6 py-3 text-right font-medium text-gray-600">
+                    <th
+                      className="px-6 py-3 text-right font-medium"
+                      style={{ color: "#666666" }}
+                    >
                       Subtotal
                     </th>
-                    <th className="px-6 py-3 text-center font-medium text-gray-600">
+                    <th
+                      className="px-6 py-3 text-center font-medium"
+                      style={{ color: "#666666" }}
+                    >
                       Acción
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y" style={{ borderColor: "#E5E5E5" }}>
                   {formData.items.map((item, idx) => {
                     const service = safeServices.find(
                       (s) => s.id === item.serviceId,
@@ -564,28 +757,50 @@ export default function QuoteForm({
                     return (
                       <tr key={idx} className="hover:bg-gray-50/50 transition">
                         <td className="px-6 py-4">
-                          <div className="font-medium text-gray-800">
+                          <div
+                            className="font-medium"
+                            style={{ color: "#333333" }}
+                          >
                             {service.name}
                           </div>
-                          <div className="text-xs text-gray-400 flex items-center gap-1">
+                          <div
+                            className="text-xs flex items-center gap-1"
+                            style={{ color: "#666666" }}
+                          >
                             <Hash className="w-3 h-3" />
                             {service.code}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-right font-mono">
+                        <td
+                          className="px-6 py-4 text-right font-mono"
+                          style={{ color: "#333333" }}
+                        >
                           {item.quantity}
                         </td>
-                        <td className="px-6 py-4 text-right font-mono">
+                        <td
+                          className="px-6 py-4 text-right font-mono"
+                          style={{ color: "#333333" }}
+                        >
                           ${unitPrice.toLocaleString("es-CL")}
                         </td>
-                        <td className="px-6 py-4 text-right font-mono font-medium">
+                        <td
+                          className="px-6 py-4 text-right font-mono font-medium"
+                          style={{ color: "#009933" }}
+                        >
                           ${subtotal.toLocaleString("es-CL")}
                         </td>
                         <td className="px-6 py-4 text-center">
                           <button
                             type="button"
                             onClick={() => removeItem(idx)}
-                            className="text-red-400 hover:text-red-600 transition p-1 rounded-full hover:bg-red-50"
+                            className="transition p-1 rounded-full hover:bg-red-50"
+                            style={{ color: "#FECACA" }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.color = "#DC2626")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.color = "#FECACA")
+                            }
                             title="Eliminar análisis"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -600,24 +815,30 @@ export default function QuoteForm({
 
             {/* Totales */}
             <div className="flex justify-end">
-              <div className="w-full sm:max-w-sm bg-gray-50/80 rounded-xl p-4 sm:p-6 space-y-3 border border-gray-100 shadow-sm">
+              <div
+                className="w-full sm:max-w-sm rounded-xl p-4 sm:p-6 space-y-3 border shadow-sm"
+                style={{ backgroundColor: "#F9F9F9", borderColor: "#E5E5E5" }}
+              >
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium text-gray-800">
+                  <span style={{ color: "#666666" }}>Subtotal</span>
+                  <span className="font-medium" style={{ color: "#333333" }}>
                     ${totals.subtotal.toLocaleString("es-CL")}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">
+                  <span style={{ color: "#666666" }}>
                     IVA ({formData.ivaPercent}%)
                   </span>
-                  <span className="font-medium text-gray-800">
+                  <span className="font-medium" style={{ color: "#333333" }}>
                     ${totals.iva.toLocaleString("es-CL")}
                   </span>
                 </div>
-                <div className="border-t border-gray-200 pt-3 flex justify-between text-base sm:text-lg font-bold">
-                  <span className="text-gray-700">Total</span>
-                  <span className="text-blue-600">
+                <div
+                  className="border-t pt-3 flex justify-between text-base sm:text-lg font-bold"
+                  style={{ borderColor: "#E5E5E5" }}
+                >
+                  <span style={{ color: "#666666" }}>Total</span>
+                  <span style={{ color: "#009933" }}>
                     ${totals.total.toLocaleString("es-CL")}
                   </span>
                 </div>
@@ -627,8 +848,16 @@ export default function QuoteForm({
         )}
 
         {/* Botones de acción */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 sm:pt-6 border-t border-gray-100">
-          <Button type="button" variant="ghost" onClick={onCancel} className="w-full sm:w-auto">
+        <div
+          className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 sm:pt-6 border-t"
+          style={{ borderColor: "#E5E5E5" }}
+        >
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onCancel}
+            className="w-full sm:w-auto"
+          >
             Cancelar
           </Button>
           <Button

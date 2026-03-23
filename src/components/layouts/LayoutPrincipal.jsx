@@ -1,8 +1,8 @@
 // layouts/LayoutPrincipal.jsx
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../layouts/SideBar';
-import Navbar from '../layouts/Navbar';
+import Sidebar from '../../components/layouts/SideBar';
+import Navbar from '../../components/layouts/Navbar';
 
 export default function LayoutPrincipal() {
   // Inicializar estado directamente desde localStorage (lazy initialization)
@@ -20,13 +20,13 @@ export default function LayoutPrincipal() {
     window.addEventListener('sidebarCollapsed', handleSidebarChange);
     
     return () => window.removeEventListener('sidebarCollapsed', handleSidebarChange);
-  }, []); // Sin dependencias, solo se ejecuta una vez
+  }, []);
 
   // Calcular el margen izquierdo según el estado del sidebar
   const sidebarWidth = sidebarCollapsed ? 'ml-20' : 'ml-64';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Sidebar />
       <Navbar />
       
@@ -43,10 +43,17 @@ export default function LayoutPrincipal() {
             <Outlet />
           </div>
           
-          {/* Footer opcional */}
-          <footer className="mt-8 text-center text-xs text-gray-400">
-            <p>LAB UTM - Sistema de Trazabilidad de Análisis de Laboratorio</p>
-            <p className="mt-1">© {new Date().getFullYear()} - Todos los derechos reservados</p>
+          {/* Footer con identidad CABA UTM */}
+          <footer className="mt-8 pt-6 text-center text-xs border-t" style={{ borderColor: '#E5E5E5' }}>
+            <p style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
+              CABA UTM - Centro de Análisis Biológico y Agroalimentario
+            </p>
+            <p className="mt-1" style={{ color: '#999999' }}>
+              Sistema de Trazabilidad de Análisis de Laboratorio
+            </p>
+            <p className="mt-2" style={{ color: '#CCCCCC' }}>
+              © {new Date().getFullYear()} - Universidad Técnica de Manabí
+            </p>
           </footer>
         </div>
       </main>

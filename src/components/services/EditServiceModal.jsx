@@ -97,29 +97,30 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
     >
       {/* Notificación de éxito */}
       {showSuccess && (
-        <div className="absolute top-0 left-0 right-0 bg-green-50 border-b border-green-200 px-4 py-3 flex items-center gap-2 animate-in slide-in-from-top">
-          <CheckCircle className="w-5 h-5 text-green-500" />
-          <span className="text-sm text-green-700 font-medium">Servicio actualizado correctamente</span>
+        <div className="absolute top-0 left-0 right-0 border-b px-4 py-3 flex items-center gap-2 animate-in slide-in-from-top z-10" 
+          style={{ backgroundColor: '#E8F5E9', borderColor: '#009933' }}>
+          <CheckCircle className="w-5 h-5" style={{ color: '#009933' }} />
+          <span className="text-sm font-medium" style={{ color: '#009933' }}>Servicio actualizado correctamente</span>
         </div>
       )}
 
       <div className="space-y-6 pt-2">
         {/* Header decorativo */}
-        <div className="flex items-center gap-3 pb-2 border-b border-gray-100">
-          <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
-            <Tag className="w-4 h-4 text-purple-600" />
+        <div className="flex items-center gap-3 pb-2 border-b" style={{ borderColor: '#E5E5E5' }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
+            <Tag className="w-4 h-4" style={{ color: '#009933' }} />
           </div>
           <div>
-            <h3 className="font-medium text-gray-800">{service?.name}</h3>
-            <p className="text-xs text-gray-500">Código: {service?.code}</p>
+            <h3 className="font-medium" style={{ color: '#009933' }}>{service?.name}</h3>
+            <p className="text-xs" style={{ color: '#666666' }}>Código: {service?.code}</p>
           </div>
         </div>
 
         {/* Mensaje de error general */}
         {errors.submit && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-600">{errors.submit}</p>
+          <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FEE2E2' }}>
+            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#DC2626' }} />
+            <p className="text-sm" style={{ color: '#DC2626' }}>{errors.submit}</p>
           </div>
         )}
 
@@ -176,7 +177,7 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
           </div>
 
           {/* Toggle de estado activo (mejorado) */}
-          <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-100">
+          <div className="rounded-xl p-4 border" style={{ backgroundColor: '#F9F9F9', borderColor: '#E5E5E5' }}>
             <div className="flex items-center gap-3">
               <div className="relative">
                 <input
@@ -191,7 +192,7 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
                   onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
                   className={`
                     w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200
-                    ${formData.isActive ? 'bg-green-500' : 'bg-gray-300'}
+                    ${formData.isActive ? 'bg-[#009933]' : 'bg-gray-300'}
                   `}
                 >
                   <div className={`
@@ -201,10 +202,10 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
                 </div>
               </div>
               <div>
-                <label htmlFor="isActive-modal" className="font-medium text-gray-700 cursor-pointer">
+                <label htmlFor="isActive-modal" className="font-medium cursor-pointer" style={{ color: '#333333' }}>
                   Servicio activo
                 </label>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs mt-0.5" style={{ color: '#666666' }}>
                   {formData.isActive 
                     ? 'El servicio está disponible en el catálogo' 
                     : 'El servicio no aparecerá en nuevas cotizaciones'}
@@ -214,8 +215,8 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
           </div>
 
           {/* Resumen de cambios */}
-          <div className="bg-blue-50/50 rounded-xl p-3 border border-blue-100">
-            <p className="text-xs text-blue-700 flex items-center gap-1">
+          <div className="rounded-xl p-3 border" style={{ backgroundColor: '#E8F5E9', borderColor: '#00993330' }}>
+            <p className="text-xs flex items-center gap-1" style={{ color: '#009933' }}>
               <AlertCircle className="w-3 h-3" />
               Los cambios se reflejarán inmediatamente en el sistema
             </p>
@@ -223,7 +224,7 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
         </div>
 
         {/* Botones de acción */}
-        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t" style={{ borderColor: '#E5E5E5' }}>
           <Button
             variant="ghost"
             onClick={onClose}
@@ -235,6 +236,7 @@ export default function EditServiceModal({ isOpen, onClose, service, onSaved }) 
             onClick={handleSave}
             disabled={saving}
             className="order-1 sm:order-2"
+            style={{ backgroundColor: '#009933' }}
           >
             {saving ? (
               <span className="flex items-center gap-2">
