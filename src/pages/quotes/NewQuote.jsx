@@ -5,6 +5,7 @@ import { quoteService } from "../../services/quoteService";
 import { clientService } from "../../services/clientService";
 import { serviceService } from "../../services/serviceService";
 import QuoteForm from "../quotes/QuoteForm";
+import Swal from "sweetalert2";
 
 export default function NewQuote() {
   const navigate = useNavigate();
@@ -54,6 +55,15 @@ export default function NewQuote() {
       const response = await quoteService.create(formData);
       const newQuoteId = response.data?.id || response.id;
       if (newQuoteId) {
+        await Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          text: 'La cotización ha sido creada correctamente.',
+          timer: 1000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
         navigate(`/quotes/${newQuoteId}`);
       } else {
         throw new Error("No se recibió el ID de la cotización");
@@ -64,6 +74,13 @@ export default function NewQuote() {
         error.response?.data?.error ||
         error.message ||
         "Error al crear la cotización";
+      
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error al crear cotización',
+        text: message,
+      });
+      
       setError(message);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }

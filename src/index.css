@@ -10,6 +10,10 @@
   to { transform: scale(1); }
 }
 
+.utm-option-active {
+  background-color: #009933;
+}
+
 .animate-in {
   animation-duration: 0.2s;
   animation-fill-mode: forwards;

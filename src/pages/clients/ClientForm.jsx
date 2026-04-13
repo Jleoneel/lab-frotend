@@ -17,6 +17,7 @@ import {
 import { clientService } from '../../services/clientService';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import Swal from 'sweetalert2';
 
 export default function ClientForm() {
   const { id } = useParams();
@@ -33,7 +34,6 @@ export default function ClientForm() {
   
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -97,18 +97,35 @@ export default function ClientForm() {
     try {
       if (isEditing) {
         await clientService.update(id, formData);
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Cliente actualizado!',
+          text: 'El cliente ha sido actualizado correctamente.',
+          confirmButtonColor: '#009933',
+          timer: 2000,
+          timerProgressBar: true
+        });
       } else {
         await clientService.create(formData);
+        await Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          text: 'El cliente ha sido creado correctamente.',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        });
       }
       
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate('/clients');
-      }, 1500);
+      navigate('/clients');
     } catch (error) {
       console.error('Error guardando cliente:', error);
-      setErrors({
-        submit: error.response?.data?.message || 'Error al guardar el cliente'
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar cliente',
+        text: error.response?.data?.message || 'Error al guardar el cliente',
+        confirmButtonColor: '#dc3545'
       });
     } finally {
       setLoading(false);
@@ -128,19 +145,6 @@ export default function ClientForm() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Notificación de éxito */}
-      {showSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-white border px-5 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-in slide-in-from-right-4 fade-in duration-300" style={{ borderColor: '#009933' }}>
-          <div className="rounded-full p-1" style={{ backgroundColor: '#E8F5E9' }}>
-            <CheckCircle className="w-5 h-5" style={{ color: '#009933' }} />
-          </div>
-          <div className="flex-1">
-            <p className="font-semibold" style={{ color: '#009933' }}>¡Cliente guardado!</p>
-            <p className="text-sm" style={{ color: '#666666' }}>Redirigiendo a la lista...</p>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <div>
         <button

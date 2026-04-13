@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
+import Swal from 'sweetalert2';
 
 export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
   const [formData, setFormData] = useState({
@@ -52,11 +53,24 @@ export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
     setLoading(true);
     try {
       await onSave(analysis.id, formData);
+      
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Resultado registrado!',
+        text: 'El resultado ha sido guardado correctamente.',
+        confirmButtonColor: '#009933',
+        timer: 2000,
+        timerProgressBar: true
+      });
+      
       onClose();
     } catch (error) {
       console.error('Error guardando resultado:', error);
-      setErrors({
-        submit: 'Error al guardar el resultado'
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar resultado',
+        text: 'No se pudo guardar el resultado. Inténtalo nuevamente.',
+        confirmButtonColor: '#dc3545'
       });
     } finally {
       setLoading(false);

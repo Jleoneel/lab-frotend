@@ -21,14 +21,6 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
-// Mapeo de colores para los estados con paleta UTM
-const statusColors = {
-  OPEN: 'bg-green-100 text-green-700 border-green-200',
-  IN_PROGRESS: 'bg-blue-100 text-blue-700 border-blue-200',
-  COMPLETED: 'bg-gray-100 text-gray-700 border-gray-200',
-  CANCELLED: 'bg-red-100 text-red-700 border-red-200'
-};
-
 // Etiquetas legibles para los estados
 const statusLabels = {
   OPEN: 'Abierta',

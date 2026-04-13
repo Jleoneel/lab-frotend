@@ -27,13 +27,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { settingsService } from "../../services/settingsService";
 import SampleReportPDF from "../../components/samples/SampleReportPDF";
 import QRCode from "qrcode";
-
-const statusColors = {
-  EN_COLA: "bg-gray-100 text-gray-700 border-gray-200",
-  EN_PROCESO: "bg-blue-100 text-blue-700 border-blue-200",
-  LISTO_PARA_INFORME: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  TERMINADO: "bg-green-100 text-green-700 border-green-200",
-};
+import Swal from "sweetalert2";
 
 const statusLabels = {
   EN_COLA: "En Cola",
@@ -90,9 +84,25 @@ export default function SampleDetail() {
   const handleStatusChange = async (analysisId, newStatus) => {
     try {
       await sampleService.updateAnalysisStatus(analysisId, newStatus);
+      
+      await Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        icon: 'success',
+        text: 'El estado del análisis ha sido actualizado correctamente.',
+        timer: 1500,
+        timerProgressBar: true
+      });
+      
       loadSampleData();
     } catch (error) {
       console.error("Error actualizando estado:", error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el estado del análisis.',
+      });
     }
   };
 
@@ -108,17 +118,41 @@ export default function SampleDetail() {
   };
 
   const handleEmitReport = async () => {
-    if (
-      !confirm("¿Emitir informe final? La muestra quedará en estado TERMINADO.")
-    ) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: '¿Emitir informe final?',
+      text: 'La muestra quedará en estado TERMINADO y no podrá modificarse.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#009933',
+      cancelButtonColor: '#666666',
+      confirmButtonText: 'Sí, emitir informe',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await sampleService.emitReport(id);
+      
+      await Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: '¡Informe generado!',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
+      
       loadSampleData();
     } catch (error) {
       console.error("Error emitiendo informe:", error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo emitir el informe.',
+      });
     }
   };
 
