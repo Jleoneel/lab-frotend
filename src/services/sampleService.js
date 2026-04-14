@@ -41,7 +41,12 @@ const adaptSampleAnalysisFromBackend = (backendAnalysis) => {
     serviceId: backendAnalysis.serviceId,
     status: backendAnalysis.status,
     assignedTo: backendAnalysis.assignedTo || null,
-    result: backendAnalysis.result || null,
+    result: backendAnalysis.result
+      ? {
+          ...backendAnalysis.result,
+          archivos: backendAnalysis.result.archivos || [],
+        }
+      : null,
     startedAt: backendAnalysis.startedAt || null,
     completedAt: backendAnalysis.completedAt || null,
     service: backendAnalysis.service || {
@@ -105,11 +110,14 @@ export const sampleService = {
     }
   },
 
-  registerResult: async (sampleServiceId, resultData) => {
+  registerResult: async (sampleServiceId, formData) => {
     try {
       return await api.post(
         `/samples/sample-services/${sampleServiceId}/result`,
-        resultData,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
       );
     } catch (error) {
       console.error("Error en sampleService.registerResult:", error);

@@ -1,6 +1,6 @@
 // components/samples/SampleAnalysesTable.jsx
 import { useState } from 'react';
-import { Play, CheckCircle, FileText, AlertCircle } from 'lucide-react';
+import { Play, CheckCircle, FileText, AlertCircle, Download } from 'lucide-react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 
@@ -197,6 +197,37 @@ export default function SampleAnalysesTable({
                             {new Date(analysis.result.recordedAt).toLocaleString()}
                           </p>
                         </div>
+                        {analysis.result.observaciones && (
+                          <div className="p-3 rounded-lg sm:col-span-2" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                            <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Observaciones</p>
+                            <p className="font-medium" style={{ color: '#333333' }}>{analysis.result.observaciones}</p>
+                          </div>
+                        )}
+                        {/* Mostrar archivos de evidencia si existen */}
+                        {analysis.result.archivos?.length > 0 && (
+                          <div className="p-3 rounded-lg sm:col-span-2" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                            <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#666666' }}>
+                              Archivos de evidencia ({analysis.result.archivos.length})
+                            </p>
+                            <div className="space-y-1">
+                              {analysis.result.archivos.map((archivo) => (
+                                <a
+                                  key={archivo.id}
+                                  href={`http://localhost:4000${archivo.path}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 text-sm font-medium transition-colors"
+                                  style={{ color: '#009933' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#00802b'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#009933'}
+                                >
+                                  <Download className="w-4 h-4 flex-shrink-0" />
+                                  {archivo.filename}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                       {analysis.result.isFinal && (
                         <div className="mt-3 flex justify-end">
