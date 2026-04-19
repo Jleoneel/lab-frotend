@@ -25,6 +25,12 @@ const navigation = [
     ]
   },
   {
+    title: 'INVENTARIO',
+    items: [
+      { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
+    ]
+  },
+  {
     title: 'CATÁLOGOS',
     items: [
       { name: 'Clientes', path: '/clients', icon: Users },

@@ -25,7 +25,12 @@ import SampleDetail from "./pages/samples/SampleDetail";
 import ClientsList from "./pages/clients/ClientsList";
 import ClientForm from "./pages/clients/ClientForm";
 import ServicesList from "./pages/services/ServicesList";
-import ServiceForm from './pages/services/ServiceForm';
+import ServiceForm from "./pages/services/ServiceForm";
+
+import SettingsPage from "./pages/settings/SettingsPage";
+
+//REACTIVOS
+import ReactivosList from './pages/inventario/ReactivosList';
 
 // Componente para rutas protegidas
 const RutaProtegida = ({ children }) => {
@@ -76,14 +81,14 @@ function App() {
         <Route path="services/new" element={<ServiceForm />} />
         <Route path="services/:id" element={<ServiceForm />} />
 
+        {/* INVENTARIO - Reactivos */}
+        <Route path="reactivos" element={<ReactivosList />} />
+
         {/* SALIDAS (placeholder) */}
         <Route path="reports" element={<div>Reportes - Próximamente</div>} />
 
         {/* CONFIGURACIÓN (placeholder) */}
-        <Route
-          path="settings"
-          element={<div>Configuración - Próximamente</div>}
-        />
+        <Route path="/settings" element={<SettingsPage />} />
 
         {/* 404 dentro de la app */}
         <Route path="*" element={<div>Página no encontrada</div>} />

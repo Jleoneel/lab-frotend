@@ -1,5 +1,5 @@
 // components/quotes/QuoteForm.jsx
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import DatePicker from "../../components/ui/DatePicker";
 import {
@@ -70,7 +70,10 @@ const Select = ({
               )}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <ChevronsUpDown className="h-5 w-5" style={{ color: "#666666" }} />
+              <ChevronsUpDown
+                className="h-5 w-5"
+                style={{ color: "#666666" }}
+              />
             </span>
           </Listbox.Button>
           <Transition
@@ -85,9 +88,7 @@ const Select = ({
                   key={opt.value}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active 
-                        ? "bg-[#009933] text-white" 
-                        : "text-gray-900"
+                      active ? "bg-[#009933] text-white" : "text-gray-900"
                     }`
                   }
                   value={opt}
@@ -295,6 +296,21 @@ export default function QuoteForm({
   const [selectedService, setSelectedService] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Agrega este useEffect para cargar el IVA al montar
+  useEffect(() => {
+    const loadIva = async () => {
+      try {
+        const { settingsService } =
+          await import("../../services/settingsService");
+        const data = await settingsService.getIva();
+        setFormData((prev) => ({ ...prev, ivaPercent: data.iva }));
+      } catch (e) {
+        console.error("Error cargando IVA:", e);
+      }
+    };
+    loadIva();
+  }, []);
 
   const clientOptions = safeClients.map((c) => ({
     value: c.id,
