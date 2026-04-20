@@ -53,6 +53,7 @@ const adaptSampleAnalysisFromBackend = (backendAnalysis) => {
       name: backendAnalysis.serviceName || "Servicio",
       code: backendAnalysis.serviceCode || "N/A",
     },
+    movimientosReactivos: backendAnalysis.movimientosReactivos || [],
   };
 };
 
