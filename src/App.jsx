@@ -32,6 +32,9 @@ import SettingsPage from "./pages/settings/SettingsPage";
 //REACTIVOS
 import ReactivosList from './pages/inventario/ReactivosList';
 
+//EQUIPOS
+import EquiposList from './pages/inventario/EquiposList';
+
 // Componente para rutas protegidas
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -83,6 +86,7 @@ function App() {
 
         {/* INVENTARIO - Reactivos */}
         <Route path="reactivos" element={<ReactivosList />} />
+        <Route path="equipos" element={<EquiposList />} />
 
         {/* SALIDAS (placeholder) */}
         <Route path="reports" element={<div>Reportes - Próximamente</div>} />

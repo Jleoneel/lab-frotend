@@ -12,7 +12,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Menu,
-  X
+  X,
+  Microscope
 } from 'lucide-react';
 
 const navigation = [
@@ -28,6 +29,12 @@ const navigation = [
     title: 'INVENTARIO',
     items: [
       { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
+    ]
+  },
+  {
+    title: 'EQUIPOS',
+    items: [
+      { name: 'Equipos', path: '/equipos', icon: Microscope },
     ]
   },
   {
