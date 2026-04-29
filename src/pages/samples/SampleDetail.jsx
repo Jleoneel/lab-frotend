@@ -9,7 +9,6 @@ import {
   Package,
   Calendar,
   User,
-  AlertCircle,
   CheckCircle,
   Clock,
   FlaskConical,
@@ -84,7 +83,7 @@ export default function SampleDetail() {
   const handleStatusChange = async (analysisId, newStatus) => {
     try {
       await sampleService.updateAnalysisStatus(analysisId, newStatus);
-      
+
       await Swal.fire({
         toast: true,
         position: 'top-end',
@@ -94,7 +93,7 @@ export default function SampleDetail() {
         timer: 1500,
         timerProgressBar: true
       });
-      
+
       loadSampleData();
     } catch (error) {
       console.error("Error actualizando estado:", error);
@@ -134,7 +133,7 @@ export default function SampleDetail() {
 
     try {
       await sampleService.emitReport(id);
-      
+
       await Swal.fire({
         toast: true,
         position: 'top-end',
@@ -144,7 +143,7 @@ export default function SampleDetail() {
         timer: 2000,
         timerProgressBar: true
       });
-      
+
       loadSampleData();
     } catch (error) {
       console.error("Error emitiendo informe:", error);
@@ -262,10 +261,10 @@ export default function SampleDetail() {
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant={
               sample.status === 'EN_COLA' ? 'utm_gray' :
-              sample.status === 'EN_PROCESO' ? 'utm_gold' :
-              sample.status === 'LISTO_PARA_INFORME' ? 'utm_green' :
-              sample.status === 'TERMINADO' ? 'utm_green' :
-              'utm_gray'
+                sample.status === 'EN_PROCESO' ? 'utm_gold' :
+                  sample.status === 'LISTO_PARA_INFORME' ? 'utm_green' :
+                    sample.status === 'TERMINADO' ? 'utm_green' :
+                      'utm_gray'
             } className="px-4 py-2 text-sm">
               <StatusIcon className="w-4 h-4 mr-2 inline" />
               {statusLabels[sample.status] || sample.status?.replace(/_/g, " ") || "Sin estado"}
@@ -410,7 +409,7 @@ export default function SampleDetail() {
                   {Math.round(
                     (analyses.filter((a) => a.status === "DONE").length /
                       analyses.length) *
-                      100
+                    100
                   )}
                   %
                 </span>
@@ -449,6 +448,7 @@ export default function SampleDetail() {
             setShowResultModal(true);
           }}
           readOnly={sample.status === "TERMINADO"}
+          onReload={loadSampleData}
         />
       </div>
 

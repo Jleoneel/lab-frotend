@@ -35,6 +35,9 @@ import ReactivosList from './pages/inventario/ReactivosList';
 //EQUIPOS
 import EquiposList from './pages/inventario/EquiposList';
 
+//Usuarios
+import UsersList from './pages/users/UsersList';
+
 // Componente para rutas protegidas
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -87,6 +90,9 @@ function App() {
         {/* INVENTARIO - Reactivos */}
         <Route path="reactivos" element={<ReactivosList />} />
         <Route path="equipos" element={<EquiposList />} />
+
+        {/*Usuarios */}
+        <Route path="users" element={<UsersList />} />
 
         {/* SALIDAS (placeholder) */}
         <Route path="reports" element={<div>Reportes - Próximamente</div>} />

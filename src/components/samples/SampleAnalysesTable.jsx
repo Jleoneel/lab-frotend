@@ -7,9 +7,11 @@ import {
   AlertCircle,
   Download,
   FlaskConical,
+  UserPlus
 } from "lucide-react";
 import Badge from "../ui/Badge";
 import RegistrarConsumoModal from "../inventario/RegistrarConsumoModal";
+import AsignarAnalistaModal from './AsignarAnalistaModal';
 
 const statusColors = {
   PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -28,10 +30,13 @@ export default function SampleAnalysesTable({
   onStatusChange,
   onRegisterResult,
   readOnly = false,
+  onReload
 }) {
   const [expandedRow, setExpandedRow] = useState(null);
   const [showConsumoModal, setShowConsumoModal] = useState(false);
   const [analysisParaConsumo, setAnalysisParaConsumo] = useState(null);
+  const [showAsignarModal, setShowAsignarModal] = useState(false);
+  const [analysisParaAsignar, setAnalysisParaAsignar] = useState(null);
 
   if (!analyses || analyses.length === 0) {
     return (
@@ -153,6 +158,19 @@ export default function SampleAnalysesTable({
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   {!readOnly && (
                     <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => {
+                          setAnalysisParaAsignar(analysis);
+                          setShowAsignarModal(true);
+                        }}
+                        className="p-2 rounded-lg transition-colors"
+                        style={{ color: '#666666' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
+                        title={analysis.assignedTo ? `Asignado: ${analysis.assignedTo}` : 'Asignar analista'}
+                      >
+                        <UserPlus className="w-4 h-4" />
+                      </button>
                       {analysis.status === "PENDING" && (
                         <button
                           onClick={() => onStatusChange(analysis.id, "RUNNING")}
@@ -519,7 +537,13 @@ export default function SampleAnalysesTable({
           setAnalysisParaConsumo(null);
         }}
         analysis={analysisParaConsumo}
-        onSaved={() => {}}
+        onSaved={() => { }}
+      />
+      <AsignarAnalistaModal
+        isOpen={showAsignarModal}
+        onClose={() => { setShowAsignarModal(false); setAnalysisParaAsignar(null); }}
+        analysis={analysisParaAsignar}
+        onSaved={onReload}
       />
     </div>
   );

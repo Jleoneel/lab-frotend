@@ -1,9 +1,9 @@
 // components/layout/Sidebar.jsx
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  FileText, 
-  ClipboardList, 
+import {
+  FileText,
+  ClipboardList,
   FlaskConical,
   Users,
   Beaker,
@@ -29,12 +29,8 @@ const navigation = [
     title: 'INVENTARIO',
     items: [
       { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
-    ]
-  },
-  {
-    title: 'EQUIPOS',
-    items: [
       { name: 'Equipos', path: '/equipos', icon: Microscope },
+
     ]
   },
   {
@@ -42,6 +38,7 @@ const navigation = [
     items: [
       { name: 'Clientes', path: '/clients', icon: Users },
       { name: 'Servicios', path: '/services', icon: Beaker },
+      { name: 'Usuarios', path: '/users', icon: Users },
     ]
   },
   {
@@ -63,7 +60,7 @@ export default function Sidebar() {
     const savedState = localStorage.getItem('sidebarCollapsed');
     return savedState !== null ? JSON.parse(savedState) : false;
   });
-  
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -74,7 +71,7 @@ export default function Sidebar() {
         setIsCollapsed(true);
       }
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -89,8 +86,8 @@ export default function Sidebar() {
   const handleToggleCollapse = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
-    window.dispatchEvent(new CustomEvent('sidebarCollapsed', { 
-      detail: { collapsed: newState } 
+    window.dispatchEvent(new CustomEvent('sidebarCollapsed', {
+      detail: { collapsed: newState }
     }));
     localStorage.setItem('sidebarCollapsed', JSON.stringify(newState));
   };
@@ -119,7 +116,7 @@ export default function Sidebar() {
           />
         )}
 
-        <aside 
+        <aside
           className={`
             fixed left-0 top-0 h-full z-50 w-64
             transform transition-transform duration-300 ease-in-out
@@ -135,7 +132,7 @@ export default function Sidebar() {
               Centro de Análisis Biológico y Agroalimentario
             </p>
           </div>
-          
+
           <nav className="p-4 overflow-y-auto h-[calc(100vh-120px)]">
             {navigation.map((section) => (
               <div key={section.title} className="mb-6">
@@ -186,7 +183,7 @@ export default function Sidebar() {
   // Versión desktop
   return (
     <>
-      <aside 
+      <aside
         className={`
           ${sidebarWidth} h-screen fixed left-0 top-0
           transition-all duration-300 ease-in-out z-30
@@ -198,7 +195,7 @@ export default function Sidebar() {
           p-5 border-b flex items-center
           ${isCollapsed ? 'justify-center' : 'justify-between'}
         `}
-        style={{ borderColor: '#FFCC33' }}
+          style={{ borderColor: '#FFCC33' }}
         >
           {!isCollapsed ? (
             <div>
@@ -215,7 +212,7 @@ export default function Sidebar() {
             </h1>
           )}
         </div>
-        
+
         <button
           onClick={handleToggleCollapse}
           className="absolute -right-3 top-20 rounded-full p-1.5 transition-colors shadow-lg border z-40"

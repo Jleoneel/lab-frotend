@@ -76,6 +76,7 @@ export const sampleService = {
       throw error;
     }
   },
+
   getById: async (id) => {
     try {
       const response = await api.get(`/samples/${id}`);
@@ -140,6 +141,18 @@ export const sampleService = {
       return await api.post(`/samples/${sampleId}/emit-report`);
     } catch (error) {
       console.error("Error en sampleService.emitReport:", error);
+      throw error;
+    }
+  },
+
+  assignAnalista: async (sampleServiceId, userId) => {
+    try {
+      return await api.patch(
+        `/samples/sample-services/${sampleServiceId}/assign`,
+        { userId },
+      );
+    } catch (error) {
+      console.error("Error en sampleService.assignAnalista:", error);
       throw error;
     }
   },
