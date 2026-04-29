@@ -27,6 +27,7 @@ import { settingsService } from "../../services/settingsService";
 import SampleReportPDF from "../../components/samples/SampleReportPDF";
 import QRCode from "qrcode";
 import Swal from "sweetalert2";
+import { useAuthStore } from '../../store/authStore';
 
 const statusLabels = {
   EN_COLA: "En Cola",
@@ -54,6 +55,7 @@ export default function SampleDetail() {
   const [showQR, setShowQR] = useState(false);
   const [labInfo, setLabInfo] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState(null);
+  const { user } = useAuthStore();
 
   useEffect(() => {
     loadSampleData();
@@ -61,20 +63,36 @@ export default function SampleDetail() {
 
   const loadSampleData = async () => {
     try {
-      const [sampleRes, analysesRes, labInfoRes] = await Promise.all([
+      const [sampleRes, analysesRes] = await Promise.all([
         sampleService.getById(id),
         sampleService.getAnalyses(id),
-        settingsService.getLabInfo(),
       ]);
       setSample(sampleRes.data);
-      setAnalyses(analysesRes.data);
-      setLabInfo(labInfoRes);
+
+      const allAnalyses = analysesRes.data;
+      if (user?.role === 'ANALYST') {
+        setAnalyses(allAnalyses.filter(a => a.assignedToId === user.id));
+      } else {
+        setAnalyses(allAnalyses);
+      }
+
+      try {
+        const labInfoRes = await settingsService.getLabInfo();
+        setLabInfo(labInfoRes);
+      } catch (e) {
+        console.warn('No se pudo cargar lab info:', e.message);
+      }
 
       const url = `${window.location.origin}/samples/${id}`;
       const dataUrl = await QRCode.toDataURL(url, { width: 150, margin: 1 });
       setQrDataUrl(dataUrl);
+
     } catch (error) {
-      console.error("Error cargando muestra:", error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo cargar la muestra.',
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +130,11 @@ export default function SampleDetail() {
       setSelectedAnalysis(null);
       loadSampleData();
     } catch (error) {
-      console.error("Error registrando resultado:", error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo registrar el resultado.',
+      });
     }
   };
 
@@ -279,7 +301,7 @@ export default function SampleDetail() {
               <span className="hidden sm:inline">Ver QR</span>
             </Button>
 
-            {canEmitReport && (
+            {canEmitReport && user.role === "ADMIN" && (
               <Button onClick={handleEmitReport} className="shadow-sm" style={{ backgroundColor: '#009933' }}>
                 <FileText className="w-4 h-4 mr-2" />
                 Emitir Informe
@@ -465,7 +487,7 @@ export default function SampleDetail() {
         />
       )}
 
-      {/* Modal QR profesional */}
+      {/* Modal QR */}
       {showQR && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden">

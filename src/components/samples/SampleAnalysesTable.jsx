@@ -12,6 +12,7 @@ import {
 import Badge from "../ui/Badge";
 import RegistrarConsumoModal from "../inventario/RegistrarConsumoModal";
 import AsignarAnalistaModal from './AsignarAnalistaModal';
+import { useAuthStore } from '../../store/authStore';
 
 const statusColors = {
   PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -37,6 +38,8 @@ export default function SampleAnalysesTable({
   const [analysisParaConsumo, setAnalysisParaConsumo] = useState(null);
   const [showAsignarModal, setShowAsignarModal] = useState(false);
   const [analysisParaAsignar, setAnalysisParaAsignar] = useState(null);
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === 'ADMIN';
 
   if (!analyses || analyses.length === 0) {
     return (
@@ -60,6 +63,7 @@ export default function SampleAnalysesTable({
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full">
+        {/* Table Header */}
         <thead>
           <tr className="border-b" style={{ borderColor: "#E5E5E5" }}>
             <th
@@ -94,6 +98,8 @@ export default function SampleAnalysesTable({
             </th>
           </tr>
         </thead>
+
+        {/* Table Body */}
         <tbody className="divide-y" style={{ borderColor: "#E5E5E5" }}>
           {analyses.map((analysis) => (
             <>
@@ -158,19 +164,21 @@ export default function SampleAnalysesTable({
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   {!readOnly && (
                     <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => {
-                          setAnalysisParaAsignar(analysis);
-                          setShowAsignarModal(true);
-                        }}
-                        className="p-2 rounded-lg transition-colors"
-                        style={{ color: '#666666' }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
-                        title={analysis.assignedTo ? `Asignado: ${analysis.assignedTo}` : 'Asignar analista'}
-                      >
-                        <UserPlus className="w-4 h-4" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => {
+                            setAnalysisParaAsignar(analysis);
+                            setShowAsignarModal(true);
+                          }}
+                          className="p-2 rounded-lg transition-colors"
+                          style={{ color: '#666666' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
+                          title={analysis.assignedTo ? `Asignado: ${analysis.assignedTo}` : 'Asignar analista'}
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </button>
+                      )}
                       {analysis.status === "PENDING" && (
                         <button
                           onClick={() => onStatusChange(analysis.id, "RUNNING")}
@@ -371,7 +379,7 @@ export default function SampleAnalysesTable({
                             className="font-medium"
                             style={{ color: "#333333" }}
                           >
-                            {analysis.result.recordedBy}
+                            {analysis.assignedTo || "No registrado"}
                           </p>
                         </div>
                         <div
@@ -530,6 +538,8 @@ export default function SampleAnalysesTable({
           ))}
         </tbody>
       </table>
+
+      {/*Modales */}
       <RegistrarConsumoModal
         isOpen={showConsumoModal}
         onClose={() => {

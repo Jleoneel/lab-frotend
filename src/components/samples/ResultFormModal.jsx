@@ -45,52 +45,52 @@ export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const validationErrors = validate();
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    return;
-  }
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const data = new FormData();
-    data.append('resultText', formData.resultText || '');
-    data.append('resultNumber', formData.resultNumber || '');
-    data.append('unit', formData.unit || '');
-    data.append('isFinal', formData.isFinal);
-    data.append('observaciones', formData.observaciones || '');
-    
-    // 👈 múltiples archivos
-    archivos.forEach(file => {
-      data.append('archivos', file);
-    });
+    setLoading(true);
+    try {
+      const data = new FormData();
+      data.append('resultText', formData.resultText || '');
+      data.append('resultNumber', formData.resultNumber || '');
+      data.append('unit', formData.unit || '');
+      data.append('isFinal', formData.isFinal);
+      data.append('observaciones', formData.observaciones || '');
 
-    await onSave(analysis.id, data);
+      //múltiples archivos
+      archivos.forEach(file => {
+        data.append('archivos', file);
+      });
 
-    await Swal.fire({
-      icon: 'success',
-      title: '¡Resultado registrado!',
-      text: 'El resultado ha sido guardado correctamente.',
-      confirmButtonColor: '#009933',
-      timer: 2000,
-      timerProgressBar: true
-    });
+      await onSave(analysis.id, data);
 
-    onClose();
-  } catch (error) {
-    console.error('Error guardando resultado:', error);
-    await Swal.fire({
-      icon: 'error',
-      title: 'Error al guardar resultado',
-      text: 'No se pudo guardar el resultado. Inténtalo nuevamente.',
-      confirmButtonColor: '#dc3545'
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Resultado registrado!',
+        text: 'El resultado ha sido guardado correctamente.',
+        confirmButtonColor: '#009933',
+        timer: 2000,
+        timerProgressBar: true
+      });
+
+      onClose();
+    } catch (error) {
+      console.error('Error guardando resultado:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar resultado',
+        text: 'No se pudo guardar el resultado. Inténtalo nuevamente.',
+        confirmButtonColor: '#dc3545'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Registrar Resultado">
@@ -284,7 +284,7 @@ export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
               type="file"
               id="archivosEvidencia"
               accept=".xlsx,.xls,.csv,.pdf,.png,.jpg,.jpeg"
-              multiple // 👈
+              multiple
               className="hidden"
               onChange={(e) => setArchivos(Array.from(e.target.files))}
             />

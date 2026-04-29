@@ -41,6 +41,7 @@ const adaptSampleAnalysisFromBackend = (backendAnalysis) => {
     serviceId: backendAnalysis.serviceId,
     status: backendAnalysis.status,
     assignedTo: backendAnalysis.assignedTo || null,
+    assignedToId: backendAnalysis.assignedToId || null,
     result: backendAnalysis.result
       ? {
           ...backendAnalysis.result,

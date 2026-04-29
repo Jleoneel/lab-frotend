@@ -1,6 +1,7 @@
 // App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
+import MisAnalisis from './pages/analyst/MisAnalisis';
 
 // Layout
 import LayoutPrincipal from "./components/layouts/LayoutPrincipal";
@@ -29,16 +30,16 @@ import ServiceForm from "./pages/services/ServiceForm";
 
 import SettingsPage from "./pages/settings/SettingsPage";
 
-//REACTIVOS
+// REACTIVOS
 import ReactivosList from './pages/inventario/ReactivosList';
 
-//EQUIPOS
+// EQUIPOS
 import EquiposList from './pages/inventario/EquiposList';
 
-//Usuarios
+// Usuarios
 import UsersList from './pages/users/UsersList';
 
-// Componente para rutas protegidas
+// Componente para rutas protegidas (solo autenticado)
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
 
@@ -49,16 +50,52 @@ const RutaProtegida = ({ children }) => {
   return children;
 };
 
+// Componente para rutas solo admin
+const SoloAdmin = ({ children }) => {
+  const { user, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== 'ADMIN') {
+    return <Navigate to="/mis-analisis" replace />;
+  }
+
+  return children;
+};
+
+// Componente para rutas solo analyst (o roles no-admin)
+const SoloAnalyst = ({ children }) => {
+  const { user, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Si es ADMIN, también puede acceder (opcional, según tu lógica)
+  if (user?.role === 'ANALYST') {
+    return children;
+  }
+
+  // Si es ADMIN, redirige a quotes o dashboard
+  if (user?.role === 'ADMIN') {
+    return <Navigate to="/quotes" replace />;
+  }
+
+  return <Navigate to="/mis-analisis" replace />;
+};
+
 function App() {
   return (
     <Routes>
       {/* Ruta pública */}
       <Route path="/login" element={<Login />} />
 
-      {/* Redirección por defecto */}
+      {/* Redirección por defecto basada en rol */}
       <Route path="/" element={<Navigate to="/quotes" replace />} />
 
-      {/* Rutas protegidas */}
+      {/* Rutas protegidas - Layout principal */}
       <Route
         path="/"
         element={
@@ -67,38 +104,44 @@ function App() {
           </RutaProtegida>
         }
       >
+        {/* Ruta específica para ANALYST */}
+        <Route path="mis-analisis" element={<MisAnalisis />} />
+
+        {/* RUTAS SOLO ADMIN */}
         {/* OPERACIÓN - Flujo principal */}
-        <Route path="quotes" element={<QuotesList />} />
-        <Route path="quotes/new" element={<NewQuote />} />
-        <Route path="quotes/:id" element={<QuoteDetail />} />
+        <Route path="quotes" element={<SoloAdmin><QuotesList /></SoloAdmin>} />
+        <Route path="quotes/new" element={<SoloAdmin><NewQuote /></SoloAdmin>} />
+        <Route path="quotes/:id" element={<SoloAdmin><QuoteDetail /></SoloAdmin>} />
 
-        <Route path="requests" element={<RequestsList />} />
-        <Route path="requests/:id" element={<RequestDetail />} />
+        <Route path="requests" element={<SoloAdmin><RequestsList /></SoloAdmin>} />
+        <Route path="requests/:id" element={<SoloAdmin><RequestDetail /></SoloAdmin>} />
 
+        {/* CATÁLOGOS - Solo admin */}
+        <Route path="clients" element={<SoloAdmin><ClientsList /></SoloAdmin>} />
+        <Route path="clients/new" element={<SoloAdmin><ClientForm /></SoloAdmin>} />
+        <Route path="clients/:id" element={<SoloAdmin><ClientForm /></SoloAdmin>} />
+
+        <Route path="services" element={<SoloAdmin><ServicesList /></SoloAdmin>} />
+        <Route path="services/new" element={<SoloAdmin><ServiceForm /></SoloAdmin>} />
+        <Route path="services/:id" element={<SoloAdmin><ServiceForm /></SoloAdmin>} />
+
+        {/* INVENTARIO - Solo admin */}
+        <Route path="reactivos" element={<SoloAdmin><ReactivosList /></SoloAdmin>} />
+        <Route path="equipos" element={<SoloAdmin><EquiposList /></SoloAdmin>} />
+
+        {/* Usuarios - Solo admin */}
+        <Route path="users" element={<SoloAdmin><UsersList /></SoloAdmin>} />
+
+        {/* Configuración - Solo admin */}
+        <Route path="settings" element={<SoloAdmin><SettingsPage /></SoloAdmin>} />
+
+        {/* RUTAS ACCESIBLES PARA AMBOS ROLES */}
+        {/* Producción - ambos roles pueden ver */}
         <Route path="production" element={<ProductionKanban />} />
         <Route path="samples/:id" element={<SampleDetail />} />
 
-        {/* CATÁLOGOS */}
-        <Route path="clients" element={<ClientsList />} />
-        <Route path="clients/new" element={<ClientForm />} />
-        <Route path="clients/:id" element={<ClientForm />} />
-
-        <Route path="services" element={<ServicesList />} />
-        <Route path="services/new" element={<ServiceForm />} />
-        <Route path="services/:id" element={<ServiceForm />} />
-
-        {/* INVENTARIO - Reactivos */}
-        <Route path="reactivos" element={<ReactivosList />} />
-        <Route path="equipos" element={<EquiposList />} />
-
-        {/*Usuarios */}
-        <Route path="users" element={<UsersList />} />
-
-        {/* SALIDAS (placeholder) */}
+        {/* Reportes (placeholder) */}
         <Route path="reports" element={<div>Reportes - Próximamente</div>} />
-
-        {/* CONFIGURACIÓN (placeholder) */}
-        <Route path="/settings" element={<SettingsPage />} />
 
         {/* 404 dentro de la app */}
         <Route path="*" element={<div>Página no encontrada</div>} />

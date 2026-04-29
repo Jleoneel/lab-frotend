@@ -1,6 +1,7 @@
 // components/layout/Sidebar.jsx
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore';
 import {
   FileText,
   ClipboardList,
@@ -16,46 +17,52 @@ import {
   Microscope
 } from 'lucide-react';
 
-const navigation = [
-  {
-    title: 'OPERACIÓN',
-    items: [
-      { name: 'Cotizaciones', path: '/quotes', icon: FileText },
-      { name: 'Solicitudes', path: '/requests', icon: ClipboardList },
-      { name: 'Producción', path: '/production', icon: FlaskConical },
-    ]
-  },
-  {
-    title: 'INVENTARIO',
-    items: [
-      { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
-      { name: 'Equipos', path: '/equipos', icon: Microscope },
-
-    ]
-  },
-  {
-    title: 'CATÁLOGOS',
-    items: [
-      { name: 'Clientes', path: '/clients', icon: Users },
-      { name: 'Servicios', path: '/services', icon: Beaker },
-      { name: 'Usuarios', path: '/users', icon: Users },
-    ]
-  },
-  {
-    title: 'SALIDAS',
-    items: [
-      { name: 'Reportes', path: '/reports', icon: BarChart3 },
-    ]
-  },
-  {
-    title: 'CONFIGURACIÓN',
-    items: [
-      { name: 'Ajustes', path: '/settings', icon: Settings },
-    ]
-  }
-];
-
 export default function Sidebar() {
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === 'ADMIN';
+
+  const getNavigation = () => [
+    ...(isAdmin ? [{
+      title: 'OPERACIÓN',
+      items: [
+        { name: 'Cotizaciones', path: '/quotes', icon: FileText },
+        { name: 'Solicitudes', path: '/requests', icon: ClipboardList },
+        { name: 'Producción', path: '/production', icon: FlaskConical },
+      ]
+    }] : [{
+      title: 'MI TRABAJO',
+      items: [
+        { name: 'Mis Análisis', path: '/mis-analisis', icon: FlaskConical },
+        { name: 'Producción', path: '/production', icon: FlaskConical },
+      ]
+    }]),
+    ...(isAdmin ? [{
+      title: 'INVENTARIO',
+      items: [
+        { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
+        { name: 'Equipos', path: '/equipos', icon: Microscope },
+      ]
+    }] : []),
+    ...(isAdmin ? [{
+      title: 'CATÁLOGOS',
+      items: [
+        { name: 'Clientes', path: '/clients', icon: Users },
+        { name: 'Servicios', path: '/services', icon: Beaker },
+        { name: 'Usuarios', path: '/users', icon: Users },
+      ]
+    }] : []),
+    ...(isAdmin ? [{
+      title: 'SALIDAS',
+      items: [{ name: 'Reportes', path: '/reports', icon: BarChart3 }]
+    }] : []),
+    ...(isAdmin ? [{
+      title: 'CONFIGURACIÓN',
+      items: [{ name: 'Ajustes', path: '/settings', icon: Settings }]
+    }] : []),
+  ];
+
+  const navigation = getNavigation();
+
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const savedState = localStorage.getItem('sidebarCollapsed');
     return savedState !== null ? JSON.parse(savedState) : false;
@@ -94,6 +101,17 @@ export default function Sidebar() {
 
   const sidebarWidth = isCollapsed ? 'w-20' : 'w-64';
   const mobileSidebarClass = isMobileOpen ? 'translate-x-0' : '-translate-x-full';
+
+  const getNavLinkClass = ({ isActive }) => {
+    return `flex items-center px-3 py-2 rounded-lg text-sm transition-colors ${isCollapsed ? 'justify-center' : ''
+      } ${isActive ? 'active' : ''}`;
+  };
+
+  const getNavLinkStyle = ({ isActive }) => ({
+    backgroundColor: isActive ? '#FFCC33' : 'transparent',
+    color: isActive ? '#009933' : '#FFFFFF',
+    fontFamily: "'Montserrat', sans-serif"
+  });
 
   // Versión móvil
   if (isMobile) {
@@ -145,14 +163,8 @@ export default function Sidebar() {
                       <NavLink
                         to={item.path}
                         onClick={handleNavClick}
-                        className={({ isActive }) =>
-                          `flex items-center px-3 py-2 rounded-lg text-sm transition-colors`
-                        }
-                        style={({ isActive }) => ({
-                          backgroundColor: isActive ? '#FFCC33' : 'transparent',
-                          color: isActive ? '#009933' : '#FFFFFF',
-                          fontFamily: "'Montserrat', sans-serif"
-                        })}
+                        className={getNavLinkClass}
+                        style={getNavLinkStyle}
                         onMouseEnter={(e) => {
                           if (!e.currentTarget.classList.contains('active')) {
                             e.currentTarget.style.backgroundColor = '#FFCC33';
@@ -245,14 +257,8 @@ export default function Sidebar() {
                   <li key={item.path}>
                     <NavLink
                       to={item.path}
-                      className={({ isActive }) =>
-                        `flex items-center px-3 py-2 rounded-lg text-sm transition-colors ${isCollapsed ? 'justify-center' : ''}`
-                      }
-                      style={({ isActive }) => ({
-                        backgroundColor: isActive ? '#FFCC33' : 'transparent',
-                        color: isActive ? '#009933' : '#FFFFFF',
-                        fontFamily: "'Montserrat', sans-serif"
-                      })}
+                      className={getNavLinkClass}
+                      style={getNavLinkStyle}
                       onMouseEnter={(e) => {
                         if (!e.currentTarget.classList.contains('active')) {
                           e.currentTarget.style.backgroundColor = '#FFCC33';
