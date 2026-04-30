@@ -123,7 +123,7 @@ export default function UsersList() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        {user.isActive ? (
+                                        {user ? (
                                             <span className="text-xs px-2 py-1 rounded-full"
                                                 style={{ backgroundColor: '#E8F5E9', color: '#009933' }}>Activo</span>
                                         ) : (

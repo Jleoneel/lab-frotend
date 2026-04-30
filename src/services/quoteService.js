@@ -53,9 +53,7 @@ export const quoteService = {
   
   create: async (data) => {
     try {
-      console.log('Enviando cotización:', JSON.stringify(data, null, 2));
       const response = await api.post('/quotes', data);
-      console.log('Respuesta del backend:', response);
       return response;
     } catch (error) {
       console.error('Error en quoteService.create:', error);

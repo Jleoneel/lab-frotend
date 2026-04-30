@@ -248,6 +248,9 @@ export default function SampleDetail() {
   const allAnalysesDone = analyses.every((a) => a.status === "DONE");
   const canEmitReport =
     sample.status === "LISTO_PARA_INFORME" && allAnalysesDone;
+  const todosConConsumo = analyses
+    .filter(a => a.status === 'DONE')
+    .every(a => (a.movimientosReactivos?.length || 0) > 0);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -302,10 +305,22 @@ export default function SampleDetail() {
             </Button>
 
             {canEmitReport && user.role === "ADMIN" && (
-              <Button onClick={handleEmitReport} className="shadow-sm" style={{ backgroundColor: '#009933' }}>
-                <FileText className="w-4 h-4 mr-2" />
-                Emitir Informe
-              </Button>
+              <div className="flex flex-col items-end gap-1">
+                <Button
+                  onClick={handleEmitReport}
+                  disabled={!todosConConsumo}
+                  className="shadow-sm"
+                  style={{ backgroundColor: todosConConsumo ? '#009933' : '#CCCCCC' }}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Emitir Informe
+                </Button>
+                {!todosConConsumo && (
+                  <p className="text-xs" style={{ color: '#DC2626' }}>
+                    ⚠ Registra el consumo de reactivos primero
+                  </p>
+                )}
+              </div>
             )}
             {sample.status === "TERMINADO" && labInfo && qrDataUrl && (
               <PDFDownloadLink

@@ -10,8 +10,6 @@ export const useAuthStore = create(
       isAuthenticated: false,
       
       login: (userData, token) => {
-        console.log('📝 Store login - guardando:', { userData, token });
-        
         // Guardar en localStorage también para axios
         localStorage.setItem('token', token);
         if (userData) {
@@ -23,17 +21,9 @@ export const useAuthStore = create(
           token: token,
           isAuthenticated: true
         });
-        
-        // Verificar que se guardó
-        setTimeout(() => {
-          const state = get();
-          console.log('✅ Store después de login:', state);
-        }, 0);
       },
       
       logout: () => {
-        console.log('📝 Store logout');
-        
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         
@@ -48,8 +38,6 @@ export const useAuthStore = create(
       checkAuth: () => {
         const token = localStorage.getItem('token');
         const userStr = localStorage.getItem('user');
-        
-        console.log('🔍 checkAuth - token:', token ? 'presente' : 'ausente');
         
         if (token && userStr) {
           try {

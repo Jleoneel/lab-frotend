@@ -261,24 +261,21 @@ export default function SampleAnalysesTable({
                           <FileText className="w-4 h-4" />
                         </button>
                       )}
-                      {analysis.status === "DONE" && (
+                      {analysis.status === 'DONE' && (
                         <button
-                          onClick={() => {
-                            setAnalysisParaConsumo(analysis);
-                            setShowConsumoModal(true);
+                          onClick={() => { setAnalysisParaConsumo(analysis); setShowConsumoModal(true); }}
+                          className={`p-2 rounded-lg transition-colors ${analysis.movimientosReactivos?.length === 0 ? 'animate-pulse' : ''
+                            }`}
+                          style={{
+                            color: analysis.movimientosReactivos?.length === 0 ? '#DC2626' : '#666666',
+                            backgroundColor: analysis.movimientosReactivos?.length === 0 ? '#FEF2F2' : 'transparent'
                           }}
-                          className="p-2 rounded-lg transition-colors"
-                          style={{ color: "#666666" }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "#E8F5E9";
-                            e.currentTarget.style.color = "#009933";
-                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "transparent";
-                            e.currentTarget.style.color = "#666666";
+                            e.currentTarget.style.backgroundColor = analysis.movimientosReactivos?.length === 0 ? '#FEF2F2' : 'transparent';
+                            e.currentTarget.style.color = analysis.movimientosReactivos?.length === 0 ? '#DC2626' : '#666666';
                           }}
-                          title="Registrar consumo de reactivos"
+                          title={analysis.movimientosReactivos?.length === 0 ? '⚠ Debes registrar consumo de reactivos' : 'Ver consumos registrados'}
                         >
                           <FlaskConical className="w-4 h-4" />
                         </button>

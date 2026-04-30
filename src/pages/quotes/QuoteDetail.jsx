@@ -114,9 +114,7 @@ export default function QuoteDetail() {
   const handleConvert = async (samplesData) => {
     setConverting(true);
     try {
-      console.log("Convirtiendo con muestras:", samplesData);
       const response = await quoteService.convert(id, samplesData);
-      console.log("Conversión exitosa:", response);
 
       const requestId = response.data?.requestId || response.data?.request?.id;
 

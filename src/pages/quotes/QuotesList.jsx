@@ -74,7 +74,7 @@ export default function QuotesList() {
   };
 
   const handleConvert = (quoteId) => {
-    console.log('Convertir cotización:', quoteId);
+    // Lógica para convertir cotización
   };
 
   const filteredQuotes = quotes
