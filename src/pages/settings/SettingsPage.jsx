@@ -30,7 +30,7 @@ export default function SettingsPage() {
       setCurrentIva(ivaData.iva);
       setRazones(Array.isArray(razonesData) ? razonesData : []);
     } catch (error) {
-      console.error('Error cargando configuración:', error);
+      // Error cargando configuración
     } finally {
       setLoading(false);
     }

@@ -30,7 +30,7 @@ export default function RegistrarConsumoModal({
       const response = await reactivoService.getAll();
       setReactivos(response.data.filter((r) => r.isActive));
     } catch (error) {
-      console.error(error);
+      // Error registrando movimientos
     }
   };
 
@@ -59,7 +59,7 @@ export default function RegistrarConsumoModal({
       const razonesData = await settingsService.getRazones();
       setRazones(Array.isArray(razonesData) ? razonesData : []);
     } catch (error) {
-      console.error("Error cargando razones:", error);
+      // Error cargando razones
     }
   };
 

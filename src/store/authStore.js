@@ -49,7 +49,7 @@ export const useAuthStore = create(
             });
             return true;
           } catch (e) {
-            console.error('Error parsing user:', e);
+            // Error parseando usuario del localStorage
           }
         }
         

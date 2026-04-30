@@ -80,7 +80,7 @@ export default function SampleDetail() {
         const labInfoRes = await settingsService.getLabInfo();
         setLabInfo(labInfoRes);
       } catch (e) {
-        console.warn('No se pudo cargar lab info:', e.message);
+        // No se pudo cargar lab info
       }
 
       const url = `${window.location.origin}/samples/${id}`;
@@ -114,7 +114,6 @@ export default function SampleDetail() {
 
       loadSampleData();
     } catch (error) {
-      console.error("Error actualizando estado:", error);
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -168,7 +167,6 @@ export default function SampleDetail() {
 
       loadSampleData();
     } catch (error) {
-      console.error("Error emitiendo informe:", error);
       await Swal.fire({
         icon: 'error',
         title: 'Error',

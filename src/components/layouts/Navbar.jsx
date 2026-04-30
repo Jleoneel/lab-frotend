@@ -83,7 +83,7 @@ export default function Navbar() {
           setNotifCount(data.count);
           setNotifications(data.notifications || []);
         } catch (err) {
-          console.error('SSE parse error:', err);
+          // Error parseando datos SSE - se ignora silenciosamente
         }
       };
 

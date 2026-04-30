@@ -47,7 +47,6 @@ export default function ClientForm() {
       const response = await clientService.getById(id);
       setFormData(response.data);
     } catch (error) {
-      console.error('Error cargando cliente:', error);
       navigate('/clients');
     } finally {
       setLoading(false);
@@ -120,7 +119,6 @@ export default function ClientForm() {
       
       navigate('/clients');
     } catch (error) {
-      console.error('Error guardando cliente:', error);
       await Swal.fire({
         icon: 'error',
         title: 'Error al guardar cliente',

@@ -34,15 +34,7 @@ export default function NewQuote() {
       setClients(clientsData);
       setServices(servicesData);
 
-      if (clientsData.length === 0) {
-        console.warn("No hay clientes disponibles");
-      }
-
-      if (servicesData.length === 0) {
-        console.warn("No hay servicios activos disponibles");
-      }
     } catch (error) {
-      console.error("Error detallado:", error);
       setError(error.message || "Error al cargar datos");
     } finally {
       setLoading(false);

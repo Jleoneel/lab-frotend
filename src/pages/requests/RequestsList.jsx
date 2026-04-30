@@ -54,7 +54,7 @@ export default function RequestsList() {
       const response = await requestService.getAll();
       setRequests(response.data);
     } catch (error) {
-      console.error('Error cargando solicitudes:', error);
+      // Error cargando solicitudes
     } finally {
       setLoading(false);
     }

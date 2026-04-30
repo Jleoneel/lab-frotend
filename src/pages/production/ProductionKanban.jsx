@@ -31,7 +31,7 @@ export default function ProductionKanban() {
       const response = await sampleService.getKanban();
       setSamples(response.data);
     } catch (error) {
-      console.error('Error cargando kanban:', error);
+      // Error cargando kanban
     } finally {
       setLoading(false);
     }

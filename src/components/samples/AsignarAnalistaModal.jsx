@@ -23,7 +23,7 @@ export default function AsignarAnalistaModal({ isOpen, onClose, analysis, onSave
       const response = await userService.getAnalistas();
       setAnalistas(response.data || []);
     } catch (error) {
-      console.error('Error cargando analistas:', error);
+      // Error cargando analistas
     } finally {
       setLoading(false);
     }

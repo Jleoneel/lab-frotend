@@ -80,7 +80,7 @@ export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
 
       onClose();
     } catch (error) {
-      console.error('Error guardando resultado:', error);
+      // Error guardando resultado
       await Swal.fire({
         icon: 'error',
         title: 'Error al guardar resultado',

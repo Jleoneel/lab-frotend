@@ -104,7 +104,7 @@ export default function ServicesList() {
       const response = await serviceService.getAll();
       setServices(response.data);
     } catch (error) {
-      console.error("Error cargando servicios:", error);
+      // Error cargando servicios
     } finally {
       setLoading(false);
     }
@@ -119,7 +119,7 @@ export default function ServicesList() {
       setShowDeleteModal(false);
       setServiceToDelete(null);
     } catch (error) {
-      console.error("Error eliminando servicio:", error);
+      // Error eliminando servicio
     }
   };
 
@@ -135,7 +135,7 @@ export default function ServicesList() {
         ),
       );
     } catch (error) {
-      console.error("Error cambiando estado:", error);
+      // Error cambiando estado del servicio
     }
   };
 

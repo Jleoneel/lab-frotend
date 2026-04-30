@@ -31,7 +31,6 @@ export const serviceService = {
       
       return { data: services.map(adaptServiceFromBackend) };
     } catch (error) {
-      console.error('Error en serviceService.getAll:', error);
       throw error;
     }
   },
@@ -45,7 +44,6 @@ export const serviceService = {
             
       return { data: activeServices };
     } catch (error) {
-      console.error('Error en serviceService.getActive:', error);
       // Si getAll falla, devolvemos array vacío
       return { data: [] };
     }
@@ -58,7 +56,6 @@ export const serviceService = {
       const data = response.data || response;
       return { data: adaptServiceFromBackend(data) };
     } catch (error) {
-      console.error('Error en serviceService.getById:', error);
       throw error;
     }
   },
@@ -79,7 +76,6 @@ export const serviceService = {
       const response = await api.post('/services', cleanData);
       return response;
     } catch (error) {
-      console.error('Error en serviceService.create:', error);
       throw error;
     }
   },
@@ -100,7 +96,6 @@ export const serviceService = {
       const response = await api.put(`/services/${id}`, cleanData);
       return response;
     } catch (error) {
-      console.error('Error en serviceService.update:', error);
       throw error;
     }
   },
@@ -111,7 +106,6 @@ export const serviceService = {
       const response = await api.delete(`/services/${id}`);
       return response;
     } catch (error) {
-      console.error('Error en serviceService.delete:', error);
       throw error;
     }
   },

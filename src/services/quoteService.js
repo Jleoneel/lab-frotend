@@ -35,7 +35,6 @@ export const quoteService = {
       const quotes = Array.isArray(data) ? data : [];
       return { data: quotes.map(adaptQuoteFromBackend) };
     } catch (error) {
-      console.error('Error en quoteService.getAll:', error);
       throw error;
     }
   },
@@ -46,7 +45,6 @@ export const quoteService = {
       const data = response.data || response;
       return { data: adaptQuoteFromBackend(data) };
     } catch (error) {
-      console.error('Error en quoteService.getById:', error);
       throw error;
     }
   },
@@ -56,7 +54,6 @@ export const quoteService = {
       const response = await api.post('/quotes', data);
       return response;
     } catch (error) {
-      console.error('Error en quoteService.create:', error);
       throw error;
     }
   },
@@ -68,7 +65,6 @@ convert: async (id, samplesData) => {
     const response = await api.post(`/quotes/${id}/convert`, { samples: samplesData });
     return response;
   } catch (error) {
-    console.error('Error en quoteService.convert:', error);
     throw error;
   }
 },
@@ -79,7 +75,6 @@ convert: async (id, samplesData) => {
       const response = await api.patch(`/quotes/${id}/status`, { status });
       return response;
     } catch (error) {
-      console.error('Error en quoteService.updateStatus:', error);
       throw error;
     }
   },

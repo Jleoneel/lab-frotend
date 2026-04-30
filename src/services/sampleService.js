@@ -73,7 +73,6 @@ export const sampleService = {
 
       return { data: adapted };
     } catch (error) {
-      console.error("Error en sampleService.getKanban:", error);
       throw error;
     }
   },
@@ -84,7 +83,6 @@ export const sampleService = {
       const data = response.data || response;
       return { data: adaptSampleFromBackend(data) };
     } catch (error) {
-      console.error("Error en sampleService.getById:", error);
       throw error;
     }
   },
@@ -96,7 +94,6 @@ export const sampleService = {
       const analyses = Array.isArray(data) ? data : [];
       return { data: analyses.map(adaptSampleAnalysisFromBackend) };
     } catch (error) {
-      console.error("Error en sampleService.getAnalyses:", error);
       throw error;
     }
   },
@@ -108,7 +105,6 @@ export const sampleService = {
         { status },
       );
     } catch (error) {
-      console.error("Error en sampleService.updateAnalysisStatus:", error);
       throw error;
     }
   },
@@ -123,7 +119,6 @@ export const sampleService = {
         },
       );
     } catch (error) {
-      console.error("Error en sampleService.registerResult:", error);
       throw error;
     }
   },
@@ -132,7 +127,6 @@ export const sampleService = {
     try {
       return await api.patch(`/samples/${sampleId}/status`, { status });
     } catch (error) {
-      console.error("Error en sampleService.updateSampleStatus:", error);
       throw error;
     }
   },
@@ -141,7 +135,6 @@ export const sampleService = {
     try {
       return await api.post(`/samples/${sampleId}/emit-report`);
     } catch (error) {
-      console.error("Error en sampleService.emitReport:", error);
       throw error;
     }
   },
@@ -153,7 +146,6 @@ export const sampleService = {
         { userId },
       );
     } catch (error) {
-      console.error("Error en sampleService.assignAnalista:", error);
       throw error;
     }
   },

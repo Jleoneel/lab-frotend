@@ -20,7 +20,7 @@ export default function RegistrarIngresoModal({ isOpen, onClose, reactivo, onSav
     try {
       const response = await reactivoService.getAll();
       setReactivos(response.data.filter(r => r.isActive));
-    } catch (error) { console.error(error); }
+    } catch (error) { }
   };
 
   const handleSave = async () => {

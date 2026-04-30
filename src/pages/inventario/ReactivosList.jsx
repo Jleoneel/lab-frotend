@@ -44,7 +44,7 @@ export default function ReactivosList() {
       const response = await reactivoService.getAll();
       setReactivos(response.data);
     } catch (error) {
-      console.error("Error cargando reactivos:", error);
+      // Error cargando reactivos
     } finally {
       setLoading(false);
     }

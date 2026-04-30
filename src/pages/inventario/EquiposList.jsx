@@ -51,7 +51,7 @@ export default function EquiposList() {
       const response = await equipoService.getAll();
       setEquipos(response.data);
     } catch (error) {
-      console.error("Error cargando equipos:", error);
+      // Error cargando equipos
     } finally {
       setLoading(false);
     }

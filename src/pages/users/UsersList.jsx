@@ -25,7 +25,7 @@ export default function UsersList() {
             const response = await userService.getAll();
             setUsers(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
-            console.error('Error cargando usuarios:', error);
+            // Error cargando usuarios
         } finally {
             setLoading(false);
         }

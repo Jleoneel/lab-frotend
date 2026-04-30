@@ -306,7 +306,7 @@ export default function QuoteForm({
         const data = await settingsService.getIva();
         setFormData((prev) => ({ ...prev, ivaPercent: data.iva }));
       } catch (e) {
-        console.error("Error cargando IVA:", e);
+        // Error cargando IVA
       }
     };
     loadIva();

@@ -67,7 +67,7 @@ export default function QuotesList() {
       const response = await quoteService.getAll();
       setQuotes(response.data);
     } catch (error) {
-      console.error('Error cargando cotizaciones:', error);
+      // Error cargando cotizaciones
     } finally {
       setLoading(false);
     }

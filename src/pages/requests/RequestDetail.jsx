@@ -61,7 +61,7 @@ export default function RequestDetail() {
       setRequest(requestRes.data);
       setSamples(samplesRes.data);
     } catch (error) {
-      console.error("Error cargando solicitud:", error);
+      // Error cargando solicitud
     } finally {
       setLoading(false);
     }

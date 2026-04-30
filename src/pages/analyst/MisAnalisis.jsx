@@ -40,7 +40,7 @@ export default function MisAnalisis() {
             const data = response.data || [];
             setAnalyses(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error('Error cargando análisis:', error);
+            // Error cargando análisis
         } finally {
             setLoading(false);
         }

@@ -113,7 +113,7 @@ export default function ClientsList() {
       const response = await clientService.getAll();
       setClients(response.data);
     } catch (error) {
-      console.error("Error cargando clientes:", error);
+      // Error cargando clientes
     } finally {
       setLoading(false);
     }
@@ -128,7 +128,7 @@ export default function ClientsList() {
       setShowDeleteModal(false);
       setClientToDelete(null);
     } catch (error) {
-      console.error("Error eliminando cliente:", error);
+      // Error eliminando cliente
     }
   };
 

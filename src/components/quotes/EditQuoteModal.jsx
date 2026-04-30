@@ -288,8 +288,6 @@ export default function EditQuoteModal({ isOpen, onClose, quote, onSaved }) {
           quantity: item.quantity,
         })),
       });
-    } catch (e) {
-      console.error(e);
     } finally {
       setLoading(false);
     }

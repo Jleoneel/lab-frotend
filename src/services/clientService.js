@@ -29,7 +29,6 @@ export const clientService = {
 
       return { data: clients.map(adaptClientFromBackend) };
     } catch (error) {
-      console.error("Error en clientService.getAll:", error);
       throw error;
     }
   },
@@ -41,7 +40,6 @@ export const clientService = {
       const data = response.data || response;
       return { data: adaptClientFromBackend(data) };
     } catch (error) {
-      console.error("Error en clientService.getById:", error);
       throw error;
     }
   },
@@ -60,7 +58,6 @@ export const clientService = {
       const response = await api.post("/clients", cleanData);
       return response;
     } catch (error) {
-      console.error("Error en clientService.create:", error);
       throw error;
     }
   },
@@ -79,7 +76,6 @@ export const clientService = {
       const response = await api.put(`/clients/${id}`, cleanData);
       return response;
     } catch (error) {
-      console.error("Error en clientService.update:", error);
       throw error;
     }
   },
@@ -90,7 +86,6 @@ export const clientService = {
       const response = await api.delete(`/clients/${id}`);
       return response;
     } catch (error) {
-      console.error("Error en clientService.delete:", error);
       throw error;
     }
   },

@@ -41,7 +41,6 @@ export const requestService = {
       const requests = Array.isArray(data) ? data : [];
       return { data: requests.map(adaptRequestFromBackend) };
     } catch (error) {
-      console.error('Error en requestService.getAll:', error);
       throw error;
     }
   },
@@ -53,7 +52,6 @@ export const requestService = {
       const data = response.data || response;
       return { data: adaptRequestFromBackend(data) };
     } catch (error) {
-      console.error('Error en requestService.getById:', error);
       throw error;
     }
   },
@@ -66,7 +64,6 @@ export const requestService = {
       const samples = Array.isArray(data) ? data : [];
       return { data: samples.map(adaptSampleFromBackend) };
     } catch (error) {
-      console.error('Error en requestService.getSamples:', error);
       throw error;
     }
   },

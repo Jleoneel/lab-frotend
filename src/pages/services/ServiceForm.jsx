@@ -48,7 +48,6 @@ export default function ServiceForm() {
       const response = await serviceService.getById(id);
       setFormData(response.data);
     } catch (error) {
-      console.error('Error cargando servicio:', error);
       navigate('/services');
     } finally {
       setLoading(false);
@@ -136,7 +135,7 @@ export default function ServiceForm() {
       
       navigate('/services');
     } catch (error) {
-      console.error('Error guardando servicio:', error);
+      // Error guardando servicio
       await Swal.fire({
         icon: 'error',
         title: 'Error al guardar servicio',

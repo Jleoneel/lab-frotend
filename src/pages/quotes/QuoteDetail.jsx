@@ -56,7 +56,6 @@ export default function QuoteDetail() {
       const response = await quoteService.getById(id);
       setQuote(response.data);
     } catch (error) {
-      console.error("Error cargando cotización:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -99,7 +98,6 @@ export default function QuoteDetail() {
         timerProgressBar: true,
       });
     } catch (error) {
-      console.error("Error aprobando cotización:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -137,7 +135,6 @@ export default function QuoteDetail() {
         });
       }
     } catch (error) {
-      console.error("Error convirtiendo:", error);
       Swal.fire({
         icon: "error",
         title: "Error al convertir",

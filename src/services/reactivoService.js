@@ -43,7 +43,6 @@ export const reactivoService = {
       const data = response.data || response;
       return { data: Array.isArray(data) ? data.map(adaptReactivoFromBackend) : [] };
     } catch (error) {
-      console.error('Error en reactivoService.getAll:', error);
       throw error;
     }
   },
@@ -54,7 +53,6 @@ export const reactivoService = {
       const data = response.data || response;
       return { data: adaptReactivoFromBackend(data) };
     } catch (error) {
-      console.error('Error en reactivoService.getById:', error);
       throw error;
     }
   },
@@ -64,7 +62,6 @@ export const reactivoService = {
       const response = await api.post('/reactivos', data);
       return response.data || response;
     } catch (error) {
-      console.error('Error en reactivoService.create:', error);
       throw error;
     }
   },
@@ -74,7 +71,6 @@ export const reactivoService = {
       const response = await api.put(`/reactivos/${id}`, data);
       return response.data || response;
     } catch (error) {
-      console.error('Error en reactivoService.update:', error);
       throw error;
     }
   },
@@ -84,7 +80,6 @@ export const reactivoService = {
       const response = await api.post('/reactivos/movimientos', data);
       return response.data || response;
     } catch (error) {
-      console.error('Error en reactivoService.registrarMovimiento:', error);
       throw error;
     }
   },
@@ -94,7 +89,6 @@ export const reactivoService = {
       const response = await api.get(`/reactivos/${id}/movimientos`);
       return { data: response.data || response };
     } catch (error) {
-      console.error('Error en reactivoService.getMovimientos:', error);
       throw error;
     }
   }

@@ -37,7 +37,6 @@ export const equipoService = {
       const data = response.data || response;
       return { data: Array.isArray(data) ? data.map(adaptEquipoFromBackend) : [] };
     } catch (error) {
-      console.error('Error en equipoService.getAll:', error);
       throw error;
     }
   },
@@ -47,7 +46,6 @@ export const equipoService = {
       const response = await api.post('/equipos', data);
       return response.data || response;
     } catch (error) {
-      console.error('Error en equipoService.create:', error);
       throw error;
     }
   },
@@ -57,7 +55,6 @@ export const equipoService = {
       const response = await api.put(`/equipos/${id}`, data);
       return response.data || response;
     } catch (error) {
-      console.error('Error en equipoService.update:', error);
       throw error;
     }
   }
