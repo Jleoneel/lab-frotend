@@ -14,7 +14,8 @@ import {
   ChevronLeft,
   Menu,
   X,
-  Microscope
+  Microscope,
+  FolderOpen
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -34,13 +35,16 @@ export default function Sidebar() {
       items: [
         { name: 'Mis Análisis', path: '/mis-analisis', icon: FlaskConical },
         { name: 'Producción', path: '/production', icon: FlaskConical },
-      ]
+        { name: 'Documentos', path: '/documentos', icon: FolderOpen }
+
+      ], 
     }]),
     ...(isAdmin ? [{
       title: 'INVENTARIO',
       items: [
         { name: 'Reactivos', path: '/reactivos', icon: FlaskConical },
         { name: 'Equipos', path: '/equipos', icon: Microscope },
+        { name: 'Documentos', path: '/documentos', icon: FolderOpen }
       ]
     }] : []),
     ...(isAdmin ? [{
