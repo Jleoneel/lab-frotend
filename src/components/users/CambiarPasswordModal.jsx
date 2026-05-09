@@ -1,6 +1,16 @@
 // components/auth/CambiarPasswordModal.jsx
 import { useState } from 'react';
-import { KeyRound, Eye, EyeOff, Save, Shield, CheckCircle, AlertCircle } from 'lucide-react';
+import { 
+  KeyRound, 
+  Eye, 
+  EyeOff, 
+  Save, 
+  Shield, 
+  CheckCircle, 
+  AlertCircle,
+  Lock,
+  RefreshCw
+} from 'lucide-react';
 import Modal from '../ui/Modal';
 import api from '../../lib/axios';
 import Swal from 'sweetalert2';
@@ -11,6 +21,7 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
   const [showNueva, setShowNueva] = useState(false);
   const [saving, setSaving] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [touched, setTouched] = useState({});
 
   const calcularFortaleza = (password) => {
     let fuerza = 0;
@@ -28,6 +39,10 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
     setPasswordStrength(calcularFortaleza(nueva));
   };
 
+  const handleTouch = (field) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+  };
+
   const getStrengthText = () => {
     const texts = ['', 'Débil', 'Básica', 'Buena', 'Fuerte'];
     return texts[passwordStrength];
@@ -39,12 +54,26 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
   };
 
   const inputStyle = {
-    width: '100%', padding: '10px 12px', border: '1px solid #E5E5E5',
-    borderRadius: '12px', fontSize: '14px', color: '#333333', outline: 'none',
-    fontFamily: "'Montserrat', sans-serif"
+    width: '100%', 
+    padding: '10px 12px', 
+    border: '1px solid #E5E5E5',
+    borderRadius: '12px', 
+    fontSize: '14px', 
+    color: '#333333', 
+    outline: 'none',
+    fontFamily: "'Montserrat', sans-serif",
+    transition: 'all 0.2s ease'
   };
-  const onFocus = (e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; };
-  const onBlur = (e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; };
+  
+  const onFocus = (e) => { 
+    e.currentTarget.style.borderColor = '#009933'; 
+    e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; 
+  };
+  
+  const onBlur = (e) => { 
+    e.currentTarget.style.borderColor = '#E5E5E5'; 
+    e.currentTarget.style.boxShadow = 'none'; 
+  };
 
   const handleSave = async () => {
     if (!form.passwordActual || !form.passwordNueva || !form.confirmar) {
@@ -86,10 +115,12 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
         text: 'Tu contraseña se ha cambiado correctamente',
         confirmButtonColor: '#009933',
         timer: 2000,
-        timerProgressBar: true
+        timerProgressBar: true,
+        backdrop: true
       });
       setForm({ passwordActual: '', passwordNueva: '', confirmar: '' });
       setPasswordStrength(0);
+      setTouched({});
       onClose();
     } catch (error) {
       Swal.fire({
@@ -106,14 +137,22 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
   const isFormValid = form.passwordActual && form.passwordNueva && form.confirmar && 
                       form.passwordNueva === form.confirmar && form.passwordNueva.length >= 6;
 
+  const passwordRequisitos = [
+    { label: 'Mínimo 6 caracteres', valid: form.passwordNueva.length >= 6 },
+    { label: 'Al menos una mayúscula', valid: /[A-Z]/.test(form.passwordNueva) },
+    { label: 'Al menos un número', valid: /[0-9]/.test(form.passwordNueva) },
+    { label: 'Caracteres especiales', valid: /[^A-Za-z0-9]/.test(form.passwordNueva) }
+  ];
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Cambiar Contraseña" size="md">
       <div className="space-y-5">
+        
         {/* Header informativo */}
         <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: "#E8F5E9", border: "1px solid #00993330" }}>
-          <KeyRound className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
+          <RefreshCw className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
           <div>
-            <p className="text-xs font-medium" style={{ color: "#009933" }}>Seguridad de la cuenta</p>
+            <p className="text-xs font-medium" style={{ color: "#009933" }}>Actualización de contraseña</p>
             <p className="text-xs mt-0.5" style={{ color: "#666666" }}>
               Recomendamos usar una contraseña segura que no uses en otros servicios
             </p>
@@ -134,10 +173,10 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
               type={showActual ? 'text' : 'password'}
               value={form.passwordActual}
               onChange={(e) => setForm({ ...form, passwordActual: e.target.value })}
+              onFocus={onFocus}
+              onBlur={(e) => { onBlur(e); handleTouch('passwordActual'); }}
               style={{ ...inputStyle, paddingRight: '40px' }}
               placeholder="Ingresa tu contraseña actual"
-              onFocus={onFocus}
-              onBlur={onBlur}
             />
             <button
               type="button"
@@ -152,11 +191,23 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
           </div>
         </div>
 
+        {/* Separador decorativo */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t" style={{ borderColor: '#E5E5E5' }}></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-3 text-xs" style={{ backgroundColor: '#FFFFFF', color: '#999999' }}>
+              Nueva contraseña
+            </span>
+          </div>
+        </div>
+
         {/* Nueva contraseña */}
         <div>
           <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
             <span className="flex items-center gap-1.5">
-              <KeyRound className="w-3.5 h-3.5" />
+              <Lock className="w-3.5 h-3.5" />
               Nueva contraseña
               <span style={{ color: "#DC2626" }}>*</span>
             </span>
@@ -166,10 +217,10 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
               type={showNueva ? 'text' : 'password'}
               value={form.passwordNueva}
               onChange={handlePasswordChange}
+              onFocus={onFocus}
+              onBlur={(e) => { onBlur(e); handleTouch('passwordNueva'); }}
               style={{ ...inputStyle, paddingRight: '40px' }}
               placeholder="Mínimo 6 caracteres"
-              onFocus={onFocus}
-              onBlur={onBlur}
             />
             <button
               type="button"
@@ -184,13 +235,13 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
           </div>
           
           {/* Indicador de fortaleza */}
-          {form.passwordNueva && (
-            <div className="mt-2 space-y-1">
+          {touched.passwordNueva && form.passwordNueva && (
+            <div className="mt-3 space-y-2">
               <div className="flex gap-1">
                 {[1, 2, 3, 4].map((level) => (
                   <div
                     key={level}
-                    className="h-1 flex-1 rounded-full transition-all duration-300"
+                    className="h-1.5 flex-1 rounded-full transition-all duration-300"
                     style={{
                       backgroundColor: level <= passwordStrength ? getStrengthColor() : '#E5E5E5'
                     }}
@@ -198,13 +249,34 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
                 ))}
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-xs" style={{ color: getStrengthColor() }}>
-                  <span className="font-medium">{getStrengthText()}</span>
-                  {passwordStrength === 4 && " - ¡Excelente contraseña!"}
+                <p className="text-xs font-medium" style={{ color: getStrengthColor() }}>
+                  Fortaleza: <span>{getStrengthText()}</span>
+                  {passwordStrength === 4 && " ✨"}
                 </p>
                 <p className="text-xs" style={{ color: '#999999' }}>
                   {form.passwordNueva.length}/20 caracteres
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* Lista de requisitos */}
+          {touched.passwordNueva && form.passwordNueva && (
+            <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: '#F9F9F9', border: '1px solid #E5E5E5' }}>
+              <p className="text-xs font-medium mb-2" style={{ color: '#666666' }}>Requisitos de seguridad:</p>
+              <div className="grid grid-cols-2 gap-1">
+                {passwordRequisitos.map((req, idx) => (
+                  <div key={idx} className="flex items-center gap-1.5">
+                    {req.valid ? (
+                      <CheckCircle className="w-3 h-3" style={{ color: '#009933' }} />
+                    ) : (
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#E5E5E5' }} />
+                    )}
+                    <span className="text-xs" style={{ color: req.valid ? '#009933' : '#999999' }}>
+                      {req.label}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -224,30 +296,38 @@ export default function CambiarPasswordModal({ isOpen, onClose }) {
             value={form.confirmar}
             onChange={(e) => setForm({ ...form, confirmar: e.target.value })}
             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+            onFocus={onFocus}
+            onBlur={(e) => { onBlur(e); handleTouch('confirmar'); }}
             style={inputStyle}
             placeholder="Repite la nueva contraseña"
-            onFocus={onFocus}
-            onBlur={onBlur}
           />
           
           {/* Indicador de coincidencia */}
-          {form.confirmar && (
+          {touched.confirmar && form.confirmar && (
             <div className="flex items-center gap-1.5 mt-1.5">
               {form.passwordNueva !== form.confirmar ? (
                 <>
                   <AlertCircle className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
                   <p className="text-xs" style={{ color: '#DC2626' }}>Las contraseñas no coinciden</p>
                 </>
-              ) : form.confirmar.length >= 6 ? (
+              ) : (
                 <>
                   <CheckCircle className="w-3.5 h-3.5" style={{ color: '#009933' }} />
                   <p className="text-xs" style={{ color: '#009933' }}>Las contraseñas coinciden ✓</p>
                 </>
-              ) : (
-                <p className="text-xs" style={{ color: '#999999' }}>Escribe la contraseña nuevamente para confirmar</p>
               )}
             </div>
           )}
+        </div>
+
+        {/* Resumen de seguridad */}
+        <div className="rounded-xl p-3 border" style={{ backgroundColor: "#F9F9F9", borderColor: "#E5E5E5" }}>
+          <div className="flex items-center gap-2">
+            <KeyRound className="w-4 h-4 flex-shrink-0" style={{ color: "#009933" }} />
+            <p className="text-xs" style={{ color: "#666666" }}>
+              Las contraseñas se almacenan de forma segura y encriptada
+            </p>
+          </div>
         </div>
 
         {/* Botones de acción */}

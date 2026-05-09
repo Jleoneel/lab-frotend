@@ -1,5 +1,18 @@
+// components/inventario/EditEquipoModal.jsx
 import { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
+import { 
+  Save, 
+  Package, 
+  Hash, 
+  MapPin, 
+  Calendar, 
+  Wrench,
+  Settings,
+  Cpu,
+  Tag,
+  AlertCircle,
+  CheckCircle
+} from 'lucide-react';
 import Modal from '../ui/Modal';
 import { equipoService, ESTADOS_EQUIPO } from '../../services/equipoService';
 import Swal from 'sweetalert2';
@@ -17,6 +30,7 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
     fechaCalibracion: '', estado: 'ACTIVO'
   });
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (isOpen && equipo) {
@@ -32,87 +46,345 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
         fechaCalibracion: toDateInput(equipo.fechaCalibracion),
         estado: equipo.estado || 'ACTIVO'
       });
+      setErrors({});
     }
   }, [isOpen, equipo]);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio';
+    if (!formData.codigoInventario.trim()) newErrors.codigoInventario = 'El código de inventario es obligatorio';
+    return newErrors;
+  };
 
   const handleSave = async () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor completa los campos obligatorios',
+        confirmButtonColor: '#009933',
+        timer: 2000,
+        timerProgressBar: true
+      });
+      return;
+    }
+
     setSaving(true);
     try {
       await equipoService.update(equipo.id, formData);
-      await Swal.fire({ icon: 'success', title: '¡Equipo actualizado!', confirmButtonColor: '#009933', timer: 1500, timerProgressBar: true });
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Equipo actualizado!',
+        text: 'Los datos del equipo se han modificado correctamente',
+        confirmButtonColor: '#009933',
+        timer: 2000,
+        timerProgressBar: true
+      });
       onSaved();
       onClose();
     } catch (error) {
-      await Swal.fire({ icon: 'error', title: 'Error', text: error.response?.data?.message || 'Error al actualizar', confirmButtonColor: '#dc3545' });
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'No se pudo actualizar el equipo',
+        confirmButtonColor: '#dc3545'
+      });
     } finally {
       setSaving(false);
     }
   };
 
-  const inputStyle = { width: '100%', padding: '8px 12px', border: '1px solid #E5E5E5', borderRadius: '12px', fontSize: '14px', color: '#333333', outline: 'none' };
-  const labelStyle = { display: 'block', fontSize: '13px', fontWeight: '500', marginBottom: '4px', color: '#666666' };
-  const onFocus = (e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; };
-  const onBlur = (e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; };
+  const estadosDisponibles = Object.entries(ESTADOS_EQUIPO);
+  const estadoActual = estadosDisponibles.find(([key]) => key === formData.estado);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Editar Equipo" size="lg">
-      <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label style={labelStyle}>Nombre *</label>
-            <input name="nombre" value={formData.nombre} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
+      <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        
+        {/* Header informativo */}
+        <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: "#E8F5E9", border: "1px solid #00993330" }}>
+          <Wrench className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
           <div>
-            <label style={labelStyle}>Marca</label>
-            <input name="marca" value={formData.marca} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Modelo</label>
-            <input name="modelo" value={formData.modelo} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Serie</label>
-            <input name="serie" value={formData.serie} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Código de inventario *</label>
-            <input name="codigoInventario" value={formData.codigoInventario} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div className="col-span-2">
-            <label style={labelStyle}>Ubicación</label>
-            <input name="ubicacion" value={formData.ubicacion} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Fecha de adquisición</label>
-            <input type="date" name="fechaAdquisicion" value={formData.fechaAdquisicion} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Estado</label>
-            <select name="estado" value={formData.estado} onChange={handleChange} style={{ ...inputStyle, appearance: 'auto' }}>
-              {Object.entries(ESTADOS_EQUIPO).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Fecha de mantenimiento</label>
-            <input type="date" name="fechaMantenimiento" value={formData.fechaMantenimiento} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
-          </div>
-          <div>
-            <label style={labelStyle}>Fecha de calibración</label>
-            <input type="date" name="fechaCalibracion" value={formData.fechaCalibracion} onChange={handleChange} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+            <p className="text-xs font-medium" style={{ color: "#009933" }}>Editando equipo</p>
+            <p className="text-xs mt-0.5" style={{ color: "#666666" }}>
+              Modifica los campos que necesites actualizar
+            </p>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-4 border-t" style={{ borderColor: '#E5E5E5' }}>
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm" style={{ color: '#666666' }}>Cancelar</button>
-          <button onClick={handleSave} disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white disabled:opacity-50"
-            style={{ backgroundColor: '#009933' }}>
-            <Save className="w-4 h-4" />
-            {saving ? 'Guardando...' : 'Guardar Cambios'}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Nombre - colspan */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Package className="w-3.5 h-3.5" />
+                Nombre del equipo
+                <span style={{ color: "#DC2626" }}>*</span>
+              </span>
+            </label>
+            <input
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ 
+                borderColor: errors.nombre ? '#FECACA' : '#E5E5E5',
+                color: '#333333'
+              }}
+              placeholder="Ej: Espectrofotómetro UV-Vis"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { if (!errors.nombre) e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+            {errors.nombre && (
+              <p className="text-xs mt-1" style={{ color: '#DC2626' }}>{errors.nombre}</p>
+            )}
+          </div>
+
+          {/* Marca */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5" />
+                Marca
+              </span>
+            </label>
+            <input
+              name="marca"
+              value={formData.marca}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              placeholder="Ej: Thermo Fisher"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Modelo */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Cpu className="w-3.5 h-3.5" />
+                Modelo
+              </span>
+            </label>
+            <input
+              name="modelo"
+              value={formData.modelo}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              placeholder="Ej: Evolution 201"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Serie */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Hash className="w-3.5 h-3.5" />
+                Número de serie
+              </span>
+            </label>
+            <input
+              name="serie"
+              value={formData.serie}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              placeholder="Ej: SN12345678"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Código de inventario */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Settings className="w-3.5 h-3.5" />
+                Código de inventario
+                <span style={{ color: "#DC2626" }}>*</span>
+              </span>
+            </label>
+            <input
+              name="codigoInventario"
+              value={formData.codigoInventario}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ 
+                borderColor: errors.codigoInventario ? '#FECACA' : '#E5E5E5',
+                color: '#333333'
+              }}
+              placeholder="Ej: LAB-001"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { if (!errors.codigoInventario) e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+            {errors.codigoInventario && (
+              <p className="text-xs mt-1" style={{ color: '#DC2626' }}>{errors.codigoInventario}</p>
+            )}
+          </div>
+
+          {/* Ubicación */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" />
+                Ubicación
+              </span>
+            </label>
+            <input
+              name="ubicacion"
+              value={formData.ubicacion}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              placeholder="Ej: Laboratorio de Química - Estante 3"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Fecha de adquisición */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
+                Fecha de adquisición
+              </span>
+            </label>
+            <input
+              type="date"
+              name="fechaAdquisicion"
+              value={formData.fechaAdquisicion}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Estado */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
+                Estado
+              </span>
+            </label>
+            <select
+              name="estado"
+              value={formData.estado}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all appearance-none cursor-pointer"
+              style={{ borderColor: '#E5E5E5', color: '#333333', fontFamily: "'Montserrat', sans-serif" }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              {estadosDisponibles.map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
+            </select>
+            {estadoActual && (
+              <p className="text-xs mt-1" style={{ color: '#666666' }}>
+                Estado actual: <span className="font-medium" style={{ color: '#009933' }}>{estadoActual[1]}</span>
+              </p>
+            )}
+          </div>
+
+          {/* Fecha de mantenimiento */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Wrench className="w-3.5 h-3.5" />
+                Fecha de mantenimiento
+              </span>
+            </label>
+            <input
+              type="date"
+              name="fechaMantenimiento"
+              value={formData.fechaMantenimiento}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Fecha de calibración */}
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
+                Fecha de calibración
+              </span>
+            </label>
+            <input
+              type="date"
+              name="fechaCalibracion"
+              value={formData.fechaCalibracion}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
+              style={{ borderColor: '#E5E5E5', color: '#333333' }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.boxShadow = '0 0 0 2px #00993320'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
+            />
+          </div>
+        </div>
+
+        {/* Resumen de cambios */}
+        <div className="rounded-xl p-3 border" style={{ backgroundColor: "#FFF9E8", borderColor: "#FFCC3330" }}>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#FFCC33" }} />
+            <p className="text-xs" style={{ color: "#996600" }}>
+              Los cambios se aplicarán inmediatamente en el sistema
+            </p>
+          </div>
+        </div>
+
+        {/* Botones de acción */}
+        <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: "#E5E5E5" }}>
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ color: "#666666" }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#F5F5F5"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#009933" }}
+            onMouseEnter={(e) => { if (!saving) e.currentTarget.style.backgroundColor = "#00802b"; }}
+            onMouseLeave={(e) => { if (!saving) e.currentTarget.style.backgroundColor = "#009933"; }}
+          >
+            {saving ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Guardando...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Guardar Cambios
+              </>
+            )}
           </button>
         </div>
       </div>
