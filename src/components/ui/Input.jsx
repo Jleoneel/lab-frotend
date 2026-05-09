@@ -5,7 +5,7 @@ const Input = forwardRef(({ label, type = "text", className = "", error, icon: I
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium mb-1" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>
+        <label className="block text-sm font-medium mb-1" style={{ color: '#666666' }}>
           {label}
         </label>
       )}
@@ -21,10 +21,9 @@ const Input = forwardRef(({ label, type = "text", className = "", error, icon: I
           className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-0 transition-shadow ${
             error ? "border-red-300" : ""
           } ${className}`}
-          style={{ 
+          style={{
             borderColor: error ? '#FECACA' : '#E5E5E5',
             color: '#333333',
-            fontFamily: "'Montserrat', sans-serif"
           }}
           onFocus={(e) => {
             e.currentTarget.style.borderColor = '#009933';
@@ -37,7 +36,7 @@ const Input = forwardRef(({ label, type = "text", className = "", error, icon: I
           {...props}
         />
       </div>
-      {error && <p className="mt-1 text-sm" style={{ color: '#DC2626', fontFamily: "'Montserrat', sans-serif" }}>{error}</p>}
+      {error && <p className="mt-1 text-sm" style={{ color: '#DC2626' }}>{error}</p>}
     </div>
   );
 });

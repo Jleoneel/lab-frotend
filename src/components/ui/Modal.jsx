@@ -44,8 +44,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
             </button>
           </div>
           
-          {/* Contenido con tipografía Montserrat */}
-          <div className="p-6" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <div className="p-6">
             {children}
           </div>
         </div>

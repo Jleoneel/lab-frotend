@@ -1,28 +1,41 @@
 @import 'tailwindcss';
 
+/* ── UTM brand tokens ── register as Tailwind utilities ──────────────────── */
+@theme {
+  /* Colors — generates text-*, bg-*, border-* utilities */
+  --color-utm-green:      #009933;
+  --color-utm-green-dark: #00802b;
+  --color-utm-gold:       #FFCC33;
+  --color-utm-gold-dark:  #996600;
+  --color-utm-danger:     #DC2626;
+
+  --color-surface:        #F9F9F9;
+  --color-border:         #E5E5E5;
+
+  /* Font families — generates font-sans / font-heading utilities */
+  --font-sans:    'Montserrat', sans-serif;
+  --font-heading: 'Trajan Pro Bold', 'Trajan Pro', serif;
+}
+
+/* ── Global base ──────────────────────────────────────────────────────────── */
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Modal animations ────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes zoomIn {
   from { transform: scale(0.95); }
-  to { transform: scale(1); }
+  to   { transform: scale(1); }
 }
 
-.utm-option-active {
-  background-color: #009933;
-}
+.animate-in  { animation-duration: 0.2s; animation-fill-mode: forwards; }
+.fade-in     { animation-name: fadeIn; }
+.zoom-in     { animation-name: zoomIn; }
 
-.animate-in {
-  animation-duration: 0.2s;
-  animation-fill-mode: forwards;
-}
-
-.fade-in {
-  animation-name: fadeIn;
-}
-
-.zoom-in {
-  animation-name: zoomIn;
-}
+/* ── Utilities kept for backwards compat ─────────────────────────────────── */
+.utm-option-active { background-color: #009933; }
