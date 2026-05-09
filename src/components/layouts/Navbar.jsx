@@ -80,8 +80,9 @@ export default function Navbar() {
     if (!token) return;
 
     const connect = () => {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
       const es = new EventSource(
-        `http://localhost:4000/notifications/stream?token=${token}`,
+        `${apiUrl}/notifications/stream?token=${token}`,
       );
 
       es.onmessage = (e) => {
