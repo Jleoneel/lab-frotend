@@ -25,4 +25,9 @@ export const mensajeService = {
     const response = await api.get(`/mensajes/conversacion/${otroUserId}`);
     return response.data || response;
   },
+  
+  getConversaciones: async () => {
+  const response = await api.get('/mensajes/conversaciones');
+  return response.data || response;
+},
 };

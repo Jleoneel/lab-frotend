@@ -113,6 +113,7 @@ export default function ConversacionModal({ isOpen, onClose, otroUserId, otroUse
     const groups = [];
     let currentDate = null;
     
+    //eslint-disable-next-line
     mensajes.forEach((msg, idx) => {
       const msgDate = new Date(msg.createdAt).toDateString();
       if (msgDate !== currentDate) {

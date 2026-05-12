@@ -42,6 +42,9 @@ import UsersList from './pages/users/UsersList';
 // Documentos
 import DocumentosPage from './pages/documentos/DocumentosPage';
 
+//MENSAJES
+import MensajesPage from './pages/mensajes/MensajesPage';
+
 // Componente para rutas protegidas (solo autenticado)
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -143,7 +146,7 @@ function App() {
         <Route path="production" element={<ProductionKanban />} />
         <Route path="samples/:id" element={<SampleDetail />} />
         <Route path="documentos" element={<DocumentosPage />} />
-
+        <Route path="mensajes" element={<MensajesPage />} />
 
         {/* Reportes (placeholder) */}
         <Route path="reports" element={<div>Reportes - Próximamente</div>} />

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import {
   FileText, ClipboardList, FlaskConical, Users, Beaker,
-  BarChart3, Settings, ChevronRight, ChevronLeft, Menu, X, Microscope, FolderOpen,
+  BarChart3, Settings, ChevronRight, ChevronLeft, Menu, X, Microscope, FolderOpen, MessageSquare
 } from 'lucide-react';
 import { fonts } from '../../styles/tokens';
 
@@ -32,6 +32,7 @@ const adminNavigation = [
       { name: 'Clientes',  path: '/clients',  icon: Users  },
       { name: 'Servicios', path: '/services', icon: Beaker },
       { name: 'Usuarios',  path: '/users',    icon: Users  },
+      { name: 'Mensajes', path: '/mensajes', icon: MessageSquare },
     ],
   },
   {
@@ -50,6 +51,7 @@ const analystNavigation = [
     items: [
       { name: 'Mis Análisis', path: '/mis-analisis', icon: FlaskConical },
       { name: 'Producción',   path: '/production',   icon: FlaskConical },
+      { name: 'Mensajes', path: '/mensajes', icon: MessageSquare },
       { name: 'Documentos',   path: '/documentos',   icon: FolderOpen  },
     ],
   },

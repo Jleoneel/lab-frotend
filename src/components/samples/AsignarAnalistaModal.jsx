@@ -59,7 +59,7 @@ export default function AsignarAnalistaModal({
       if (instrucciones.trim()) {
         await mensajeService.send(
           selectedUserId,
-          `📋 INSTRUCCIONES PARA ANÁLISIS\n\nAnálisis: ${analysis.service?.name}\n\nInstrucciones:\n${instrucciones}\n\n---\nSistema CABA UTM`
+          `INSTRUCCIONES PARA ANÁLISIS: ${analysis.service?.name}\n\nInstrucciones:\n${instrucciones}\n\n---\n`
         );
       }
 
