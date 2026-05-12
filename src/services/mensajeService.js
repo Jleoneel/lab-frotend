@@ -1,13 +1,13 @@
-import api from '../lib/axios';
+import api from "../lib/axios";
 
 export const mensajeService = {
   getAll: async () => {
-    const response = await api.get('/mensajes');
+    const response = await api.get("/mensajes");
     return response.data || response;
   },
 
   send: async (toId, contenido) => {
-    const response = await api.post('/mensajes', { toId, contenido });
+    const response = await api.post("/mensajes", { toId, contenido });
     return response.data || response;
   },
 
@@ -17,7 +17,12 @@ export const mensajeService = {
   },
 
   marcarTodosLeidos: async () => {
-    const response = await api.patch('/mensajes/leer-todos');
+    const response = await api.patch("/mensajes/leer-todos");
     return response.data || response;
-  }
+  },
+  
+  getConversacion: async (otroUserId) => {
+    const response = await api.get(`/mensajes/conversacion/${otroUserId}`);
+    return response.data || response;
+  },
 };
