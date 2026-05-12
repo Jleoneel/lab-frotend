@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Send, Mail, User, MessageSquare, SendHorizontal, CheckCircle } from 'lucide-react';
 import Modal from '../ui/Modal';
+import ModalActions from '../common/ModalActions';
 import { mensajeService } from '../../services/mensajeService';
 import Swal from 'sweetalert2';
 
@@ -105,7 +106,7 @@ export default function EnviarMensajeModal({ isOpen, onClose, user }) {
             rows={5}
             placeholder="Escribe tu mensaje aquí..."
             className="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none transition-all resize-none"
-            style={{ borderColor: "#E5E5E5", color: "#333333", fontFamily: "'Montserrat', sans-serif" }}
+            style={{ borderColor: "#E5E5E5", color: "#333333" }}
             onFocus={(e) => {
               e.currentTarget.style.borderColor = "#009933";
               e.currentTarget.style.boxShadow = "0 0 0 2px #00993320";
@@ -141,43 +142,20 @@ export default function EnviarMensajeModal({ isOpen, onClose, user }) {
               <Send className="w-3.5 h-3.5" style={{ color: "#FFCC33" }} />
               <p className="text-xs font-medium" style={{ color: "#996600" }}>Vista previa del mensaje</p>
             </div>
-            <p className="text-sm" style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}>
+            <p className="text-sm" style={{ color: "#666666" }}>
               {contenido.length > 150 ? contenido.substring(0, 150) + '...' : contenido}
             </p>
           </div>
         )}
-        {/* Botones de acción */}
-        <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: "#E5E5E5" }}>
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-            style={{ color: "#666666" }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#F5F5F5"}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSend}
-            disabled={sending || !contenido.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: "#009933" }}
-            onMouseEnter={(e) => { if (!sending && contenido.trim()) e.currentTarget.style.backgroundColor = "#00802b"; }}
-            onMouseLeave={(e) => { if (!sending) e.currentTarget.style.backgroundColor = "#009933"; }}
-          >
-            {sending ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              <>
-                <SendHorizontal className="w-4 h-4" />
-                Enviar Mensaje
-              </>
-            )}
-          </button>
-        </div>
+        <ModalActions
+          onCancel={onClose}
+          onConfirm={handleSend}
+          confirmLabel="Enviar Mensaje"
+          loadingLabel="Enviando..."
+          loading={sending}
+          disabled={!contenido.trim()}
+          icon={SendHorizontal}
+        />
       </div>
     </Modal>
   );
