@@ -45,6 +45,9 @@ import DocumentosPage from './pages/documentos/DocumentosPage';
 //MENSAJES
 import MensajesPage from './pages/mensajes/MensajesPage';
 
+//REPORTES
+import ReportsPage from './pages/reports/ReportsPage';
+
 // Componente para rutas protegidas (solo autenticado)
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -149,7 +152,7 @@ function App() {
         <Route path="mensajes" element={<MensajesPage />} />
 
         {/* Reportes (placeholder) */}
-        <Route path="reports" element={<div>Reportes - Próximamente</div>} />
+        <Route path="reports" element={<ReportsPage />} />
 
         {/* 404 dentro de la app */}
         <Route path="*" element={<div>Página no encontrada</div>} />

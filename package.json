@@ -17,6 +17,8 @@
     "@tailwindcss/vite": "^4.2.1",
     "axios": "^1.13.6",
     "framer-motion": "^12.35.2",
+    "highcharts": "^12.6.0",
+    "highcharts-react-official": "^3.2.3",
     "lucide-react": "^0.576.0",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
@@ -30,6 +32,7 @@
     "sweetalert2": "^11.26.22",
     "tailwindcss": "^4.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.11"
   },
   "devDependencies": {
