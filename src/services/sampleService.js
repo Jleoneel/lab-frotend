@@ -60,93 +60,61 @@ const adaptSampleAnalysisFromBackend = (backendAnalysis) => {
 
 export const sampleService = {
   getKanban: async () => {
-    try {
-      const response = await api.get("/samples/kanban");
-      const data = response.data || response;
+    const response = await api.get("/samples/kanban");
+    const data = response.data || response;
 
-      const adapted = Object.fromEntries(
-        Object.entries(data).map(([status, samples]) => [
-          status,
-          Array.isArray(samples) ? samples.map(adaptSampleFromBackend) : [],
-        ]),
-      );
+    const adapted = Object.fromEntries(
+      Object.entries(data).map(([status, samples]) => [
+        status,
+        Array.isArray(samples) ? samples.map(adaptSampleFromBackend) : [],
+      ]),
+    );
 
-      return { data: adapted };
-    } catch (error) {
-      throw error;
-    }
+    return { data: adapted };
   },
 
   getById: async (id) => {
-    try {
-      const response = await api.get(`/samples/${id}`);
-      const data = response.data || response;
-      return { data: adaptSampleFromBackend(data) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/samples/${id}`);
+    const data = response.data || response;
+    return { data: adaptSampleFromBackend(data) };
   },
 
   getAnalyses: async (sampleId) => {
-    try {
-      const response = await api.get(`/samples/${sampleId}/services`);
-      const data = response.data || response;
-      const analyses = Array.isArray(data) ? data : [];
-      return { data: analyses.map(adaptSampleAnalysisFromBackend) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/samples/${sampleId}/services`);
+    const data = response.data || response;
+    const analyses = Array.isArray(data) ? data : [];
+    return { data: analyses.map(adaptSampleAnalysisFromBackend) };
   },
 
   updateAnalysisStatus: async (sampleServiceId, status) => {
-    try {
-      return await api.patch(
-        `/samples/sample-services/${sampleServiceId}/status`,
-        { status },
-      );
-    } catch (error) {
-      throw error;
-    }
+    return await api.patch(
+      `/samples/sample-services/${sampleServiceId}/status`,
+      { status },
+    );
   },
 
   registerResult: async (sampleServiceId, formData) => {
-    try {
-      return await api.post(
-        `/samples/sample-services/${sampleServiceId}/result`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
-    } catch (error) {
-      throw error;
-    }
+    return await api.post(
+      `/samples/sample-services/${sampleServiceId}/result`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
   },
 
   updateSampleStatus: async (sampleId, status) => {
-    try {
-      return await api.patch(`/samples/${sampleId}/status`, { status });
-    } catch (error) {
-      throw error;
-    }
+    return await api.patch(`/samples/${sampleId}/status`, { status });
   },
 
   emitReport: async (sampleId) => {
-    try {
-      return await api.post(`/samples/${sampleId}/emit-report`);
-    } catch (error) {
-      throw error;
-    }
+    return await api.post(`/samples/${sampleId}/emit-report`);
   },
 
   assignAnalista: async (sampleServiceId, userId) => {
-    try {
-      return await api.patch(
-        `/samples/sample-services/${sampleServiceId}/assign`,
-        { userId },
-      );
-    } catch (error) {
-      throw error;
-    }
+    return await api.patch(
+      `/samples/sample-services/${sampleServiceId}/assign`,
+      { userId },
+    );
   },
 };

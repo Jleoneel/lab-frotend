@@ -2,49 +2,29 @@ import api from "../lib/axios";
 
 export const userService = {
   create: async (data) => {
-    try {
-      const response = await api.post("/users", data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post("/users", data);
+    return response.data || response;
   },
 
   update: async (id, data) => {
-    try {
-      const response = await api.put(`/users/${id}`, data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.put(`/users/${id}`, data);
+    return response.data || response;
   },
 
   resetPassword: async (id, password) => {
-    try {
-      const response = await api.patch(`/users/${id}/reset-password`, {
-        password,
-      });
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.patch(`/users/${id}/reset-password`, {
+      password,
+    });
+    return response.data || response;
   },
 
   getAnalistas: async () => {
-    try {
-      const response = await api.get("/users/analistas");
-      return { data: response.data || response };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get("/users/analistas");
+    return { data: response.data || response };
   },
 
   getAll: async () => {
-    try {
-      const response = await api.get("/users");
-      return { data: response.data || response };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get("/users");
+    return { data: response.data || response };
   },
 };

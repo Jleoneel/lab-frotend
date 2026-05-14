@@ -31,31 +31,19 @@ const adaptEquipoFromBackend = (e) => ({
 
 export const equipoService = {
   getAll: async (params = {}) => {
-    try {
-      const query = new URLSearchParams(params).toString();
-      const response = await api.get(`/equipos${query ? `?${query}` : ''}`);
-      const data = response.data || response;
-      return { data: Array.isArray(data) ? data.map(adaptEquipoFromBackend) : [] };
-    } catch (error) {
-      throw error;
-    }
+    const query = new URLSearchParams(params).toString();
+    const response = await api.get(`/equipos${query ? `?${query}` : ''}`);
+    const data = response.data || response;
+    return { data: Array.isArray(data) ? data.map(adaptEquipoFromBackend) : [] };
   },
 
   create: async (data) => {
-    try {
-      const response = await api.post('/equipos', data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/equipos', data);
+    return response.data || response;
   },
 
   update: async (id, data) => {
-    try {
-      const response = await api.put(`/equipos/${id}`, data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.put(`/equipos/${id}`, data);
+    return response.data || response;
   }
 };

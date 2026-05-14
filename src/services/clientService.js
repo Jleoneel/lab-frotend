@@ -11,86 +11,57 @@ const adaptClientFromBackend = (backendClient) => {
     email: backendClient.email || "",
     createdAt: backendClient.createdAt,
     updatedAt: backendClient.updatedAt,
-    _count: backendClient._count || { quotes: 0, requests: 0 }, // 👈
+    _count: backendClient._count || { quotes: 0, requests: 0 },
   };
 };
 
 export const clientService = {
-  // Obtener todos los clientes (usa ?q= para búsqueda)
   getAll: async (searchTerm = "") => {
-    try {
-      const url = searchTerm
-        ? `/clients?q=${encodeURIComponent(searchTerm)}`
-        : "/clients";
-      const response = await api.get(url);
+    const url = searchTerm
+      ? `/clients?q=${encodeURIComponent(searchTerm)}`
+      : "/clients";
+    const response = await api.get(url);
 
-      const data = response.data || response;
-      const clients = Array.isArray(data) ? data : [];
+    const data = response.data || response;
+    const clients = Array.isArray(data) ? data : [];
 
-      return { data: clients.map(adaptClientFromBackend) };
-    } catch (error) {
-      throw error;
-    }
+    return { data: clients.map(adaptClientFromBackend) };
   },
 
-  // Obtener un cliente por ID
   getById: async (id) => {
-    try {
-      const response = await api.get(`/clients/${id}`);
-      const data = response.data || response;
-      return { data: adaptClientFromBackend(data) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/clients/${id}`);
+    const data = response.data || response;
+    return { data: adaptClientFromBackend(data) };
   },
 
-  // Crear nuevo cliente
   create: async (data) => {
-    try {
-      const cleanData = {
-        name: data.name,
-        address: data.address || undefined,
-        city: data.city || undefined,
-        phone: data.phone || undefined,
-        email: data.email || undefined,
-      };
+    const cleanData = {
+      name: data.name,
+      address: data.address || undefined,
+      city: data.city || undefined,
+      phone: data.phone || undefined,
+      email: data.email || undefined,
+    };
 
-      const response = await api.post("/clients", cleanData);
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    return await api.post("/clients", cleanData);
   },
 
-  // Actualizar cliente
   update: async (id, data) => {
-    try {
-      const cleanData = {
-        name: data.name,
-        address: data.address || undefined,
-        city: data.city || undefined,
-        phone: data.phone || undefined,
-        email: data.email || undefined,
-      };
+    const cleanData = {
+      name: data.name,
+      address: data.address || undefined,
+      city: data.city || undefined,
+      phone: data.phone || undefined,
+      email: data.email || undefined,
+    };
 
-      const response = await api.put(`/clients/${id}`, cleanData);
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    return await api.put(`/clients/${id}`, cleanData);
   },
 
-  // Eliminar cliente
   delete: async (id) => {
-    try {
-      const response = await api.delete(`/clients/${id}`);
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    return await api.delete(`/clients/${id}`);
   },
 
-  // Buscar clientes
   search: async (query) => {
     return clientService.getAll(query);
   },

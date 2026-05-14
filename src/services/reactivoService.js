@@ -37,59 +37,35 @@ export const RAZONES = {
 
 export const reactivoService = {
   getAll: async (params = {}) => {
-    try {
-      const query = new URLSearchParams(params).toString();
-      const response = await api.get(`/reactivos${query ? `?${query}` : ''}`);
-      const data = response.data || response;
-      return { data: Array.isArray(data) ? data.map(adaptReactivoFromBackend) : [] };
-    } catch (error) {
-      throw error;
-    }
+    const query = new URLSearchParams(params).toString();
+    const response = await api.get(`/reactivos${query ? `?${query}` : ''}`);
+    const data = response.data || response;
+    return { data: Array.isArray(data) ? data.map(adaptReactivoFromBackend) : [] };
   },
 
   getById: async (id) => {
-    try {
-      const response = await api.get(`/reactivos/${id}`);
-      const data = response.data || response;
-      return { data: adaptReactivoFromBackend(data) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/reactivos/${id}`);
+    const data = response.data || response;
+    return { data: adaptReactivoFromBackend(data) };
   },
 
   create: async (data) => {
-    try {
-      const response = await api.post('/reactivos', data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/reactivos', data);
+    return response.data || response;
   },
 
   update: async (id, data) => {
-    try {
-      const response = await api.put(`/reactivos/${id}`, data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.put(`/reactivos/${id}`, data);
+    return response.data || response;
   },
 
   registrarMovimiento: async (data) => {
-    try {
-      const response = await api.post('/reactivos/movimientos', data);
-      return response.data || response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/reactivos/movimientos', data);
+    return response.data || response;
   },
 
   getMovimientos: async (id) => {
-    try {
-      const response = await api.get(`/reactivos/${id}/movimientos`);
-      return { data: response.data || response };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/reactivos/${id}/movimientos`);
+    return { data: response.data || response };
   }
 };

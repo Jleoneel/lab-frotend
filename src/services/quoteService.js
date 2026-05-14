@@ -1,6 +1,5 @@
 import api from '../lib/axios';
 
-// Adaptador para las respuestas del backend
 const adaptQuoteFromBackend = (backendQuote) => {
   return {
     id: backendQuote.id,
@@ -29,54 +28,28 @@ const adaptQuoteFromBackend = (backendQuote) => {
 
 export const quoteService = {
   getAll: async () => {
-    try {
-      const response = await api.get('/quotes');
-      const data = response.data || response;
-      const quotes = Array.isArray(data) ? data : [];
-      return { data: quotes.map(adaptQuoteFromBackend) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get('/quotes');
+    const data = response.data || response;
+    const quotes = Array.isArray(data) ? data : [];
+    return { data: quotes.map(adaptQuoteFromBackend) };
   },
-  
+
   getById: async (id) => {
-    try {
-      const response = await api.get(`/quotes/${id}`);
-      const data = response.data || response;
-      return { data: adaptQuoteFromBackend(data) };
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/quotes/${id}`);
+    const data = response.data || response;
+    return { data: adaptQuoteFromBackend(data) };
   },
-  
+
   create: async (data) => {
-    try {
-      const response = await api.post('/quotes', data);
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    return await api.post('/quotes', data);
   },
-  
-// services/quoteService.js
-convert: async (id, samplesData) => {
-  try {
-    // Envolver samplesData en un objeto con propiedad 'samples'
-    const response = await api.post(`/quotes/${id}/convert`, { samples: samplesData });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-},
-  
-  //NUEVO MÉTODO - DENTRO del objeto
+
+  convert: async (id, samplesData) => {
+    return await api.post(`/quotes/${id}/convert`, { samples: samplesData });
+  },
+
   updateStatus: async (id, status) => {
-    try {
-      const response = await api.patch(`/quotes/${id}/status`, { status });
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    return await api.patch(`/quotes/${id}/status`, { status });
   },
 
   update: (id, data) => api.put(`/quotes/${id}`, data),
