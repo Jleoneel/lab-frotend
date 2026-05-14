@@ -47,6 +47,7 @@ export default function ServiceForm() {
     try {
       const response = await serviceService.getById(id);
       setFormData(response.data);
+      //eslint-disable-next-line
     } catch (error) {
       navigate('/services');
     } finally {

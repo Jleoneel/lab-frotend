@@ -1,5 +1,6 @@
 import { Settings, KeyRound, LogOut } from 'lucide-react';
 
+//eslint-disable-next-line
 function MenuButton({ icon: Icon, onClick, children, gold }) {
   const baseColor = gold ? '#FFCC33' : '#666666';
   const hoverBg = gold ? '#FFF9E8' : '#F5F5F5';

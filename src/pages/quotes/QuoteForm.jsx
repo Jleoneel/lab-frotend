@@ -305,6 +305,7 @@ export default function QuoteForm({
           await import("../../services/settingsService");
         const data = await settingsService.getIva();
         setFormData((prev) => ({ ...prev, ivaPercent: data.iva }));
+        //eslint-disable-next-line 
       } catch (e) {
         // Error cargando IVA
       }

@@ -101,9 +101,11 @@ export default function ConvertToRequestModal({
     onConfirm(validSamples);
   };
 
-  const canConfirm =
-    samples.some((s) => s.sampleName.trim() !== "") &&
-    samples.every((s) => s.serviceIds.length > 0);
+  // Total de análisis disponibles en la cotización
+  const totalDisponible = quoteItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
 
   const totalMuestrasValidas = samples.filter((s) =>
     s.sampleName.trim(),
@@ -112,6 +114,11 @@ export default function ConvertToRequestModal({
     (acc, s) => acc + s.serviceIds.length,
     0,
   );
+
+  const canConfirm =
+    samples.some((s) => s.sampleName.trim() !== "") &&
+    samples.every((s) => s.serviceIds.length > 0) &&
+    totalAnalisisAsignados === totalDisponible;
 
   return (
     <Modal
@@ -122,28 +129,53 @@ export default function ConvertToRequestModal({
     >
       <div className="space-y-5">
         {/* Header con estadísticas rápidas */}
-        <div className="rounded-xl p-4 border" style={{ backgroundColor: '#E8F5E9', borderColor: '#00993330' }}>
+        <div
+          className="rounded-xl p-4 border"
+          style={{ backgroundColor: "#E8F5E9", borderColor: "#00993330" }}
+        >
           <div className="flex items-start gap-3">
-            <div className="bg-white p-2 rounded-lg shadow-sm" style={{ border: '1px solid #E5E5E5' }}>
-              <Package className="w-5 h-5" style={{ color: '#009933' }} />
+            <div
+              className="bg-white p-2 rounded-lg shadow-sm"
+              style={{ border: "1px solid #E5E5E5" }}
+            >
+              <Package className="w-5 h-5" style={{ color: "#009933" }} />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+              <h3
+                className="font-medium"
+                style={{
+                  color: "#009933",
+                  fontFamily: "'Montserrat', sans-serif",
+                }}
+              >
                 Registro de Muestras
               </h3>
-              <p className="text-sm mt-1" style={{ color: '#666666' }}>
-                Asigna los análisis disponibles a cada muestra. Cada análisis tiene una cantidad limitada según la cotización.
+              <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                Asigna los análisis disponibles a cada muestra. Cada análisis
+                tiene una cantidad limitada según la cotización.
               </p>
               <div className="flex flex-wrap gap-3 mt-3">
-                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border" style={{ borderColor: '#E5E5E5' }}>
-                  <span style={{ color: '#666666' }}>Muestras:</span>
-                  <span className="ml-2 font-semibold" style={{ color: '#009933' }}>
+                <div
+                  className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border"
+                  style={{ borderColor: "#E5E5E5" }}
+                >
+                  <span style={{ color: "#666666" }}>Muestras:</span>
+                  <span
+                    className="ml-2 font-semibold"
+                    style={{ color: "#009933" }}
+                  >
                     {totalMuestrasValidas}
                   </span>
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border" style={{ borderColor: '#E5E5E5' }}>
-                  <span style={{ color: '#666666' }}>Análisis asignados:</span>
-                  <span className="ml-2 font-semibold" style={{ color: '#FFCC33' }}>
+                <div
+                  className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border"
+                  style={{ borderColor: "#E5E5E5" }}
+                >
+                  <span style={{ color: "#666666" }}>Análisis asignados:</span>
+                  <span
+                    className="ml-2 font-semibold"
+                    style={{ color: "#FFCC33" }}
+                  >
                     {totalAnalisisAsignados}
                   </span>
                 </div>
@@ -168,8 +200,8 @@ export default function ConvertToRequestModal({
                   ${isExpanded ? "shadow-md" : "shadow-sm"}
                 `}
                 style={{
-                  borderColor: isComplete ? '#00993330' : '#E5E5E5',
-                  backgroundColor: isComplete ? '#E8F5E9' : '#FFFFFF'
+                  borderColor: isComplete ? "#00993330" : "#E5E5E5",
+                  backgroundColor: isComplete ? "#E8F5E9" : "#FFFFFF",
                 }}
               >
                 {/* Header de la muestra */}
@@ -181,36 +213,66 @@ export default function ConvertToRequestModal({
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
                       style={{
-                        backgroundColor: isComplete ? '#E8F5E9' : (hasName ? '#E8F5E9' : '#F5F5F5'),
-                        color: isComplete ? '#009933' : (hasName ? '#009933' : '#999999')
+                        backgroundColor: isComplete
+                          ? "#E8F5E9"
+                          : hasName
+                            ? "#E8F5E9"
+                            : "#F5F5F5",
+                        color: isComplete
+                          ? "#009933"
+                          : hasName
+                            ? "#009933"
+                            : "#999999",
                       }}
                     >
                       <Package className="w-4 h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium" style={{ color: '#333333' }}>
+                        <span
+                          className="font-medium"
+                          style={{ color: "#333333" }}
+                        >
                           Muestra #{sampleIndex + 1}
                         </span>
                         {isComplete && (
-                          <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8F5E9', color: '#009933' }}>
+                          <span
+                            className="text-xs px-2 py-0.5 rounded-full"
+                            style={{
+                              backgroundColor: "#E8F5E9",
+                              color: "#009933",
+                            }}
+                          >
                             Completa
                           </span>
                         )}
                       </div>
                       {sample.sampleName ? (
-                        <p className="text-sm truncate" style={{ color: '#666666' }}>
+                        <p
+                          className="text-sm truncate"
+                          style={{ color: "#666666" }}
+                        >
                           {sample.sampleName}
                         </p>
                       ) : (
-                        <p className="text-sm italic" style={{ color: '#999999' }}>
+                        <p
+                          className="text-sm italic"
+                          style={{ color: "#999999" }}
+                        >
                           Sin nombre
                         </p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-xs px-2 py-1 rounded-full border" style={{ color: '#666666', backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <span
+                      className="text-xs px-2 py-1 rounded-full border"
+                      style={{
+                        color: "#666666",
+                        backgroundColor: "#FFFFFF",
+                        borderColor: "#E5E5E5",
+                      }}
+                    >
                       {sample.serviceIds.length}/{quoteItems.length} análisis
                     </span>
                     {samples.length > 1 && (
@@ -220,24 +282,39 @@ export default function ConvertToRequestModal({
                           removeSample(sampleIndex);
                         }}
                         className="p-1.5 rounded-lg transition-colors"
-                        style={{ color: '#666666' }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF2F2'; e.currentTarget.style.color = '#DC2626'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
+                        style={{ color: "#666666" }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#FEF2F2";
+                          e.currentTarget.style.color = "#DC2626";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = "#666666";
+                        }}
                       >
                         <X className="w-4 h-4" />
                       </button>
                     )}
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5" style={{ color: '#666666' }} />
+                      <ChevronUp
+                        className="w-5 h-5"
+                        style={{ color: "#666666" }}
+                      />
                     ) : (
-                      <ChevronDown className="w-5 h-5" style={{ color: '#666666' }} />
+                      <ChevronDown
+                        className="w-5 h-5"
+                        style={{ color: "#666666" }}
+                      />
                     )}
                   </div>
                 </div>
 
                 {/* Contenido expandible */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-2 border-t space-y-4" style={{ borderColor: '#E5E5E5' }}>
+                  <div
+                    className="px-4 pb-4 pt-2 border-t space-y-4"
+                    style={{ borderColor: "#E5E5E5" }}
+                  >
                     <Input
                       placeholder="Nombre de la muestra *"
                       value={sample.sampleName}
@@ -270,7 +347,10 @@ export default function ConvertToRequestModal({
                     />
 
                     <div>
-                      <p className="text-xs font-medium mb-2 flex items-center gap-1" style={{ color: '#666666' }}>
+                      <p
+                        className="text-xs font-medium mb-2 flex items-center gap-1"
+                        style={{ color: "#666666" }}
+                      >
                         <span>Selecciona los análisis a realizar</span>
                         <span className="text-gray-400">·</span>
                         <span className="text-gray-400">
@@ -293,9 +373,12 @@ export default function ConvertToRequestModal({
                               key={item.serviceId}
                               className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm border"
                               style={{
-                                backgroundColor: agotado && usadoEnEstaMuestra === 0 ? '#F9F9F9' : '#FFFFFF',
-                                borderColor: '#E5E5E5',
-                                color: '#666666'
+                                backgroundColor:
+                                  agotado && usadoEnEstaMuestra === 0
+                                    ? "#F9F9F9"
+                                    : "#FFFFFF",
+                                borderColor: "#E5E5E5",
+                                color: "#666666",
                               }}
                             >
                               <span className="truncate text-left flex-1">
@@ -313,14 +396,32 @@ export default function ConvertToRequestModal({
                                   }
                                   disabled={usadoEnEstaMuestra === 0}
                                   className="w-6 h-6 rounded-full transition-colors flex items-center justify-center font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-                                  style={{ backgroundColor: '#F5F5F5', color: '#666666' }}
-                                  onMouseEnter={(e) => { if (usadoEnEstaMuestra > 0) { e.currentTarget.style.backgroundColor = '#FEF2F2'; e.currentTarget.style.color = '#DC2626'; } }}
-                                  onMouseLeave={(e) => { if (usadoEnEstaMuestra > 0) { e.currentTarget.style.backgroundColor = '#F5F5F5'; e.currentTarget.style.color = '#666666'; } }}
+                                  style={{
+                                    backgroundColor: "#F5F5F5",
+                                    color: "#666666",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    if (usadoEnEstaMuestra > 0) {
+                                      e.currentTarget.style.backgroundColor =
+                                        "#FEF2F2";
+                                      e.currentTarget.style.color = "#DC2626";
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    if (usadoEnEstaMuestra > 0) {
+                                      e.currentTarget.style.backgroundColor =
+                                        "#F5F5F5";
+                                      e.currentTarget.style.color = "#666666";
+                                    }
+                                  }}
                                 >
                                   −
                                 </button>
 
-                                <span className="w-6 text-center font-semibold" style={{ color: '#009933' }}>
+                                <span
+                                  className="w-6 text-center font-semibold"
+                                  style={{ color: "#009933" }}
+                                >
                                   {usadoEnEstaMuestra}
                                 </span>
 
@@ -335,9 +436,24 @@ export default function ConvertToRequestModal({
                                   }
                                   disabled={agotado}
                                   className="w-6 h-6 rounded-full transition-colors flex items-center justify-center font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-                                  style={{ backgroundColor: '#F5F5F5', color: '#666666' }}
-                                  onMouseEnter={(e) => { if (!agotado) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; } }}
-                                  onMouseLeave={(e) => { if (!agotado) { e.currentTarget.style.backgroundColor = '#F5F5F5'; e.currentTarget.style.color = '#666666'; } }}
+                                  style={{
+                                    backgroundColor: "#F5F5F5",
+                                    color: "#666666",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    if (!agotado) {
+                                      e.currentTarget.style.backgroundColor =
+                                        "#E8F5E9";
+                                      e.currentTarget.style.color = "#009933";
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    if (!agotado) {
+                                      e.currentTarget.style.backgroundColor =
+                                        "#F5F5F5";
+                                      e.currentTarget.style.color = "#666666";
+                                    }
+                                  }}
                                 >
                                   +
                                 </button>
@@ -345,8 +461,10 @@ export default function ConvertToRequestModal({
                                 <span
                                   className="text-xs px-2 py-0.5 rounded-full font-medium"
                                   style={{
-                                    backgroundColor: agotado ? '#FEF2F2' : '#F5F5F5',
-                                    color: agotado ? '#DC2626' : '#666666'
+                                    backgroundColor: agotado
+                                      ? "#FEF2F2"
+                                      : "#F5F5F5",
+                                    color: agotado ? "#DC2626" : "#666666",
                                   }}
                                 >
                                   {disponible}/{item.quantity}
@@ -358,9 +476,17 @@ export default function ConvertToRequestModal({
                       </div>
 
                       {sample.serviceIds.length === 0 && (
-                        <div className="flex items-center gap-2 mt-2 text-xs p-2 rounded-lg" style={{ backgroundColor: '#FEF2F2', color: '#DC2626' }}>
+                        <div
+                          className="flex items-center gap-2 mt-2 text-xs p-2 rounded-lg"
+                          style={{
+                            backgroundColor: "#FEF2F2",
+                            color: "#DC2626",
+                          }}
+                        >
                           <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                          <span>Selecciona al menos un análisis para esta muestra</span>
+                          <span>
+                            Selecciona al menos un análisis para esta muestra
+                          </span>
                         </div>
                       )}
                     </div>
@@ -377,9 +503,15 @@ export default function ConvertToRequestModal({
           variant="secondary"
           onClick={addSample}
           className="w-full py-3 border-dashed border-2 transition-all"
-          style={{ borderColor: '#E5E5E5' }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#009933'; e.currentTarget.style.backgroundColor = '#E8F5E9'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+          style={{ borderColor: "#E5E5E5" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "#009933";
+            e.currentTarget.style.backgroundColor = "#E8F5E9";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "#E5E5E5";
+            e.currentTarget.style.backgroundColor = "transparent";
+          }}
         >
           <Plus className="w-4 h-4 mr-2" />
           Agregar otra muestra
@@ -387,9 +519,18 @@ export default function ConvertToRequestModal({
 
         {/* Resumen de validación */}
         {!canConfirm && (
-          <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: '#FFF9E8', border: '1px solid #FFCC3330' }}>
-            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FFCC33' }} />
-            <div className="text-sm" style={{ color: '#996600' }}>
+          <div
+            className="rounded-xl p-3 flex items-start gap-2"
+            style={{
+              backgroundColor: "#FFF9E8",
+              border: "1px solid #FFCC3330",
+            }}
+          >
+            <AlertCircle
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              style={{ color: "#FFCC33" }}
+            />
+            <div className="text-sm" style={{ color: "#996600" }}>
               <p className="font-medium">Completa los datos requeridos:</p>
               <ul className="list-disc list-inside mt-1 text-xs opacity-90">
                 {!samples.some((s) => s.sampleName.trim()) && (
@@ -398,6 +539,13 @@ export default function ConvertToRequestModal({
                 {samples.some((s) => s.serviceIds.length === 0) && (
                   <li>Todas las muestras deben tener al menos un análisis</li>
                 )}
+                {totalAnalisisAsignados < totalDisponible && (
+                  <li>
+                    Faltan {totalDisponible - totalAnalisisAsignados} análisis
+                    por asignar ({totalAnalisisAsignados}/{totalDisponible}{" "}
+                    asignados)
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -405,7 +553,10 @@ export default function ConvertToRequestModal({
       </div>
 
       {/* Footer con botones de acción */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-5 border-t mt-5" style={{ borderColor: '#E5E5E5' }}>
+      <div
+        className="flex flex-col sm:flex-row justify-end gap-3 pt-5 border-t mt-5"
+        style={{ borderColor: "#E5E5E5" }}
+      >
         <Button
           type="button"
           variant="ghost"
@@ -418,7 +569,7 @@ export default function ConvertToRequestModal({
           onClick={handleConfirm}
           disabled={loading || !canConfirm}
           className="order-1 sm:order-2"
-          style={{ backgroundColor: '#009933' }}
+          style={{ backgroundColor: "#009933" }}
         >
           {loading ? (
             <span className="flex items-center gap-2">

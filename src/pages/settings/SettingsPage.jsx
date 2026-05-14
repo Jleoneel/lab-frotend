@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Settings, Percent, Save, CheckCircle, Plus, Pencil, Trash2, X } from 'lucide-react';
 import { settingsService } from '../../services/settingsService';
 import Swal from 'sweetalert2';
@@ -16,11 +16,7 @@ export default function SettingsPage() {
   const [editNombre, setEditNombre] = useState('');
   const [savingRazon, setSavingRazon] = useState(false);
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  const loadSettings = async () => {
+  const loadSettings = useCallback(async () => {
     try {
       const [ivaData, razonesData] = await Promise.all([
         settingsService.getIva(),
@@ -29,12 +25,16 @@ export default function SettingsPage() {
       setIva(String(ivaData.iva));
       setCurrentIva(ivaData.iva);
       setRazones(Array.isArray(razonesData) ? razonesData : []);
-    } catch (error) {
+    } catch {
       // Error cargando configuración
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
 
   const handleSaveIva = async () => {
     const ivaNum = parseFloat(iva);
@@ -47,7 +47,7 @@ export default function SettingsPage() {
       await settingsService.updateIva(ivaNum);
       setCurrentIva(ivaNum);
       await Swal.fire({ icon: 'success', title: '¡IVA actualizado!', text: `Nuevo IVA: ${ivaNum}%`, confirmButtonColor: '#009933', timer: 2000, timerProgressBar: true });
-    } catch (error) {
+    } catch {
       await Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar el IVA', confirmButtonColor: '#dc3545' });
     } finally {
       setSaving(false);
@@ -75,7 +75,7 @@ export default function SettingsPage() {
       setRazones(razones.map(r => r.id === id ? updated : r));
       setEditingRazon(null);
       setEditNombre('');
-    } catch (error) {
+    } catch {
       await Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar', confirmButtonColor: '#dc3545' });
     }
   };
@@ -95,7 +95,7 @@ export default function SettingsPage() {
     try {
       await settingsService.deleteRazon(razon.id);
       setRazones(razones.filter(r => r.id !== razon.id));
-    } catch (error) {
+    } catch {
       await Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo eliminar', confirmButtonColor: '#dc3545' });
     }
   };

@@ -27,7 +27,7 @@ import { settingsService } from "../../services/settingsService";
 import SampleReportPDF from "../../components/samples/SampleReportPDF";
 import QRCode from "qrcode";
 import Swal from "sweetalert2";
-import { useAuthStore } from '../../store/authStore';
+import { useAuthStore } from "../../store/authStore";
 
 const statusLabels = {
   EN_COLA: "En Cola",
@@ -66,8 +66,8 @@ export default function SampleDetail() {
       setSample(sampleRes.data);
 
       const allAnalyses = analysesRes.data;
-      if (user?.role === 'ANALYST') {
-        setAnalyses(allAnalyses.filter(a => a.assignedToId === user.id));
+      if (user?.role === "ANALYST") {
+        setAnalyses(allAnalyses.filter((a) => a.assignedToId === user.id));
       } else {
         setAnalyses(allAnalyses);
       }
@@ -82,12 +82,11 @@ export default function SampleDetail() {
       const url = `${window.location.origin}/seguimiento/${sampleRes.data.sampleCode}`;
       const dataUrl = await QRCode.toDataURL(url, { width: 150, margin: 1 });
       setQrDataUrl(dataUrl);
-
     } catch {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo cargar la muestra.',
+        icon: "error",
+        title: "Error",
+        text: "No se pudo cargar la muestra.",
       });
     } finally {
       setLoading(false);
@@ -96,6 +95,8 @@ export default function SampleDetail() {
 
   useEffect(() => {
     loadSampleData();
+    const interval = setInterval(loadSampleData, 30000);
+    return () => clearInterval(interval);
   }, [loadSampleData]);
 
   const handleStatusChange = async (analysisId, newStatus) => {
@@ -104,20 +105,20 @@ export default function SampleDetail() {
 
       await Swal.fire({
         toast: true,
-        position: 'top-end',
+        position: "top-end",
         showConfirmButton: false,
-        icon: 'success',
-        text: 'El estado del análisis ha sido actualizado correctamente.',
+        icon: "success",
+        text: "El estado del análisis ha sido actualizado correctamente.",
         timer: 1500,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
 
       loadSampleData();
     } catch {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo actualizar el estado del análisis.',
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el estado del análisis.",
       });
     }
   };
@@ -130,23 +131,23 @@ export default function SampleDetail() {
       loadSampleData();
     } catch {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo registrar el resultado.',
+        icon: "error",
+        title: "Error",
+        text: "No se pudo registrar el resultado.",
       });
     }
   };
 
   const handleEmitReport = async () => {
     const result = await Swal.fire({
-      title: '¿Emitir informe final?',
-      text: 'La muestra quedará en estado TERMINADO y no podrá modificarse.',
-      icon: 'question',
+      title: "¿Emitir informe final?",
+      text: "La muestra quedará en estado TERMINADO y no podrá modificarse.",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#009933',
-      cancelButtonColor: '#666666',
-      confirmButtonText: 'Sí, emitir informe',
-      cancelButtonText: 'Cancelar',
+      confirmButtonColor: "#009933",
+      cancelButtonColor: "#666666",
+      confirmButtonText: "Sí, emitir informe",
+      cancelButtonText: "Cancelar",
       reverseButtons: true,
     });
 
@@ -157,20 +158,20 @@ export default function SampleDetail() {
 
       await Swal.fire({
         toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: '¡Informe generado!',
+        position: "top-end",
+        icon: "success",
+        title: "¡Informe generado!",
         showConfirmButton: false,
         timer: 2000,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
 
       loadSampleData();
     } catch {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo emitir el informe.',
+        icon: "error",
+        title: "Error",
+        text: "No se pudo emitir el informe.",
       });
     }
   };
@@ -215,8 +216,16 @@ export default function SampleDetail() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#009933', borderTopColor: '#FFCC33' }}></div>
-          <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>Cargando muestra...</p>
+          <div
+            className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4"
+            style={{ borderColor: "#009933", borderTopColor: "#FFCC33" }}
+          ></div>
+          <p
+            className="text-sm"
+            style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}
+          >
+            Cargando muestra...
+          </p>
         </div>
       </div>
     );
@@ -225,16 +234,26 @@ export default function SampleDetail() {
   if (!sample) {
     return (
       <div className="text-center py-12">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-          <Package className="w-10 h-10" style={{ color: '#CCCCCC' }} />
+        <div
+          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+          style={{ backgroundColor: "#F5F5F5" }}
+        >
+          <Package className="w-10 h-10" style={{ color: "#CCCCCC" }} />
         </div>
-        <h3 className="text-lg font-medium mb-2" style={{ color: '#333333', fontFamily: "'Montserrat', sans-serif" }}>
+        <h3
+          className="text-lg font-medium mb-2"
+          style={{ color: "#333333", fontFamily: "'Montserrat', sans-serif" }}
+        >
           Muestra no encontrada
         </h3>
-        <p className="text-sm mt-2" style={{ color: '#666666' }}>
+        <p className="text-sm mt-2" style={{ color: "#666666" }}>
           La muestra que buscas no existe o ha sido eliminada.
         </p>
-        <Button onClick={() => navigate("/production")} className="mt-4" style={{ backgroundColor: '#009933' }}>
+        <Button
+          onClick={() => navigate("/production")}
+          className="mt-4"
+          style={{ backgroundColor: "#009933" }}
+        >
           Volver a producción
         </Button>
       </div>
@@ -247,8 +266,8 @@ export default function SampleDetail() {
   const canEmitReport =
     sample.status === "LISTO_PARA_INFORME" && allAnalysesDone;
   const todosConConsumo = analyses
-    .filter(a => a.status === 'DONE')
-    .every(a => (a.movimientosReactivos?.length || 0) > 0);
+    .filter((a) => a.status === "DONE")
+    .every((a) => (a.movimientosReactivos?.length || 0) > 0);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -257,9 +276,9 @@ export default function SampleDetail() {
         <button
           onClick={() => navigate("/production")}
           className="flex items-center mb-4 transition-colors group"
-          style={{ color: '#666666' }}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#009933'}
-          onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
+          style={{ color: "#666666" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#009933")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#666666")}
         >
           <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a producción
@@ -267,14 +286,26 @@ export default function SampleDetail() {
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
-              <Package className="w-7 h-7" style={{ color: '#009933' }} />
+            <div
+              className="w-14 h-14 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: "#E8F5E9" }}
+            >
+              <Package className="w-7 h-7" style={{ color: "#009933" }} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold" style={{ color: '#009933', fontFamily: "'Trajan Pro Bold', serif" }}>
+              <h1
+                className="text-2xl font-bold"
+                style={{
+                  color: "#009933",
+                  fontFamily: "'Trajan Pro Bold', serif",
+                }}
+              >
                 Muestra {sample.sampleCode}
               </h1>
-              <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: '#666666' }}>
+              <div
+                className="flex items-center gap-2 mt-1 text-sm"
+                style={{ color: "#666666" }}
+              >
                 <Calendar className="w-4 h-4" />
                 <span>Recibida el {formatDate(sample.receivedAt)}</span>
               </div>
@@ -282,15 +313,24 @@ export default function SampleDetail() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Badge variant={
-              sample.status === 'EN_COLA' ? 'utm_gray' :
-                sample.status === 'EN_PROCESO' ? 'utm_gold' :
-                  sample.status === 'LISTO_PARA_INFORME' ? 'utm_green' :
-                    sample.status === 'TERMINADO' ? 'utm_green' :
-                      'utm_gray'
-            } className="px-4 py-2 text-sm">
+            <Badge
+              variant={
+                sample.status === "EN_COLA"
+                  ? "utm_gray"
+                  : sample.status === "EN_PROCESO"
+                    ? "utm_gold"
+                    : sample.status === "LISTO_PARA_INFORME"
+                      ? "utm_green"
+                      : sample.status === "TERMINADO"
+                        ? "utm_green"
+                        : "utm_gray"
+              }
+              className="px-4 py-2 text-sm"
+            >
               <StatusIcon className="w-4 h-4 mr-2 inline" />
-              {statusLabels[sample.status] || sample.status?.replace(/_/g, " ") || "Sin estado"}
+              {statusLabels[sample.status] ||
+                sample.status?.replace(/_/g, " ") ||
+                "Sin estado"}
             </Badge>
 
             <Button
@@ -308,13 +348,15 @@ export default function SampleDetail() {
                   onClick={handleEmitReport}
                   disabled={!todosConConsumo}
                   className="shadow-sm"
-                  style={{ backgroundColor: todosConConsumo ? '#009933' : '#CCCCCC' }}
+                  style={{
+                    backgroundColor: todosConConsumo ? "#009933" : "#CCCCCC",
+                  }}
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   Emitir Informe
                 </Button>
                 {!todosConConsumo && (
-                  <p className="text-xs" style={{ color: '#DC2626' }}>
+                  <p className="text-xs" style={{ color: "#DC2626" }}>
                     ⚠ Registra el consumo de reactivos primero
                   </p>
                 )}
@@ -351,47 +393,87 @@ export default function SampleDetail() {
       {/* Grid de información */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Tarjeta de información de la muestra */}
-        <div className="bg-white rounded-2xl border p-6 shadow-sm" style={{ borderColor: '#E5E5E5' }}>
+        <div
+          className="bg-white rounded-2xl border p-6 shadow-sm"
+          style={{ borderColor: "#E5E5E5" }}
+        >
           <div className="flex items-center gap-2 mb-4">
-            <Package className="w-5 h-5" style={{ color: '#666666' }} />
-            <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+            <Package className="w-5 h-5" style={{ color: "#666666" }} />
+            <h2
+              className="text-lg font-semibold"
+              style={{
+                color: "#009933",
+                fontFamily: "'Montserrat', sans-serif",
+              }}
+            >
               Información de la Muestra
             </h2>
           </div>
 
           <div className="space-y-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Objetivo del Análisis</p>
-              <p className="text-sm" style={{ color: '#333333' }}>
+              <p
+                className="text-xs font-medium uppercase tracking-wider mb-1"
+                style={{ color: "#666666" }}
+              >
+                Objetivo del Análisis
+              </p>
+              <p className="text-sm" style={{ color: "#333333" }}>
                 {sample.objetivoAnalisis || (
-                  <span className="italic" style={{ color: '#999999' }}>Sin objetivo</span>
+                  <span className="italic" style={{ color: "#999999" }}>
+                    Sin objetivo
+                  </span>
                 )}
               </p>
             </div>
 
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Cantidad Recibida</p>
-              <p className="text-sm" style={{ color: '#333333' }}>
+              <p
+                className="text-xs font-medium uppercase tracking-wider mb-1"
+                style={{ color: "#666666" }}
+              >
+                Cantidad Recibida
+              </p>
+              <p className="text-sm" style={{ color: "#333333" }}>
                 {sample.cantidadRecibida || (
-                  <span className="italic" style={{ color: '#999999' }}>No especificada</span>
+                  <span className="italic" style={{ color: "#999999" }}>
+                    No especificada
+                  </span>
                 )}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Solicitud</p>
+                <p
+                  className="text-xs font-medium uppercase tracking-wider mb-1"
+                  style={{ color: "#666666" }}
+                >
+                  Solicitud
+                </p>
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4" style={{ color: '#666666' }} />
-                  <span className="font-mono text-sm" style={{ color: '#009933' }}>{sample.requestNumber || "N/A"}</span>
+                  <FileText className="w-4 h-4" style={{ color: "#666666" }} />
+                  <span
+                    className="font-mono text-sm"
+                    style={{ color: "#009933" }}
+                  >
+                    {sample.requestNumber || "N/A"}
+                  </span>
                 </div>
               </div>
 
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: '#666666' }}>Cliente</p>
+                <p
+                  className="text-xs font-medium uppercase tracking-wider mb-1"
+                  style={{ color: "#666666" }}
+                >
+                  Cliente
+                </p>
                 <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" style={{ color: '#666666' }} />
-                  <span className="text-sm" style={{ color: '#333333' }}>{sample.clientName || "N/A"}</span>
+                  <User className="w-4 h-4" style={{ color: "#666666" }} />
+                  <span className="text-sm" style={{ color: "#333333" }}>
+                    {sample.clientName || "N/A"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -399,39 +481,70 @@ export default function SampleDetail() {
         </div>
 
         {/* Tarjeta de progreso */}
-        <div className="bg-white rounded-2xl border p-6 shadow-sm" style={{ borderColor: '#E5E5E5' }}>
+        <div
+          className="bg-white rounded-2xl border p-6 shadow-sm"
+          style={{ borderColor: "#E5E5E5" }}
+        >
           <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="w-5 h-5" style={{ color: '#666666' }} />
-            <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+            <CheckCircle className="w-5 h-5" style={{ color: "#666666" }} />
+            <h2
+              className="text-lg font-semibold"
+              style={{
+                color: "#009933",
+                fontFamily: "'Montserrat', sans-serif",
+              }}
+            >
               Progreso de Análisis
             </h2>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#F9F9F9' }}>
-              <p className="text-3xl font-bold" style={{ color: '#009933' }}>{analyses.length}</p>
-              <p className="text-sm mt-1" style={{ color: '#666666' }}>Total análisis</p>
+            <div
+              className="rounded-xl p-4 text-center"
+              style={{ backgroundColor: "#F9F9F9" }}
+            >
+              <p className="text-3xl font-bold" style={{ color: "#009933" }}>
+                {analyses.length}
+              </p>
+              <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                Total análisis
+              </p>
             </div>
 
-            <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#F9F9F9' }}>
-              <p className="text-3xl font-bold" style={{ color: '#009933' }}>
+            <div
+              className="rounded-xl p-4 text-center"
+              style={{ backgroundColor: "#F9F9F9" }}
+            >
+              <p className="text-3xl font-bold" style={{ color: "#009933" }}>
                 {analyses.filter((a) => a.status === "DONE").length}
               </p>
-              <p className="text-sm mt-1" style={{ color: '#666666' }}>Completados</p>
+              <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                Completados
+              </p>
             </div>
 
-            <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#FFF9E8' }}>
-              <p className="text-3xl font-bold" style={{ color: '#FFCC33' }}>
+            <div
+              className="rounded-xl p-4 text-center"
+              style={{ backgroundColor: "#FFF9E8" }}
+            >
+              <p className="text-3xl font-bold" style={{ color: "#FFCC33" }}>
                 {analyses.filter((a) => a.status === "PENDING").length}
               </p>
-              <p className="text-sm mt-1" style={{ color: '#666666' }}>Pendientes</p>
+              <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                Pendientes
+              </p>
             </div>
 
-            <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#FFF9E8' }}>
-              <p className="text-3xl font-bold" style={{ color: '#FFCC33' }}>
+            <div
+              className="rounded-xl p-4 text-center"
+              style={{ backgroundColor: "#FFF9E8" }}
+            >
+              <p className="text-3xl font-bold" style={{ color: "#FFCC33" }}>
                 {analyses.filter((a) => a.status === "RUNNING").length}
               </p>
-              <p className="text-sm mt-1" style={{ color: '#666666' }}>En proceso</p>
+              <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                En proceso
+              </p>
             </div>
           </div>
 
@@ -439,22 +552,25 @@ export default function SampleDetail() {
           {analyses.length > 0 && (
             <div className="mt-4">
               <div className="flex justify-between text-xs mb-1">
-                <span style={{ color: '#666666' }}>Progreso general</span>
-                <span style={{ color: '#009933' }}>
+                <span style={{ color: "#666666" }}>Progreso general</span>
+                <span style={{ color: "#009933" }}>
                   {Math.round(
                     (analyses.filter((a) => a.status === "DONE").length /
                       analyses.length) *
-                    100
+                      100,
                   )}
                   %
                 </span>
               </div>
-              <div className="w-full rounded-full h-2" style={{ backgroundColor: '#E5E5E5' }}>
+              <div
+                className="w-full rounded-full h-2"
+                style={{ backgroundColor: "#E5E5E5" }}
+              >
                 <div
                   className="h-2 rounded-full transition-all duration-300"
                   style={{
                     width: `${(analyses.filter((a) => a.status === "DONE").length / analyses.length) * 100}%`,
-                    backgroundColor: '#009933'
+                    backgroundColor: "#009933",
                   }}
                 />
               </div>
@@ -464,10 +580,16 @@ export default function SampleDetail() {
       </div>
 
       {/* Análisis asignados */}
-      <div className="bg-white rounded-2xl border p-6 shadow-sm" style={{ borderColor: '#E5E5E5' }}>
+      <div
+        className="bg-white rounded-2xl border p-6 shadow-sm"
+        style={{ borderColor: "#E5E5E5" }}
+      >
         <div className="flex items-center gap-2 mb-6">
-          <FlaskConical className="w-5 h-5" style={{ color: '#666666' }} />
-          <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+          <FlaskConical className="w-5 h-5" style={{ color: "#666666" }} />
+          <h2
+            className="text-lg font-semibold"
+            style={{ color: "#009933", fontFamily: "'Montserrat', sans-serif" }}
+          >
             Análisis Asignados
           </h2>
           <Badge variant="utm_green" className="ml-auto">
@@ -505,13 +627,19 @@ export default function SampleDetail() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden">
             {/* Header del modal */}
-            <div className="px-6 py-4 flex justify-between items-center" style={{ backgroundColor: '#009933' }}>
+            <div
+              className="px-6 py-4 flex justify-between items-center"
+              style={{ backgroundColor: "#009933" }}
+            >
               <div className="flex items-center gap-3">
                 <div className="bg-white/20 rounded-lg p-2">
                   <QrCode className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white" style={{ fontFamily: "'Trajan Pro Bold', serif" }}>
+                  <h2
+                    className="text-lg font-semibold text-white"
+                    style={{ fontFamily: "'Trajan Pro Bold', serif" }}
+                  >
                     Etiqueta de Muestra
                   </h2>
                   <p className="text-xs text-white/80">
@@ -529,11 +657,26 @@ export default function SampleDetail() {
 
             {/* Contenido del modal */}
             <div className="p-6">
-              <div className="border-2 border-dashed rounded-xl p-6 text-center" style={{ borderColor: '#E5E5E5', backgroundColor: '#F9F9F9' }}>
+              <div
+                className="border-2 border-dashed rounded-xl p-6 text-center"
+                style={{ borderColor: "#E5E5E5", backgroundColor: "#F9F9F9" }}
+              >
                 <div className="mb-4">
-                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>CABA UTM</p>
-                  <p className="text-2xl font-bold mt-1 font-mono" style={{ color: '#009933' }}>{sample.sampleCode}</p>
-                  <p className="text-sm mt-1" style={{ color: '#666666' }}>{sample.sampleName || "Muestra sin nombre"}</p>
+                  <p
+                    className="text-xs font-medium uppercase tracking-wider"
+                    style={{ color: "#666666" }}
+                  >
+                    CABA UTM
+                  </p>
+                  <p
+                    className="text-2xl font-bold mt-1 font-mono"
+                    style={{ color: "#009933" }}
+                  >
+                    {sample.sampleCode}
+                  </p>
+                  <p className="text-sm mt-1" style={{ color: "#666666" }}>
+                    {sample.sampleName || "Muestra sin nombre"}
+                  </p>
                 </div>
 
                 <div className="flex justify-center mb-4" id="qr-code-svg">
@@ -547,20 +690,36 @@ export default function SampleDetail() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2 text-xs" style={{ color: '#666666' }}>
+                <div
+                  className="flex items-center justify-center gap-2 text-xs"
+                  style={{ color: "#666666" }}
+                >
                   <Calendar className="w-3 h-3" />
                   <span>{formatDate(sample.receivedAt)}</span>
                 </div>
 
                 {/* Información adicional */}
-                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-2 text-xs" style={{ borderColor: '#E5E5E5' }}>
+                <div
+                  className="mt-4 pt-4 border-t grid grid-cols-2 gap-2 text-xs"
+                  style={{ borderColor: "#E5E5E5" }}
+                >
                   <div>
                     <p className="text-gray-500">Solicitud</p>
-                    <p className="font-medium font-mono" style={{ color: '#009933' }}>{sample.requestNumber || "N/A"}</p>
+                    <p
+                      className="font-medium font-mono"
+                      style={{ color: "#009933" }}
+                    >
+                      {sample.requestNumber || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-500">Cliente</p>
-                    <p className="font-medium truncate" style={{ color: '#333333' }}>{sample.clientName || "N/A"}</p>
+                    <p
+                      className="font-medium truncate"
+                      style={{ color: "#333333" }}
+                    >
+                      {sample.clientName || "N/A"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -574,7 +733,11 @@ export default function SampleDetail() {
                 >
                   Cancelar
                 </Button>
-                <Button className="flex-1" onClick={handlePrintQR} style={{ backgroundColor: '#009933' }}>
+                <Button
+                  className="flex-1"
+                  onClick={handlePrintQR}
+                  style={{ backgroundColor: "#009933" }}
+                >
                   <Printer className="w-4 h-4 mr-2" />
                   Imprimir
                 </Button>

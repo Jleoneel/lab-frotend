@@ -416,7 +416,7 @@ export default function RegistrarConsumoModal({
           </button>
           <button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || consumos.some(c => !c.reactivoId || !c.cantidad)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: "#009933" }}
             onMouseEnter={(e) => { if (!saving) e.currentTarget.style.backgroundColor = "#00802b"; }}

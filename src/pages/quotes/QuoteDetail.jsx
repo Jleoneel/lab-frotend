@@ -55,6 +55,7 @@ export default function QuoteDetail() {
     try {
       const response = await quoteService.getById(id);
       setQuote(response.data);
+      //eslint-disable-next-line
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -97,6 +98,7 @@ export default function QuoteDetail() {
         timer: 2000,
         timerProgressBar: true,
       });
+      //eslint-disable-next-line
     } catch (error) {
       Swal.fire({
         icon: "error",

@@ -39,7 +39,6 @@ export default function Navbar() {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -142,30 +141,6 @@ export default function Navbar() {
           </h1>
 
           <div className="flex items-center space-x-3">
-            {/* Dark mode */}
-            <button
-              onClick={() => {
-                setIsDarkMode(!isDarkMode);
-                document.documentElement.classList.toggle("dark");
-              }}
-              className="p-2 rounded-lg transition-colors"
-              style={{ color: "#666666" }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#F5F5F5";
-                e.currentTarget.style.color = "#009933";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#666666";
-              }}
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
-
             {/* Notificaciones */}
             <div className="relative">
               <button

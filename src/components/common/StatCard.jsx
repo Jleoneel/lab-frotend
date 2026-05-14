@@ -1,5 +1,6 @@
 import { colorVariants } from '../../styles/tokens';
 
+//eslint-disable-next-line
 export default function StatCard({ icon: Icon, label, value, variant = 'green' }) {
   const { bg, color } = colorVariants[variant] ?? colorVariants.green;
 

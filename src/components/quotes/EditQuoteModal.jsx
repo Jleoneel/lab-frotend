@@ -10,8 +10,9 @@ import { clientService } from "../../services/clientService";
 import DatePicker from "../../components/ui/DatePicker";
 import { quoteService } from "../../services/quoteService";
 import Swal from "sweetalert2";
+import { settingsService } from "../../services/settingsService";
 
-// Select personalizado con búsqueda - Estilo UTM
+// Select con búsqueda
 const SearchableSelect = ({
   label,
   value,
@@ -143,7 +144,7 @@ const SearchableSelect = ({
   );
 };
 
-// Select simple - Estilo UTM
+// Select simple 
 const SimpleSelect = ({ label, value, onChange, options = [], disabled }) => (
   <div className="w-full">
     {label && (
@@ -180,7 +181,7 @@ const SimpleSelect = ({ label, value, onChange, options = [], disabled }) => (
   </div>
 );
 
-// Input de cantidad con botones +/- - Estilo UTM
+// Input de cantidad con botones +/-
 const QuantityInput = ({ value, onChange, min = 1, disabled }) => {
   const handleIncrement = () => onChange(value + 1);
   const handleDecrement = () => onChange(Math.max(min, value - 1));
@@ -266,9 +267,10 @@ export default function EditQuoteModal({ isOpen, onClose, quote, onSaved }) {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [clientsRes, servicesRes] = await Promise.all([
+      const [clientsRes, servicesRes, ivaRes] = await Promise.all([
         clientService.getAll(),
         serviceService.getActive(),
+        settingsService.getIva(),
       ]);
 
       setClients(clientsRes.data || []);
@@ -277,7 +279,7 @@ export default function EditQuoteModal({ isOpen, onClose, quote, onSaved }) {
       setFormData({
         clientId: quote.clientId,
         priceList: quote.priceList,
-        ivaPercent: parseFloat(quote.ivaPercent) || 19,
+        ivaPercent: parseFloat(ivaRes) || parseFloat(quote.ivaPercent) || 0,
         validUntil: quote.validUntil
           ? new Date(quote.validUntil).toISOString().split("T")[0]
           : "",
@@ -362,23 +364,23 @@ export default function EditQuoteModal({ isOpen, onClose, quote, onSaved }) {
           quantity: i.quantity,
         })),
       });
-      
+
       await Swal.fire({
         toast: true,
-        position: 'top-end',
-        icon: 'success',
-        text: 'La cotización ha sido actualizada correctamente.',
-        showConfirmButton : false,
+        position: "top-end",
+        icon: "success",
+        text: "La cotización ha sido actualizada correctamente.",
+        showConfirmButton: false,
         timer: 1000,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
-      
+
       onSaved();
       onClose();
     } catch (e) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error al editar',
+        icon: "error",
+        title: "Error al editar",
         text: e.response?.data?.message || e.message,
       });
     } finally {

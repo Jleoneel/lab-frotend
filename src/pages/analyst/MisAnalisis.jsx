@@ -48,6 +48,8 @@ export default function MisAnalisis() {
 
   useEffect(() => {
     loadMisAnalisis();
+    const interval = setInterval(loadMisAnalisis, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadMisAnalisis = async () => {

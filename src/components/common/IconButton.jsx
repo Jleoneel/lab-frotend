@@ -12,6 +12,7 @@ const sizeMap = {
 };
 
 export default function IconButton({
+  //eslint-disable-next-line
   icon: Icon,
   onClick,
   title,

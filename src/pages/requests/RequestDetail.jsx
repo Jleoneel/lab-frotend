@@ -60,6 +60,7 @@ export default function RequestDetail() {
       ]);
       setRequest(requestRes.data);
       setSamples(samplesRes.data);
+      //eslint-disable-next-line
     } catch (error) {
       // Error cargando solicitud
     } finally {

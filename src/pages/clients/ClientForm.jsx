@@ -46,6 +46,7 @@ export default function ClientForm() {
     try {
       const response = await clientService.getById(id);
       setFormData(response.data);
+      //eslint-disable-next-line no-unused-vars
     } catch (error) {
       navigate('/clients');
     } finally {

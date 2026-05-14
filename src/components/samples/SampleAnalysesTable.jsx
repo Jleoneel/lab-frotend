@@ -1,5 +1,5 @@
 // components/samples/SampleAnalysesTable.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Play,
   CheckCircle,
@@ -7,12 +7,12 @@ import {
   AlertCircle,
   Download,
   FlaskConical,
-  UserPlus
+  UserPlus,
 } from "lucide-react";
 import Badge from "../ui/Badge";
 import RegistrarConsumoModal from "../inventario/RegistrarConsumoModal";
-import AsignarAnalistaModal from './AsignarAnalistaModal';
-import { useAuthStore } from '../../store/authStore';
+import AsignarAnalistaModal from "./AsignarAnalistaModal";
+import { useAuthStore } from "../../store/authStore";
 
 const statusColors = {
   PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -31,7 +31,7 @@ export default function SampleAnalysesTable({
   onStatusChange,
   onRegisterResult,
   readOnly = false,
-  onReload
+  onReload,
 }) {
   const [expandedRow, setExpandedRow] = useState(null);
   const [showConsumoModal, setShowConsumoModal] = useState(false);
@@ -39,7 +39,7 @@ export default function SampleAnalysesTable({
   const [showAsignarModal, setShowAsignarModal] = useState(false);
   const [analysisParaAsignar, setAnalysisParaAsignar] = useState(null);
   const { user } = useAuthStore();
-  const isAdmin = user?.role === 'ADMIN';
+  const isAdmin = user?.role === "ADMIN";
 
   if (!analyses || analyses.length === 0) {
     return (
@@ -102,11 +102,8 @@ export default function SampleAnalysesTable({
         {/* Table Body */}
         <tbody className="divide-y" style={{ borderColor: "#E5E5E5" }}>
           {analyses.map((analysis) => (
-            <>
-              <tr
-                key={analysis.id}
-                className="hover:bg-gray-50/50 transition-colors"
-              >
+            <React.Fragment key={analysis.id}>
+              <tr className="hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div
                     className="text-sm font-medium"
@@ -164,24 +161,12 @@ export default function SampleAnalysesTable({
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   {!readOnly && (
                     <div className="flex justify-end gap-2">
-                      {isAdmin && (
+                      {isAdmin && !analysis.result && (
                         <button
                           onClick={() => {
                             setAnalysisParaAsignar(analysis);
                             setShowAsignarModal(true);
                           }}
-                          className="p-2 rounded-lg transition-colors"
-                          style={{ color: '#666666' }}
-                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#666666'; }}
-                          title={analysis.assignedTo ? `Asignado: ${analysis.assignedTo}` : 'Asignar analista'}
-                        >
-                          <UserPlus className="w-4 h-4" />
-                        </button>
-                      )}
-                      {analysis.status === "PENDING" && (
-                        <button
-                          onClick={() => onStatusChange(analysis.id, "RUNNING")}
                           className="p-2 rounded-lg transition-colors"
                           style={{ color: "#666666" }}
                           onMouseEnter={(e) => {
@@ -193,11 +178,37 @@ export default function SampleAnalysesTable({
                               "transparent";
                             e.currentTarget.style.color = "#666666";
                           }}
-                          title="Iniciar análisis"
+                          title={
+                            analysis.assignedTo
+                              ? `Asignado: ${analysis.assignedTo}`
+                              : "Asignar analista"
+                          }
                         >
-                          <Play className="w-4 h-4" />
+                          <UserPlus className="w-4 h-4" />
                         </button>
                       )}
+                      {analysis.status === "PENDING" &&
+                        (!isAdmin || !analysis.assignedToId) && (
+                          <button
+                            onClick={() =>
+                              onStatusChange(analysis.id, "RUNNING")
+                            }
+                            className="p-2 rounded-lg transition-colors"
+                            style={{ color: "#666666" }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = "#E8F5E9";
+                              e.currentTarget.style.color = "#009933";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
+                              e.currentTarget.style.color = "#666666";
+                            }}
+                            title="Iniciar análisis"
+                          >
+                            <Play className="w-4 h-4" />
+                          </button>
+                        )}
                       {analysis.status === "RUNNING" && (
                         <>
                           <button
@@ -261,21 +272,46 @@ export default function SampleAnalysesTable({
                           <FileText className="w-4 h-4" />
                         </button>
                       )}
-                      {analysis.status === 'DONE' && (
+                      {analysis.status === "DONE" && (!analysis.assignedToId || !isAdmin) &&  (
                         <button
-                          onClick={() => { setAnalysisParaConsumo(analysis); setShowConsumoModal(true); }}
-                          className={`p-2 rounded-lg transition-colors ${analysis.movimientosReactivos?.length === 0 ? 'animate-pulse' : ''
-                            }`}
+                          onClick={() => {
+                            setAnalysisParaConsumo(analysis);
+                            setShowConsumoModal(true);
+                          }}
+                          className={`p-2 rounded-lg transition-colors ${
+                            analysis.movimientosReactivos?.length === 0
+                              ? "animate-pulse"
+                              : ""
+                          }`}
                           style={{
-                            color: analysis.movimientosReactivos?.length === 0 ? '#DC2626' : '#666666',
-                            backgroundColor: analysis.movimientosReactivos?.length === 0 ? '#FEF2F2' : 'transparent'
+                            color:
+                              analysis.movimientosReactivos?.length === 0
+                                ? "#DC2626"
+                                : "#666666",
+                            backgroundColor:
+                              analysis.movimientosReactivos?.length === 0
+                                ? "#FEF2F2"
+                                : "transparent",
                           }}
-                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#009933'; }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "#E8F5E9";
+                            e.currentTarget.style.color = "#009933";
+                          }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = analysis.movimientosReactivos?.length === 0 ? '#FEF2F2' : 'transparent';
-                            e.currentTarget.style.color = analysis.movimientosReactivos?.length === 0 ? '#DC2626' : '#666666';
+                            e.currentTarget.style.backgroundColor =
+                              analysis.movimientosReactivos?.length === 0
+                                ? "#FEF2F2"
+                                : "transparent";
+                            e.currentTarget.style.color =
+                              analysis.movimientosReactivos?.length === 0
+                                ? "#DC2626"
+                                : "#666666";
                           }}
-                          title={analysis.movimientosReactivos?.length === 0 ? '⚠ Debes registrar consumo de reactivos' : 'Ver consumos registrados'}
+                          title={
+                            analysis.movimientosReactivos?.length === 0
+                              ? "⚠ Debes registrar consumo de reactivos"
+                              : "Ver consumos registrados"
+                          }
                         >
                           <FlaskConical className="w-4 h-4" />
                         </button>
@@ -531,7 +567,7 @@ export default function SampleAnalysesTable({
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>
@@ -544,11 +580,18 @@ export default function SampleAnalysesTable({
           setAnalysisParaConsumo(null);
         }}
         analysis={analysisParaConsumo}
-        onSaved={() => { }}
+        onSaved={() => {
+          setShowConsumoModal(false);
+          setAnalysisParaConsumo(null);
+          onReload();
+        }}
       />
       <AsignarAnalistaModal
         isOpen={showAsignarModal}
-        onClose={() => { setShowAsignarModal(false); setAnalysisParaAsignar(null); }}
+        onClose={() => {
+          setShowAsignarModal(false);
+          setAnalysisParaAsignar(null);
+        }}
         analysis={analysisParaAsignar}
         onSaved={onReload}
       />

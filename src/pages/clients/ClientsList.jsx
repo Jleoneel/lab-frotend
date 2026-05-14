@@ -263,6 +263,7 @@ function ClientCard({ client, onEdit, onDelete }) {
   );
 }
 
+//eslint-disable-next-line
 function ContactRow({ icon: Icon, value, href, bg, color, emptyLabel }) {
   return (
     <div className="flex items-center gap-2 text-sm rounded-lg p-2" style={{ backgroundColor: bg }}>

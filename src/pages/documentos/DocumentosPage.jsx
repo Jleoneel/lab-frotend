@@ -38,7 +38,10 @@ export default function DocumentosPage() {
   const [enlaceForm, setEnlaceForm] = useState({ titulo: '', url: '', descripcion: '' });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); 
+    const interval = setInterval(loadData, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const loadData = async () => {
     try {

@@ -1,5 +1,6 @@
 import { fonts } from '../../styles/tokens';
 
+//eslint-disable-next-line
 export default function PageHeader({ icon: Icon, title, subtitle, children }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

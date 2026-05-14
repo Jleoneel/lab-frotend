@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { fonts } from '../../styles/tokens';
 
-// ── Navigation config
+//Navigation config
 
 const adminNavigation = [
   {
@@ -57,7 +57,7 @@ const analystNavigation = [
   },
 ];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+//Sub-components
 
 function NavItem({ item, collapsed, onClick }) {
   return (
@@ -133,7 +133,7 @@ function BrandHeader({ collapsed }) {
   );
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
+//Main component
 
 export default function Sidebar() {
   const { user } = useAuthStore();
@@ -165,7 +165,7 @@ export default function Sidebar() {
     localStorage.setItem('sidebarCollapsed', JSON.stringify(next));
   };
 
-  // ── Mobile ──────────────────────────────────────────────────────────────────
+  //Mobile
   if (isMobile) {
     return (
       <>
@@ -206,7 +206,7 @@ export default function Sidebar() {
     );
   }
 
-  // ── Desktop ─────────────────────────────────────────────────────────────────
+  //Desktop
   const sidebarWidth = isCollapsed ? 'w-20' : 'w-64';
 
   return (

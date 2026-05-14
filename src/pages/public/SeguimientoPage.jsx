@@ -14,7 +14,7 @@ import {
   TrendingUp,
   FileText,
   Beaker,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 const STATUS_LABELS = {
@@ -67,6 +67,7 @@ export default function SeguimientoPage() {
 
         const data = await response.json();
         setSample(data);
+        //eslint-disable-next-line
       } catch (e) {
         setError("Error al cargar la información");
       } finally {
@@ -74,6 +75,9 @@ export default function SeguimientoPage() {
       }
     };
     load();
+
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
   }, [sampleCode]);
 
   const statusInfo = sample
@@ -84,7 +88,10 @@ export default function SeguimientoPage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#FAFAFA" }}>
       {/* Header con gradiente */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: "#009933" }}>
+      <div
+        className="relative overflow-hidden"
+        style={{ backgroundColor: "#009933" }}
+      >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-white" />
@@ -141,25 +148,39 @@ export default function SeguimientoPage() {
             <p className="text-sm mt-2" style={{ color: "#666666" }}>
               Verifica el código QR e intenta nuevamente
             </p>
-            <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: "#F9F9F9" }}>
-              <QrCode className="w-8 h-8 mx-auto mb-2" style={{ color: "#CCCCCC" }} />
+            <div
+              className="mt-6 p-4 rounded-xl"
+              style={{ backgroundColor: "#F9F9F9" }}
+            >
+              <QrCode
+                className="w-8 h-8 mx-auto mb-2"
+                style={{ color: "#CCCCCC" }}
+              />
               <p className="text-xs" style={{ color: "#999999" }}>
                 Código buscado: <span className="font-mono">{sampleCode}</span>
               </p>
             </div>
           </div>
         ) : (
-          <div className={`space-y-5 transition-all duration-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div
+            className={`space-y-5 transition-all duration-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          >
             {/* Tarjeta principal - Código y estado */}
             <div
               className="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-all duration-200"
               style={{ borderColor: "#E5E5E5" }}
             >
-              <div className="p-5 border-b" style={{ borderColor: "#E5E5E5", backgroundColor: "#F9F9F9" }}>
+              <div
+                className="p-5 border-b"
+                style={{ borderColor: "#E5E5E5", backgroundColor: "#F9F9F9" }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <QrCode className="w-4 h-4" style={{ color: "#009933" }} />
-                    <p className="text-xs font-medium uppercase tracking-wider" style={{ color: "#666666" }}>
+                    <p
+                      className="text-xs font-medium uppercase tracking-wider"
+                      style={{ color: "#666666" }}
+                    >
                       Código de muestra
                     </p>
                   </div>
@@ -188,27 +209,52 @@ export default function SeguimientoPage() {
 
               {/* Información de la muestra */}
               <div className="p-5 space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#666666" }}>
+                <p
+                  className="text-xs font-semibold uppercase tracking-wider"
+                  style={{ color: "#666666" }}
+                >
                   Información de la muestra
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {sample.objetivoAnalisis && (
-                    <div className="flex items-start gap-2 p-2 rounded-lg" style={{ backgroundColor: "#F9F9F9" }}>
-                      <FileText className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
+                    <div
+                      className="flex items-start gap-2 p-2 rounded-lg"
+                      style={{ backgroundColor: "#F9F9F9" }}
+                    >
+                      <FileText
+                        className="w-3.5 h-3.5 flex-shrink-0 mt-0.5"
+                        style={{ color: "#009933" }}
+                      />
                       <div>
-                        <p className="text-xs" style={{ color: "#666666" }}>Objetivo</p>
-                        <p className="text-xs font-medium" style={{ color: "#333333" }}>
+                        <p className="text-xs" style={{ color: "#666666" }}>
+                          Objetivo
+                        </p>
+                        <p
+                          className="text-xs font-medium"
+                          style={{ color: "#333333" }}
+                        >
                           {sample.objetivoAnalisis}
                         </p>
                       </div>
                     </div>
                   )}
                   {sample.cantidadRecibida && (
-                    <div className="flex items-start gap-2 p-2 rounded-lg" style={{ backgroundColor: "#F9F9F9" }}>
-                      <TrendingUp className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
+                    <div
+                      className="flex items-start gap-2 p-2 rounded-lg"
+                      style={{ backgroundColor: "#F9F9F9" }}
+                    >
+                      <TrendingUp
+                        className="w-3.5 h-3.5 flex-shrink-0 mt-0.5"
+                        style={{ color: "#009933" }}
+                      />
                       <div>
-                        <p className="text-xs" style={{ color: "#666666" }}>Cantidad</p>
-                        <p className="text-xs font-medium" style={{ color: "#333333" }}>
+                        <p className="text-xs" style={{ color: "#666666" }}>
+                          Cantidad
+                        </p>
+                        <p
+                          className="text-xs font-medium"
+                          style={{ color: "#333333" }}
+                        >
                           {sample.cantidadRecibida}
                         </p>
                       </div>
@@ -216,10 +262,16 @@ export default function SeguimientoPage() {
                   )}
                 </div>
 
-                <div className="pt-3 border-t space-y-2" style={{ borderColor: "#E5E5E5" }}>
+                <div
+                  className="pt-3 border-t space-y-2"
+                  style={{ borderColor: "#E5E5E5" }}
+                >
                   {sample.cliente && (
                     <div className="flex items-center gap-2">
-                      <User className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#666666" }} />
+                      <User
+                        className="w-3.5 h-3.5 flex-shrink-0"
+                        style={{ color: "#666666" }}
+                      />
                       <p className="text-sm" style={{ color: "#333333" }}>
                         {sample.cliente}
                       </p>
@@ -227,14 +279,20 @@ export default function SeguimientoPage() {
                   )}
                   {sample.ciudad && (
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#666666" }} />
+                      <MapPin
+                        className="w-3.5 h-3.5 flex-shrink-0"
+                        style={{ color: "#666666" }}
+                      />
                       <p className="text-sm" style={{ color: "#333333" }}>
                         {sample.ciudad}
                       </p>
                     </div>
                   )}
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#666666" }} />
+                    <Calendar
+                      className="w-3.5 h-3.5 flex-shrink-0"
+                      style={{ color: "#666666" }}
+                    />
                     <p className="text-sm" style={{ color: "#333333" }}>
                       Recibido el{" "}
                       {new Date(sample.receivedAt).toLocaleDateString("es-EC", {
@@ -255,7 +313,10 @@ export default function SeguimientoPage() {
             >
               <div className="flex items-center gap-2 mb-5">
                 <TrendingUp className="w-4 h-4" style={{ color: "#009933" }} />
-                <p className="text-sm font-semibold" style={{ color: "#333333" }}>
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: "#333333" }}
+                >
                   Progreso de la muestra
                 </p>
               </div>
@@ -263,18 +324,24 @@ export default function SeguimientoPage() {
               {/* Timeline visual */}
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  {STEPS.map((s, i) => {
+                  {STEPS.map((s) => {
                     const done = currentStep > s.step;
                     const active = currentStep === s.step;
                     return (
-                      <div key={s.step} className="flex flex-col items-center flex-1">
+                      <div
+                        key={s.step}
+                        className="flex flex-col items-center flex-1"
+                      >
                         <div
                           className="w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all duration-300"
                           style={{
                             backgroundColor:
                               done || active ? "#009933" : "#F5F5F5",
-                            border: done || active ? "2px solid #009933" : "2px solid #E5E5E5",
-                            transform: active ? "scale(1.1)" : "scale(1)"
+                            border:
+                              done || active
+                                ? "2px solid #009933"
+                                : "2px solid #E5E5E5",
+                            transform: active ? "scale(1.1)" : "scale(1)",
                           }}
                         >
                           {done ? (
@@ -282,7 +349,12 @@ export default function SeguimientoPage() {
                           ) : active ? (
                             <div className="w-3 h-3 rounded-full bg-white" />
                           ) : (
-                            <span className="text-sm" style={{ color: "#CCCCCC" }}>{s.icon}</span>
+                            <span
+                              className="text-sm"
+                              style={{ color: "#CCCCCC" }}
+                            >
+                              {s.icon}
+                            </span>
                           )}
                         </div>
                         <p
@@ -300,7 +372,10 @@ export default function SeguimientoPage() {
               </div>
 
               {/* Barra de progreso */}
-              <div className="mt-6 pt-4 border-t" style={{ borderColor: "#E5E5E5" }}>
+              <div
+                className="mt-6 pt-4 border-t"
+                style={{ borderColor: "#E5E5E5" }}
+              >
                 <div className="flex justify-between text-xs mb-2">
                   <span style={{ color: "#666666" }}>Análisis completados</span>
                   <span className="font-semibold" style={{ color: "#009933" }}>
@@ -319,7 +394,10 @@ export default function SeguimientoPage() {
                     }}
                   />
                 </div>
-                <p className="text-xs text-right mt-1" style={{ color: "#999999" }}>
+                <p
+                  className="text-xs text-right mt-1"
+                  style={{ color: "#999999" }}
+                >
                   {sample.progreso}% completado
                 </p>
               </div>
@@ -330,10 +408,16 @@ export default function SeguimientoPage() {
               className="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-all duration-200"
               style={{ borderColor: "#E5E5E5" }}
             >
-              <div className="px-5 py-4 border-b" style={{ borderColor: "#E5E5E5", backgroundColor: "#F9F9F9" }}>
+              <div
+                className="px-5 py-4 border-b"
+                style={{ borderColor: "#E5E5E5", backgroundColor: "#F9F9F9" }}
+              >
                 <div className="flex items-center gap-2">
                   <Beaker className="w-4 h-4" style={{ color: "#009933" }} />
-                  <p className="text-sm font-semibold" style={{ color: "#333333" }}>
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: "#333333" }}
+                  >
                     Análisis solicitados
                   </p>
                 </div>
@@ -346,22 +430,43 @@ export default function SeguimientoPage() {
                     <div
                       key={s.id}
                       className="flex items-center justify-between p-3 rounded-xl transition-all duration-200 hover:shadow-sm"
-                      style={{ backgroundColor: idx % 2 === 0 ? "#FAFAFA" : "#FFFFFF", border: "1px solid #F0F0F0" }}
+                      style={{
+                        backgroundColor: idx % 2 === 0 ? "#FAFAFA" : "#FFFFFF",
+                        border: "1px solid #F0F0F0",
+                      }}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#E8F5E9" }}>
-                          <FlaskConical className="w-4 h-4" style={{ color: "#009933" }} />
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: "#E8F5E9" }}
+                        >
+                          <FlaskConical
+                            className="w-4 h-4"
+                            style={{ color: "#009933" }}
+                          />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium truncate" style={{ color: "#333333" }}>
+                          <p
+                            className="text-sm font-medium truncate"
+                            style={{ color: "#333333" }}
+                          >
                             {s.nombre}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs font-mono" style={{ color: "#666666" }}>
+                            <span
+                              className="text-xs font-mono"
+                              style={{ color: "#666666" }}
+                            >
                               {s.codigo}
                             </span>
                             {s.repeticion > 1 && (
-                              <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: "#F5F5F5", color: "#666666" }}>
+                              <span
+                                className="text-xs px-1.5 py-0.5 rounded-full"
+                                style={{
+                                  backgroundColor: "#F5F5F5",
+                                  color: "#666666",
+                                }}
+                              >
                                 x{s.repeticion}
                               </span>
                             )}
@@ -369,8 +474,14 @@ export default function SeguimientoPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <Icon className="w-3.5 h-3.5" style={{ color: st.color }} />
-                        <span className="text-xs font-medium" style={{ color: st.color }}>
+                        <Icon
+                          className="w-3.5 h-3.5"
+                          style={{ color: st.color }}
+                        />
+                        <span
+                          className="text-xs font-medium"
+                          style={{ color: st.color }}
+                        >
                           {st.label}
                         </span>
                       </div>
@@ -383,12 +494,24 @@ export default function SeguimientoPage() {
             {/* Footer institucional */}
             <div className="text-center py-4 space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <div className="w-8 h-0.5 rounded-full" style={{ backgroundColor: "#009933" }} />
-                <span className="text-xs font-medium" style={{ color: "#009933" }}>CABA UTM</span>
-                <div className="w-8 h-0.5 rounded-full" style={{ backgroundColor: "#009933" }} />
+                <div
+                  className="w-8 h-0.5 rounded-full"
+                  style={{ backgroundColor: "#009933" }}
+                />
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: "#009933" }}
+                >
+                  CABA UTM
+                </span>
+                <div
+                  className="w-8 h-0.5 rounded-full"
+                  style={{ backgroundColor: "#009933" }}
+                />
               </div>
               <p className="text-xs" style={{ color: "#666666" }}>
-                Universidad Técnica de Manabí — Centro de Análisis Biológico y Agroalimentario
+                Universidad Técnica de Manabí — Centro de Análisis Biológico y
+                Agroalimentario
               </p>
               <p className="text-xs" style={{ color: "#CCCCCC" }}>
                 Portal de seguimiento de muestras
