@@ -48,6 +48,9 @@ import MensajesPage from './pages/mensajes/MensajesPage';
 //REPORTES
 import ReportsPage from './pages/reports/ReportsPage';
 
+// Seguimiento
+import SeguimientoPage from './pages/public/SeguimientoPage';
+
 // Componente para rutas protegidas (solo autenticado)
 const RutaProtegida = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -101,8 +104,11 @@ function App() {
       {/* Ruta pública */}
       <Route path="/login" element={<Login />} />
 
+      <Route path="/seguimiento/:sampleCode" element={<SeguimientoPage />} />
+
       {/* Redirección por defecto basada en rol */}
       <Route path="/" element={<Navigate to="/quotes" replace />} />
+
 
       {/* Rutas protegidas - Layout principal */}
       <Route

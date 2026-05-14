@@ -79,6 +79,7 @@ export default function ResultFormModal({ isOpen, onClose, analysis, onSave }) {
       });
 
       onClose();
+      //eslint-disable-next-line
     } catch (error) {
       // Error guardando resultado
       await Swal.fire({

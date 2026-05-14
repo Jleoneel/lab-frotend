@@ -1,5 +1,5 @@
 // pages/samples/SampleDetail.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -57,11 +57,7 @@ export default function SampleDetail() {
   const [qrDataUrl, setQrDataUrl] = useState(null);
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    loadSampleData();
-  }, [id]);
-
-  const loadSampleData = async () => {
+  const loadSampleData = useCallback(async () => {
     try {
       const [sampleRes, analysesRes] = await Promise.all([
         sampleService.getById(id),
@@ -79,15 +75,15 @@ export default function SampleDetail() {
       try {
         const labInfoRes = await settingsService.getLabInfo();
         setLabInfo(labInfoRes);
-      } catch (e) {
+      } catch {
         // No se pudo cargar lab info
       }
 
-      const url = `${window.location.origin}/samples/${id}`;
+      const url = `${window.location.origin}/seguimiento/${sampleRes.data.sampleCode}`;
       const dataUrl = await QRCode.toDataURL(url, { width: 150, margin: 1 });
       setQrDataUrl(dataUrl);
 
-    } catch (error) {
+    } catch {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -96,7 +92,11 @@ export default function SampleDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, user]);
+
+  useEffect(() => {
+    loadSampleData();
+  }, [loadSampleData]);
 
   const handleStatusChange = async (analysisId, newStatus) => {
     try {
@@ -113,7 +113,7 @@ export default function SampleDetail() {
       });
 
       loadSampleData();
-    } catch (error) {
+    } catch {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -128,7 +128,7 @@ export default function SampleDetail() {
       setShowResultModal(false);
       setSelectedAnalysis(null);
       loadSampleData();
-    } catch (error) {
+    } catch {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -166,7 +166,7 @@ export default function SampleDetail() {
       });
 
       loadSampleData();
-    } catch (error) {
+    } catch {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -242,7 +242,7 @@ export default function SampleDetail() {
   }
 
   const StatusIcon = statusIcons[sample.status] || Package;
-  const sampleUrl = `${window.location.origin}/samples/${sample.id}`;
+  const sampleUrl = `${window.location.origin}/seguimiento/${sample.sampleCode}`;
   const allAnalysesDone = analyses.every((a) => a.status === "DONE");
   const canEmitReport =
     sample.status === "LISTO_PARA_INFORME" && allAnalysesDone;

@@ -8,7 +8,7 @@ import {
 } from "@react-pdf/renderer";
 
 import utmLogo from "../../assets/logos/utm.png";
-import cabaLogo from "../../assets/logos/caba.png";
+import cabaLogo from "../../assets/logos/logocaba.png";
 
 const styles = StyleSheet.create({
   page: {
