@@ -1,18 +1,20 @@
 // components/inventario/NuevoEquipoModal.jsx
 import { useState } from 'react';
-import { 
-  Save, 
-  Package, 
-  Hash, 
-  MapPin, 
-  Calendar, 
+import {
+  Save,
+  Package,
+  Hash,
+  MapPin,
+  Calendar,
   Wrench,
   Settings,
   Cpu,
   Tag,
   AlertCircle,
   CheckCircle,
-  PlusCircle
+  PlusCircle,
+  ImagePlus,
+  X
 } from 'lucide-react';
 import Modal from '../ui/Modal';
 import { equipoService, ESTADOS_EQUIPO } from '../../services/equipoService';
@@ -27,6 +29,15 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
   });
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
+
+  const handleFoto = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setFoto(file);
+    setFotoPreview(URL.createObjectURL(file));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +69,7 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
 
     setSaving(true);
     try {
-      await equipoService.create(formData);
+      await equipoService.create(formData, foto);
       await Swal.fire({
         icon: 'success',
         title: '¡Equipo registrado!',
@@ -74,6 +85,8 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
         fechaCalibracion: '', estado: 'ACTIVO'
       });
       setErrors({});
+      setFoto(null);
+      setFotoPreview(null);
       onSaved();
       onClose();
     } catch (error) {
@@ -93,7 +106,7 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Nuevo Equipo" size="lg">
       <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-        
+
         {/* Header informativo */}
         <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: "#E8F5E9", border: "1px solid #00993330" }}>
           <PlusCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
@@ -120,7 +133,7 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
               value={formData.nombre}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
-              style={{ 
+              style={{
                 borderColor: errors.nombre ? '#FECACA' : '#E5E5E5',
                 color: '#333333'
               }}
@@ -207,7 +220,7 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
               value={formData.codigoInventario}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
-              style={{ 
+              style={{
                 borderColor: errors.codigoInventario ? '#FECACA' : '#E5E5E5',
                 color: '#333333'
               }}
@@ -325,6 +338,41 @@ export default function NuevoEquipoModal({ isOpen, onClose, onSaved }) {
               onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
             />
           </div>
+        </div>
+
+        {/* Foto del equipo */}
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
+            <span className="flex items-center gap-1.5">
+              <ImagePlus className="w-3.5 h-3.5" />
+              Foto del equipo
+            </span>
+          </label>
+          {fotoPreview ? (
+            <div className="relative inline-block">
+              <img src={fotoPreview} alt="preview"
+                className="w-32 h-32 object-cover rounded-xl border"
+                style={{ borderColor: '#E5E5E5' }} />
+              <button
+                onClick={() => { setFoto(null); setFotoPreview(null); }}
+                className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white"
+                style={{ backgroundColor: '#DC2626' }}>
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-xl cursor-pointer transition-all"
+              style={{ borderColor: '#E5E5E5' }}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = '#009933'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#E5E5E5'}>
+              <ImagePlus className="w-6 h-6 mb-1" style={{ color: '#CCCCCC' }} />
+              <span className="text-xs" style={{ color: '#999999' }}>
+                Click para subir imagen (JPG, PNG, WebP — máx 5MB)
+              </span>
+              <input type="file" className="hidden" accept="image/jpeg,image/png,image/webp"
+                onChange={handleFoto} />
+            </label>
+          )}
         </div>
 
         {/* Resumen de campos obligatorios */}

@@ -79,6 +79,14 @@ export default function QuotesList() {
     navigate(`/quotes/${quoteId}`);
   };
 
+  const estaVencida = (quote) => {
+    if (!quote.validUntil) return false;
+    return (
+      new Date(quote.validUntil) < new Date() &&
+      ["DRAFT", "SENT"].includes(quote.status)
+    );
+  };
+
   const filteredQuotes = quotes
     .filter((quote) => {
       const matchesSearch =
@@ -308,9 +316,17 @@ export default function QuotesList() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge className={statusColors[quote.status]}>
+                        <Badge
+                          className={
+                            estaVencida(quote)
+                              ? "bg-red-100 text-red-700 border-red-200"
+                              : statusColors[quote.status]
+                          }
+                        >
                           <StatusIcon className="w-3 h-3 mr-1 inline" />
-                          {statusLabels[quote.status] ?? quote.status}
+                          {estaVencida(quote)
+                            ? "Vencida"
+                            : (statusLabels[quote.status] ?? quote.status)}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -369,9 +385,17 @@ export default function QuotesList() {
                         </span>
                       </div>
                     </div>
-                    <Badge className={statusColors[quote.status]}>
+                    <Badge
+                      className={
+                        estaVencida(quote)
+                          ? "bg-red-100 text-red-700 border-red-200"
+                          : statusColors[quote.status]
+                      }
+                    >
                       <StatusIcon className="w-3 h-3 mr-1 inline" />
-                      {statusLabels[quote.status] ?? quote.status}
+                      {estaVencida(quote)
+                        ? "Vencida"
+                        : (statusLabels[quote.status] ?? quote.status)}
                     </Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-3 text-sm">

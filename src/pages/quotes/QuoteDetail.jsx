@@ -12,6 +12,7 @@ import {
   DollarSign,
   FileText,
   Package,
+  AlertCircle,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { quoteService } from "../../services/quoteService";
@@ -281,8 +282,16 @@ export default function QuoteDetail() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#009933', borderTopColor: '#FFCC33' }}></div>
-          <p className="text-sm" style={{ color: '#666666', fontFamily: "'Montserrat', sans-serif" }}>Cargando cotización...</p>
+          <div
+            className="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4"
+            style={{ borderColor: "#009933", borderTopColor: "#FFCC33" }}
+          ></div>
+          <p
+            className="text-sm"
+            style={{ color: "#666666", fontFamily: "'Montserrat', sans-serif" }}
+          >
+            Cargando cotización...
+          </p>
         </div>
       </div>
     );
@@ -291,19 +300,31 @@ export default function QuoteDetail() {
   if (!quote) {
     return (
       <div className="text-center py-12">
-        <Package className="w-16 h-16 mx-auto mb-4" style={{ color: '#CCCCCC' }} />
-        <h3 className="text-lg font-medium mb-2" style={{ color: '#333333', fontFamily: "'Montserrat', sans-serif" }}>
+        <Package
+          className="w-16 h-16 mx-auto mb-4"
+          style={{ color: "#CCCCCC" }}
+        />
+        <h3
+          className="text-lg font-medium mb-2"
+          style={{ color: "#333333", fontFamily: "'Montserrat', sans-serif" }}
+        >
           Cotización no encontrada
         </h3>
-        <p className="text-sm mt-2" style={{ color: '#666666' }}>
+        <p className="text-sm mt-2" style={{ color: "#666666" }}>
           La cotización que buscas no existe o ha sido eliminada.
         </p>
-        <Button onClick={() => navigate("/quotes")} className="mt-4" style={{ backgroundColor: '#009933' }}>
+        <Button
+          onClick={() => navigate("/quotes")}
+          className="mt-4"
+          style={{ backgroundColor: "#009933" }}
+        >
           Volver a cotizaciones
         </Button>
       </div>
     );
   }
+  
+  const vencida = quote.validUntil && new Date(quote.validUntil) < new Date();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -312,9 +333,9 @@ export default function QuoteDetail() {
         <button
           onClick={() => navigate("/quotes")}
           className="flex items-center mb-4 transition-colors group"
-          style={{ color: '#666666' }}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#009933'}
-          onMouseLeave={(e) => e.currentTarget.style.color = '#666666'}
+          style={{ color: "#666666" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#009933")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#666666")}
         >
           <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
           Volver a cotizaciones
@@ -322,14 +343,26 @@ export default function QuoteDetail() {
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F5E9' }}>
-              <FileText className="w-6 h-6" style={{ color: '#009933' }} />
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: "#E8F5E9" }}
+            >
+              <FileText className="w-6 h-6" style={{ color: "#009933" }} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold" style={{ color: '#009933', fontFamily: "'Trajan Pro Bold', serif" }}>
+              <h1
+                className="text-2xl font-bold"
+                style={{
+                  color: "#009933",
+                  fontFamily: "'Trajan Pro Bold', serif",
+                }}
+              >
                 Cotización {quote.quoteNumber}
               </h1>
-              <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: '#666666' }}>
+              <div
+                className="flex items-center gap-2 mt-1 text-sm"
+                style={{ color: "#666666" }}
+              >
                 <Calendar className="w-4 h-4" />
                 <span>Creada el {formatDate(quote.createdAt)}</span>
               </div>
@@ -340,10 +373,10 @@ export default function QuoteDetail() {
             {quote.status === "DRAFT" && (
               <Button
                 onClick={handleApprove}
-                disabled={approving}
+                disabled={vencida || quote.status !== "DRAFT"}
                 variant="success"
                 className="shadow-sm"
-                style={{ backgroundColor: '#009933' }}
+                style={{ backgroundColor: "#009933" }}
               >
                 <ThumbsUp className="w-4 h-4 mr-2" />
                 {approving ? "Aprobando..." : "Aprobar Cotización"}
@@ -355,7 +388,7 @@ export default function QuoteDetail() {
                 variant="secondary"
                 onClick={() => setShowEditModal(true)}
                 className="shadow-sm"
-                style={{ borderColor: '#E5E5E5', color: '#666666' }}
+                style={{ borderColor: "#E5E5E5", color: "#666666" }}
               >
                 <Pencil className="w-4 h-4 mr-2" />
                 Editar
@@ -366,7 +399,7 @@ export default function QuoteDetail() {
               <Button
                 onClick={() => setShowConvertModal(true)}
                 className="shadow-sm"
-                style={{ backgroundColor: '#FFCC33', color: '#333333' }}
+                style={{ backgroundColor: "#FFCC33", color: "#333333" }}
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Convertir a Solicitud
@@ -377,39 +410,79 @@ export default function QuoteDetail() {
               variant="secondary"
               onClick={handlePrint}
               className="shadow-sm"
-              style={{ borderColor: '#E5E5E5', color: '#666666' }}
+              style={{ borderColor: "#E5E5E5", color: "#666666" }}
             >
               <Printer className="w-4 h-4 mr-2" />
               Imprimir
             </Button>
+
+            {vencida && (
+              <div
+                className="rounded-xl p-3 flex items-center gap-2"
+                style={{
+                  backgroundColor: "#FEF2F2",
+                  border: "1px solid #FEE2E2",
+                }}
+              >
+                <AlertCircle className="w-4 h-4" style={{ color: "#DC2626" }} />
+                <p className="text-sm" style={{ color: "#DC2626" }}>
+                  Esta cotización venció el {formatDate(quote.validUntil)} y no
+                  puede aprobarse.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Tarjeta de información del cliente */}
-      <div className="bg-white rounded-2xl shadow-sm border p-6 mb-6" style={{ borderColor: '#E5E5E5' }}>
+      <div
+        className="bg-white rounded-2xl shadow-sm border p-6 mb-6"
+        style={{ borderColor: "#E5E5E5" }}
+      >
         <div className="flex items-center gap-2 mb-4">
-          <User className="w-5 h-5" style={{ color: '#666666' }} />
-          <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+          <User className="w-5 h-5" style={{ color: "#666666" }} />
+          <h2
+            className="text-lg font-semibold"
+            style={{ color: "#009933", fontFamily: "'Montserrat', sans-serif" }}
+          >
             Información del Cliente
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Cliente</p>
-            <p className="font-medium" style={{ color: '#333333' }}>{quote.client}</p>
+            <p
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: "#666666" }}
+            >
+              Cliente
+            </p>
+            <p className="font-medium" style={{ color: "#333333" }}>
+              {quote.client}
+            </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Lista de Precios</p>
-            <p className="font-medium" style={{ color: '#333333' }}>
+            <p
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: "#666666" }}
+            >
+              Lista de Precios
+            </p>
+            <p className="font-medium" style={{ color: "#333333" }}>
               {quote.priceList === "ESTUDIANTE" ? (
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm" style={{ backgroundColor: '#E8F5E9', color: '#009933' }}>
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm"
+                  style={{ backgroundColor: "#E8F5E9", color: "#009933" }}
+                >
                   <User className="w-3 h-3" />
                   Estudiante
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm" style={{ backgroundColor: '#FFF9E8', color: '#FFCC33' }}>
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm"
+                  style={{ backgroundColor: "#FFF9E8", color: "#FFCC33" }}
+                >
                   <DollarSign className="w-3 h-3" />
                   Externo
                 </span>
@@ -417,25 +490,43 @@ export default function QuoteDetail() {
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Estado</p>
+            <p
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: "#666666" }}
+            >
+              Estado
+            </p>
             <Badge className={statusColors[quote.status] || "bg-gray-100"}>
               {statusLabels[quote.status] || quote.status}
             </Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Válido hasta</p>
-            <p className="font-medium" style={{ color: '#333333' }}>
-              {quote.validUntil ? formatDate(quote.validUntil) : "No especificado"}
+            <p
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: "#666666" }}
+            >
+              Válido hasta
+            </p>
+            <p className="font-medium" style={{ color: "#333333" }}>
+              {quote.validUntil
+                ? formatDate(quote.validUntil)
+                : "No especificado"}
             </p>
           </div>
         </div>
       </div>
 
       {/* Tarjeta de análisis cotizados */}
-      <div className="bg-white rounded-2xl shadow-sm border p-6" style={{ borderColor: '#E5E5E5' }}>
+      <div
+        className="bg-white rounded-2xl shadow-sm border p-6"
+        style={{ borderColor: "#E5E5E5" }}
+      >
         <div className="flex items-center gap-2 mb-6">
-          <FileText className="w-5 h-5" style={{ color: '#666666' }} />
-          <h2 className="text-lg font-semibold" style={{ color: '#009933', fontFamily: "'Montserrat', sans-serif" }}>
+          <FileText className="w-5 h-5" style={{ color: "#666666" }} />
+          <h2
+            className="text-lg font-semibold"
+            style={{ color: "#009933", fontFamily: "'Montserrat', sans-serif" }}
+          >
             Análisis Cotizados
           </h2>
         </div>
@@ -443,23 +534,68 @@ export default function QuoteDetail() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b" style={{ borderColor: '#E5E5E5' }}>
-                <th className="text-left py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Análisis</th>
-                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Cantidad</th>
-                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Precio Unit.</th>
-                <th className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: '#666666' }}>Subtotal</th>
-               </tr>
+              <tr className="border-b" style={{ borderColor: "#E5E5E5" }}>
+                <th
+                  className="text-left py-4 px-4 text-xs font-medium uppercase tracking-wider"
+                  style={{ color: "#666666" }}
+                >
+                  Análisis
+                </th>
+                <th
+                  className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider"
+                  style={{ color: "#666666" }}
+                >
+                  Cantidad
+                </th>
+                <th
+                  className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider"
+                  style={{ color: "#666666" }}
+                >
+                  Precio Unit.
+                </th>
+                <th
+                  className="text-right py-4 px-4 text-xs font-medium uppercase tracking-wider"
+                  style={{ color: "#666666" }}
+                >
+                  Subtotal
+                </th>
+              </tr>
             </thead>
-            <tbody className="divide-y" style={{ borderColor: '#E5E5E5' }}>
+            <tbody className="divide-y" style={{ borderColor: "#E5E5E5" }}>
               {quote.items?.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50/50 transition-colors"
+                >
                   <td className="py-4 px-4">
-                    <div className="font-medium" style={{ color: '#333333' }}>{item.serviceName}</div>
-                    <div className="text-xs mt-0.5" style={{ color: '#666666' }}>{item.serviceCode}</div>
+                    <div className="font-medium" style={{ color: "#333333" }}>
+                      {item.serviceName}
+                    </div>
+                    <div
+                      className="text-xs mt-0.5"
+                      style={{ color: "#666666" }}
+                    >
+                      {item.serviceCode}
+                    </div>
                   </td>
-                  <td className="text-right py-4 px-4 font-mono" style={{ color: '#666666' }}>{item.quantity}</td>
-                  <td className="text-right py-4 px-4 font-mono" style={{ color: '#666666' }}>${item.unitPriceApplied?.toLocaleString("es-CL")}</td>
-                  <td className="text-right py-4 px-4 font-mono font-medium" style={{ color: '#009933' }}>${item.lineSubtotal?.toLocaleString("es-CL")}</td>
+                  <td
+                    className="text-right py-4 px-4 font-mono"
+                    style={{ color: "#666666" }}
+                  >
+                    {item.quantity}
+                  </td>
+                  <td
+                    className="text-right py-4 px-4 font-mono"
+                    style={{ color: "#666666" }}
+                  >
+                    ${item.unitPriceApplied?.toLocaleString("es-CL")}
+                  </td>
+                  <td
+                    className="text-right py-4 px-4 font-mono font-medium"
+                    style={{ color: "#009933" }}
+                  >
+                    ${item.lineSubtotal?.toLocaleString("es-CL")}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -467,20 +603,40 @@ export default function QuoteDetail() {
         </div>
 
         {/* Totales */}
-        <div className="mt-6 pt-6 border-t" style={{ borderColor: '#E5E5E5' }}>
+        <div className="mt-6 pt-6 border-t" style={{ borderColor: "#E5E5E5" }}>
           <div className="flex justify-end">
-            <div className="w-full max-w-sm rounded-xl p-5 space-y-3" style={{ backgroundColor: '#F9F9F9' }}>
+            <div
+              className="w-full max-w-sm rounded-xl p-5 space-y-3"
+              style={{ backgroundColor: "#F9F9F9" }}
+            >
               <div className="flex justify-between text-sm">
-                <span style={{ color: '#666666' }}>Subtotal</span>
-                <span className="font-medium font-mono" style={{ color: '#333333' }}>${quote.subtotal?.toLocaleString("es-CL")}</span>
+                <span style={{ color: "#666666" }}>Subtotal</span>
+                <span
+                  className="font-medium font-mono"
+                  style={{ color: "#333333" }}
+                >
+                  ${quote.subtotal?.toLocaleString("es-CL")}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span style={{ color: '#666666' }}>IVA ({quote.ivaPercent || 19}%)</span>
-                <span className="font-medium font-mono" style={{ color: '#333333' }}>${quote.ivaAmount?.toLocaleString("es-CL")}</span>
+                <span style={{ color: "#666666" }}>
+                  IVA ({quote.ivaPercent || 19}%)
+                </span>
+                <span
+                  className="font-medium font-mono"
+                  style={{ color: "#333333" }}
+                >
+                  ${quote.ivaAmount?.toLocaleString("es-CL")}
+                </span>
               </div>
-              <div className="border-t pt-3 flex justify-between text-lg font-bold" style={{ borderColor: '#E5E5E5' }}>
-                <span style={{ color: '#666666' }}>Total</span>
-                <span className="font-mono" style={{ color: '#009933' }}>${quote.total?.toLocaleString("es-CL")}</span>
+              <div
+                className="border-t pt-3 flex justify-between text-lg font-bold"
+                style={{ borderColor: "#E5E5E5" }}
+              >
+                <span style={{ color: "#666666" }}>Total</span>
+                <span className="font-mono" style={{ color: "#009933" }}>
+                  ${quote.total?.toLocaleString("es-CL")}
+                </span>
               </div>
             </div>
           </div>

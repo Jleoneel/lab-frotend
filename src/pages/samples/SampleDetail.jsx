@@ -28,6 +28,9 @@ import SampleReportPDF from "../../components/samples/SampleReportPDF";
 import QRCode from "qrcode";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../../store/authStore";
+import { generateSampleDocx } from "../../components/samples/SampleReportDOCX";
+import utmLogo from "../../assets/logos/utm.png";
+import cabaLogo from "../../assets/logos/logocaba.png";
 
 const statusLabels = {
   EN_COLA: "En Cola",
@@ -174,6 +177,16 @@ export default function SampleDetail() {
         text: "No se pudo emitir el informe.",
       });
     }
+  };
+
+  const handleDownloadDocx = async () => {
+    await generateSampleDocx({
+      sample,
+      analyses,
+      labInfo,
+      utmLogoUrl: utmLogo,
+      cabaLogoUrl: cabaLogo,
+    });
   };
 
   const handlePrintQR = () => {
@@ -361,6 +374,16 @@ export default function SampleDetail() {
                   </p>
                 )}
               </div>
+            )}
+            {sample.status === "TERMINADO" && labInfo && (
+              <Button
+                variant="secondary"
+                onClick={handleDownloadDocx}
+                className="shadow-sm"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Descargar Word
+              </Button>
             )}
             {sample.status === "TERMINADO" && labInfo && qrDataUrl && (
               <PDFDownloadLink

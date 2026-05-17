@@ -27,6 +27,7 @@ const adaptEquipoFromBackend = (e) => ({
   fechaCalibracion: e.fechaCalibracion,
   estado: e.estado,
   createdAt: e.createdAt,
+  fotoUrl: e.fotoUrl || null,
 });
 
 export const equipoService = {
@@ -37,13 +38,23 @@ export const equipoService = {
     return { data: Array.isArray(data) ? data.map(adaptEquipoFromBackend) : [] };
   },
 
-  create: async (data) => {
-    const response = await api.post('/equipos', data);
+  create: async (data, foto) => {
+    const form = new FormData();
+    Object.entries(data).forEach(([k, v]) => { if (v) form.append(k, v); });
+    if (foto) form.append('foto', foto);
+    const response = await api.post('/equipos', form, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data || response;
   },
 
-  update: async (id, data) => {
-    const response = await api.put(`/equipos/${id}`, data);
+  update: async (id, data, foto) => {
+    const form = new FormData();
+    Object.entries(data).forEach(([k, v]) => { if (v !== undefined) form.append(k, v); });
+    if (foto) form.append('foto', foto);
+    const response = await api.put(`/equipos/${id}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data || response;
-  }
+  },
 };

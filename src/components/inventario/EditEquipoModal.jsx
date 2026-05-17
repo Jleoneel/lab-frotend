@@ -1,17 +1,22 @@
 // components/inventario/EditEquipoModal.jsx
-import { useState, useEffect } from 'react';
-import { 
-  Save, 
-  Package, 
-  Hash, 
-  MapPin, 
-  Calendar, 
+import { useState, useEffect, useRef } from 'react';
+import {
+  Save,
+  Package,
+  Hash,
+  MapPin,
+  Calendar,
   Wrench,
   Settings,
   Cpu,
   Tag,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Camera,
+  Image,
+  Trash2,
+  Plus,
+  Upload
 } from 'lucide-react';
 import Modal from '../ui/Modal';
 import { equipoService, ESTADOS_EQUIPO } from '../../services/equipoService';
@@ -29,8 +34,10 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
     fechaAdquisicion: '', fechaMantenimiento: '',
     fechaCalibracion: '', estado: 'ACTIVO'
   });
+  const [fotos, setFotos] = useState([]);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && equipo) {
@@ -46,6 +53,14 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
         fechaCalibracion: toDateInput(equipo.fechaCalibracion),
         estado: equipo.estado || 'ACTIVO'
       });
+      if (equipo.fotoUrl) {
+        setFotos([{
+          url: `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${equipo.fotoUrl}`,
+          isExisting: true
+        }]);
+      } else {
+        setFotos([]);
+      }
       setErrors({});
     }
   }, [isOpen, equipo]);
@@ -61,6 +76,26 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
     if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio';
     if (!formData.codigoInventario.trim()) newErrors.codigoInventario = 'El código de inventario es obligatorio';
     return newErrors;
+  };
+
+  // Manejo de fotos
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    const newFotos = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+      isExisting: false
+    }));
+    setFotos(prev => [...prev, ...newFotos]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const removeFoto = (index) => {
+    const foto = fotos[index];
+    if (foto.preview && !foto.isExisting) {
+      URL.revokeObjectURL(foto.preview);
+    }
+    setFotos(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
@@ -80,7 +115,9 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
 
     setSaving(true);
     try {
-      await equipoService.update(equipo.id, formData);
+      const fotoNueva = fotos.find(f => !f.isExisting)?.file || null;
+      await equipoService.update(equipo.id, formData, fotoNueva);
+
       await Swal.fire({
         icon: 'success',
         title: '¡Equipo actualizado!',
@@ -89,6 +126,11 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
         timer: 2000,
         timerProgressBar: true
       });
+
+      fotos.forEach(foto => {
+        if (foto.preview && !foto.isExisting) URL.revokeObjectURL(foto.preview);
+      });
+
       onSaved();
       onClose();
     } catch (error) {
@@ -109,7 +151,7 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Editar Equipo" size="lg">
       <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-        
+
         {/* Header informativo */}
         <div className="rounded-xl p-3 flex items-start gap-2" style={{ backgroundColor: "#E8F5E9", border: "1px solid #00993330" }}>
           <Wrench className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#009933" }} />
@@ -122,7 +164,7 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Nombre - colspan */}
+          {/* Nombre */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium mb-1" style={{ color: "#666666" }}>
               <span className="flex items-center gap-1.5">
@@ -136,7 +178,7 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
               value={formData.nombre}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
-              style={{ 
+              style={{
                 borderColor: errors.nombre ? '#FECACA' : '#E5E5E5',
                 color: '#333333'
               }}
@@ -223,7 +265,7 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
               value={formData.codigoInventario}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border rounded-xl focus:outline-none transition-all"
-              style={{ 
+              style={{
                 borderColor: errors.codigoInventario ? '#FECACA' : '#E5E5E5',
                 color: '#333333'
               }}
@@ -343,6 +385,64 @@ export default function EditEquipoModal({ isOpen, onClose, equipo, onSaved }) {
               onBlur={(e) => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.boxShadow = 'none'; }}
             />
           </div>
+        </div>
+
+        {/* Sección de Fotos */}
+        <div className="border rounded-xl p-4" style={{ borderColor: '#E5E5E5' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Camera className="w-4 h-4" style={{ color: '#009933' }} />
+            <h3 className="text-sm font-semibold" style={{ color: '#333333' }}>Fotos del equipo</h3>
+          </div>
+
+          {/* Área de subida */}
+          <div
+            className="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all hover:border-[#009933] hover:bg-[#E8F5E9]"
+            style={{ borderColor: '#E5E5E5', backgroundColor: '#FAFAFA' }}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+            <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: '#CCCCCC' }} />
+            <p className="text-sm font-medium" style={{ color: '#666666' }}>
+              Haz clic o arrastra imágenes
+            </p>
+            <p className="text-xs mt-1" style={{ color: '#999999' }}>
+              Soporta JPG, PNG, GIF (máx. 5MB cada una)
+            </p>
+          </div>
+
+          {/* Grid de fotos */}
+          {fotos.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+              {fotos.map((foto, idx) => (
+                <div key={idx} className="relative group rounded-lg overflow-hidden border" style={{ borderColor: '#E5E5E5' }}>
+                  <img
+                    src={foto.preview || foto.url}
+                    alt={`Equipo ${idx + 1}`}
+                    className="w-full h-24 object-cover"
+                  />
+                  <button
+                    onClick={() => removeFoto(idx)}
+                    className="absolute top-1 right-1 p-1 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ color: '#DC2626' }}
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          {fotos.length === 0 && (
+            <p className="text-xs text-center mt-3" style={{ color: '#999999' }}>
+              No hay fotos registradas
+            </p>
+          )}
         </div>
 
         {/* Resumen de cambios */}

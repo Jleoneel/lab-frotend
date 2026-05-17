@@ -13,14 +13,6 @@ const adaptReactivoFromBackend = (r) => ({
   _count: r._count || { movimientos: 0 }
 });
 
-export const CATEGORIAS = {
-  SUJETOS_FISCALIZACION: 'Sujetos a Fiscalización',
-  FUERZAS_ARMADAS: 'Reactivos Fuerzas Armadas',
-  QUIMICA: 'Química',
-  BIOLOGIA_MOLECULAR: 'Biología Molecular',
-  MICROBIOLOGIA: 'Microbiología'
-};
-
 export const UNIDADES = {
   LITROS: 'L',
   KILOGRAMOS: 'KG'
